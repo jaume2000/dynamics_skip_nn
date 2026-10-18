@@ -1,0 +1,30 @@
+\subsection{Do weight-tied stage-3 networks achieve similar results?}
+\label{sec:weight_tied}
+
+We first ask whether the stage-3 transport needs nine independent blocks, or whether
+one shared block applied nine times is enough.
+\citet{sun2025painters} study a related question in transformers: they replace and loop
+layers with a middle block to test whether all layers implement the same operation.
+We observe the same phenomenon in ConvNeXt stage~3---ablations that permute, duplicate
+or substitute blocks are reported in \cref{app:block-ops}---and go one step further:
+if the stage can be run with a single repeated function, a network trained to use that
+shared function should reach a similar accuracy level.
+
+We train a vanilla ConvNeXt-T and a weight-tied stage-3 variant under the same recipe
+(ImageNet-1k, batch size 1024; configuration in Appendix~X).
+Our baseline reaches 80.97\% top-1 (28.59M params), slightly below the original
+82.1\% report---expected under our hardware constraints---but all comparisons below
+use models trained by us under matched conditions.
+
+The weight-tied model (18.97M params, 33\% fewer) reaches 80.36\% top-1
+($-0.61$ points).
+Sharing all four stages (8.68M params, 70\% fewer) reaches 79.01\%
+($-1.96$ points).
+
+A network that implements (approximately) the same residual function at every depth
+can therefore sit close to the untied baseline.
+That motivates the next subsection: if stage~3 is approximately the Euler
+discretisation of one vector field, refining that discretisation at inference---looping
+with step $\Delta t{=}1/R$ while keeping $T{=}9$---should remain meaningful, without
+fine-tuning.
+We test this on both the weight-tied network and standard residual models.

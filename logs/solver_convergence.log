@@ -1,0 +1,35 @@
+device=cuda
+n_images=32 seed=0 ignore_top_k=1
+
+=== shared ConvNeXt  D=100  Δt=0.09  Euler vs RK4 vs R1 ===
+Rewired: stage3 -> 1 shared block + shared-only (no delta params) + 2 tail layers
+Loaded shared /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/shared_convnextv1_imagenet/weights/last.pth (epoch 299)
+D=100 RK1:   0%|          | 0/4 [00:00<?, ?it/s]D=100 RK1:  25%|██▌       | 1/4 [00:00<00:00,  4.67it/s]D=100 RK1:  50%|█████     | 2/4 [00:00<00:00,  6.44it/s]D=100 RK1:  75%|███████▌  | 3/4 [00:00<00:00,  7.66it/s]D=100 RK1: 100%|██████████| 4/4 [00:00<00:00,  8.22it/s]                                                        D=100 RK4:   0%|          | 0/4 [00:00<?, ?it/s]D=100 RK4:  25%|██▌       | 1/4 [00:00<00:00,  4.80it/s]D=100 RK4:  50%|█████     | 2/4 [00:00<00:00,  4.63it/s]D=100 RK4:  75%|███████▌  | 3/4 [00:00<00:00,  4.57it/s]D=100 RK4: 100%|██████████| 4/4 [00:00<00:00,  4.51it/s]                                                        R1:   0%|          | 0/4 [00:00<?, ?it/s]R1:  75%|███████▌  | 3/4 [00:00<00:00, 20.44it/s]                                                 
+[shared Euler↔RK4] full:     n=32  ||Δ||=26.5 (med 26.3)  rel=0.0082 (med 0.0083)  cos=1.0000 (med 1.0000)  ∠=0.28°  ||x_a||=3226.3 ||x_b||=3208.4
+[shared Euler↔RK4] ignore1: n=32  ||Δ||=7.04 (med 7)  rel=0.0168 (med 0.0166)  cos=0.9999 (med 0.9999)  ∠=0.91°  ||x_a||=422.8 ||x_b||=420.7  ch=[236]
+
+[shared Euler↔R1] full:     n=32  ||Δ||=333 (med 321)  rel=0.0955 (med 0.0947)  cos=0.9982 (med 0.9984)  ∠=3.40°  ||x_a||=3226.3 ||x_b||=3484.6
+[shared Euler↔R1] ignore1: n=32  ||Δ||=82.7 (med 82.6)  rel=0.1830 (med 0.1815)  cos=0.9845 (med 0.9849)  ∠=10.08°  ||x_a||=422.8 ||x_b||=453.2  ch=[236]
+
+[shared RK4↔R1] full:     n=32  ||Δ||=358 (med 347)  rel=0.1026 (med 0.1018)  cos=0.9978 (med 0.9981)  ∠=3.69°  ||x_a||=3208.4 ||x_b||=3484.6
+[shared RK4↔R1] ignore1: n=32  ||Δ||=89.2 (med 89.2)  rel=0.1973 (med 0.1955)  cos=0.9818 (med 0.9824)  ∠=10.91°  ||x_a||=420.7 ||x_b||=453.2  ch=[236]
+
+=== ConvNeXt-T  R=100  Δt=0.01  Euler vs RK4 (+ R=200 Cauchy) ===
+Loaded interpoled convnext /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/convnextv1_imagenet/weights/last.pth (epoch 299)
+D=900 RK1:   0%|          | 0/4 [00:00<?, ?it/s]D=900 RK1:  25%|██▌       | 1/4 [00:00<00:01,  2.58it/s]D=900 RK1:  50%|█████     | 2/4 [00:00<00:00,  2.48it/s]D=900 RK1:  75%|███████▌  | 3/4 [00:01<00:00,  2.50it/s]D=900 RK1: 100%|██████████| 4/4 [00:01<00:00,  2.48it/s]                                                        D=900 RK4:   0%|          | 0/4 [00:00<?, ?it/s]D=900 RK4:  25%|██▌       | 1/4 [00:01<00:04,  1.54s/it]D=900 RK4:  50%|█████     | 2/4 [00:03<00:03,  1.54s/it]D=900 RK4:  75%|███████▌  | 3/4 [00:04<00:01,  1.55s/it]D=900 RK4: 100%|██████████| 4/4 [00:06<00:00,  1.55s/it]                                                        R1:   0%|          | 0/4 [00:00<?, ?it/s]R1:  75%|███████▌  | 3/4 [00:00<00:00, 19.70it/s]                                                 
+[convnext R100 Euler↔RK4] full:     n=32  ||Δ||=3.47 (med 3.13)  rel=0.0019 (med 0.0016)  cos=1.0000 (med 1.0000)  ∠=0.00°  ||x_a||=1803.0 ||x_b||=1801.9
+[convnext R100 Euler↔RK4] ignore1: n=32  ||Δ||=0.868 (med 0.85)  rel=0.0043 (med 0.0041)  cos=1.0000 (med 1.0000)  ∠=0.24°  ||x_a||=204.0 ||x_b||=204.0  ch=[195]
+
+[convnext R100 Euler↔R1] full:     n=32  ||Δ||=351 (med 324)  rel=0.1705 (med 0.1588)  cos=0.9897 (med 0.9912)  ∠=7.96°  ||x_a||=1803.0 ||x_b||=2013.9
+[convnext R100 Euler↔R1] ignore1: n=32  ||Δ||=75.3 (med 74.3)  rel=0.3593 (med 0.3531)  cos=0.9334 (med 0.9346)  ∠=20.93°  ||x_a||=204.0 ||x_b||=210.5  ch=[195]
+
+[convnext R100 RK4↔R1] full:     n=32  ||Δ||=353 (med 327)  rel=0.1718 (med 0.1600)  cos=0.9895 (med 0.9910)  ∠=8.03°  ||x_a||=1801.9 ||x_b||=2013.9
+[convnext R100 RK4↔R1] ignore1: n=32  ||Δ||=76 (med 74.9)  rel=0.3625 (med 0.3563)  cos=0.9322 (med 0.9335)  ∠=21.12°  ||x_a||=204.0 ||x_b||=210.5  ch=[195]
+D=1800 RK1:   0%|          | 0/4 [00:00<?, ?it/s]D=1800 RK1:  25%|██▌       | 1/4 [00:00<00:02,  1.35it/s]D=1800 RK1:  50%|█████     | 2/4 [00:01<00:01,  1.32it/s]D=1800 RK1:  75%|███████▌  | 3/4 [00:02<00:00,  1.32it/s]D=1800 RK1: 100%|██████████| 4/4 [00:03<00:00,  1.31it/s]                                                         
+[convnext Euler R100↔R200] full:     n=32  ||Δ||=1.73 (med 1.56)  rel=0.0009 (med 0.0008)  cos=1.0000 (med 1.0000)  ∠=0.00°  ||x_a||=1803.0 ||x_b||=1802.5
+[convnext Euler R100↔R200] ignore1: n=32  ||Δ||=0.434 (med 0.425)  rel=0.0021 (med 0.0020)  cos=1.0000 (med 1.0000)  ∠=0.10°  ||x_a||=204.0 ||x_b||=204.0  ch=[195]
+
+[convnext Euler R200↔R1] full:     n=32  ||Δ||=352 (med 325)  rel=0.1712 (med 0.1594)  cos=0.9896 (med 0.9911)  ∠=8.00°  ||x_a||=1802.5 ||x_b||=2013.9
+[convnext Euler R200↔R1] ignore1: n=32  ||Δ||=75.7 (med 74.6)  rel=0.3609 (med 0.3547)  cos=0.9328 (med 0.9340)  ∠=21.03°  ||x_a||=204.0 ||x_b||=210.5  ch=[195]
+
+Done.

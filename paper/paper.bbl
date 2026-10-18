@@ -1,0 +1,73 @@
+\begin{thebibliography}{10}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Ainsworth et~al.(2023)Ainsworth, Hayase, and
+  Srinivasa]{ainsworth2023gitrebasin}
+Ainsworth, S.~K., Hayase, J., and Srinivasa, S.
+\newblock Git re-basin: Merging models modulo permutation symmetries.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2023.
+
+\bibitem[Chang et~al.(2018)Chang, Meng, Haber, Tung, and
+  Begert]{chang2018multilevel}
+Chang, B., Meng, L., Haber, E., Tung, F., and Begert, D.
+\newblock Multi-level residual networks from dynamical systems view.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2018.
+
+\bibitem[E(2017)]{e2017proposal}
+E, W.
+\newblock A proposal on machine learning via dynamical systems.
+\newblock \emph{Communications in Mathematics and Statistics}, 5\penalty0
+  (1):\penalty0 1--11, 2017.
+
+\bibitem[Entezari et~al.(2022)Entezari, Sedghi, Saukh, and
+  Neyshabur]{entezari2022permutation}
+Entezari, R., Sedghi, H., Saukh, O., and Neyshabur, B.
+\newblock The role of permutation invariance in linear mode connectivity of
+  neural networks.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2022.
+
+\bibitem[Haber \& Ruthotto(2017)Haber and Ruthotto]{haber2017stable}
+Haber, E. and Ruthotto, L.
+\newblock Stable architectures for deep neural networks.
+\newblock \emph{Inverse Problems}, 34\penalty0 (1):\penalty0 014004, 2017.
+
+\bibitem[He et~al.(2016)He, Zhang, Ren, and Sun]{he2016resnet}
+He, K., Zhang, X., Ren, S., and Sun, J.
+\newblock Deep residual learning for image recognition.
+\newblock In \emph{Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition (CVPR)}, pp.\  770--778, 2016.
+
+\bibitem[Lu et~al.(2018)Lu, Zhong, Li, and Dong]{lu2018beyond}
+Lu, Y., Zhong, A., Li, Q., and Dong, B.
+\newblock Beyond finite layer neural networks: Bridging deep architectures and
+  numerical differential equations.
+\newblock In \emph{International Conference on Machine Learning (ICML)}, 2018.
+
+\bibitem[Queiruga et~al.(2020)Queiruga, Erichson, Taylor, and
+  Mahoney]{queiruga2020continuousindepthneuralnetworks}
+Queiruga, A.~F., Erichson, N.~B., Taylor, D., and Mahoney, M.~W.
+\newblock Continuous-in-depth neural networks, 2020.
+\newblock URL \url{https://arxiv.org/abs/2008.02389}.
+
+\bibitem[Sander et~al.(2022)Sander, Ablin, and
+  Peyr{\'e}]{sander2022residualneuralnetworksdiscretize}
+Sander, M.~E., Ablin, P., and Peyr{\'e}, G.
+\newblock Do residual neural networks discretize neural ordinary differential
+  equations?
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~35, 2022.
+
+\bibitem[Sun et~al.(2025)Sun, Pickett, Nain, and Jones]{sun2025painters}
+Sun, Q., Pickett, M., Nain, A.~K., and Jones, L.
+\newblock Transformer layers as painters.
+\newblock In \emph{Proceedings of the AAAI Conference on Artificial
+  Intelligence}, volume~39, pp.\  25219--25227, 2025.
+
+\end{thebibliography}

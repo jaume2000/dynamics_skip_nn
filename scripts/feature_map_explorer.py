@@ -1282,6 +1282,8 @@ def trajectory_stats(
     cos_x0_xd_i = torch.zeros(n, D + 1, dtype=torch.float64)  # cos(x_0, x_d)
     dist_x_r1_i = torch.zeros(n, D, dtype=torch.float64)  # ||x_n - x_R1|| after step d
     dist_x_r1_rel_i = torch.zeros(n, D, dtype=torch.float64)  # / ||x_R1||
+    # 1 - cos(x_n, x_R1); plot panel cos_dist_to_parallel_R1 transforms back to cos.
+    cos_dist_x_r1_i = torch.zeros(n, D, dtype=torch.float64)
     inter_block = _inter_block_mask(schedule, D)
     rect_L_i = torch.zeros(n, dtype=torch.float64)
     rect_N_i = torch.zeros(n, dtype=torch.float64)
@@ -1394,10 +1396,13 @@ def trajectory_stats(
             # Distance of the fine state after n micro-steps vs R1's block-k output.
             assert x_r1_ref is not None
             x_r1_ref_m = mv(x_r1_ref)
+            x_r1_ref_flat = x_r1_ref_m.flatten(1)
             dist = (xm_next - x_r1_ref_m).flatten(1).norm(dim=1)
-            rel = dist / x_r1_ref_m.flatten(1).norm(dim=1).clamp_min(1e-30)
+            rel = dist / x_r1_ref_flat.norm(dim=1).clamp_min(1e-30)
+            cos_xr1 = F.cosine_similarity(x_next_flat, x_r1_ref_flat, dim=1).clamp(-1.0, 1.0)
             dist_x_r1_i[start : start + bsz, d] = dist.double().cpu()
             dist_x_r1_rel_i[start : start + bsz, d] = rel.double().cpu()
+            cos_dist_x_r1_i[start : start + bsz, d] = (1.0 - cos_xr1).double().cpu()
             if d in group_ends:
                 x_r1 = x_r1_ref
 
@@ -1520,6 +1525,7 @@ def trajectory_stats(
         "cos_dist_x_spatial": cos_x_spatial_i,
         "dist_x_r1": dist_x_r1_i,
         "dist_x_r1_rel": dist_x_r1_rel_i,
+        "cos_dist_x_r1": cos_dist_x_r1_i,
     }
     pairs_cols: dict[str, np.ndarray | list] = {
         "d": torch.arange(D).numpy(),
@@ -2146,6 +2152,8 @@ def load_cached_run(run_dir: Path, spec: dict) -> dict | None:
     # New pair columns / R1-ref semantics require a trajectory pass; stale caches must recompute.
     if "dist_x_r1" not in res["pairs"].columns or "acc_h" not in res["pairs"].columns:
         return None
+    if "cos_dist_x_r1" not in res["pairs"].columns:
+        return None
     if any(c not in res["pairs"].columns for c in ACCEL_DECOMP_COLUMNS):
         return None
     diag = res["accel_decomp"] or {}
@@ -2412,6 +2420,26 @@ def _metric_panel_specs(res: dict) -> list[dict]:
         )
         _finish(ax, xlabel="t", ylabel="relative distance", title=r"relative distance to parallel R1 (ES$=1$)")
 
+    has_cos_r1 = has_r1 and "cos_dist_x_r1" in pairs.columns
+
+    def draw_cos_dist_r1(ax):
+        # Stored as 1-cos; plot cosine similarity (high ⇒ aligned with R1).
+        _plot_stat(
+            ax,
+            t_pair,
+            pairs,
+            "cos_dist_x_r1",
+            label=r"$\cos(x^{(n)}, x_{\mathrm{R1}})$",
+            transform=cos_from_dist,
+        )
+        _finish(
+            ax,
+            xlabel="t",
+            ylabel=r"$\cos(x^{(n)}, x_{\mathrm{R1}})$",
+            title=r"cosine to parallel R1 (ES$=1$, one step / block)",
+            unit_ylim=True,
+        )
+
     has_block_end = has_r1 and "is_block_end" in pairs.columns and "r1_block" in pairs.columns
 
     def draw_dist_r1_block_end(ax):
@@ -2422,6 +2450,24 @@ def _metric_panel_specs(res: dict) -> list[dict]:
             xlabel="reference block k",
             ylabel=r"$\|x^{(\mathrm{end})} - x_{\mathrm{R1},k}\| / \|x_{\mathrm{R1},k}\|$",
             title="relative distance to R1 at the end of each block",
+        )
+
+    def draw_cos_dist_r1_block_end(ax):
+        end = pairs[pairs["is_block_end"].astype(bool)].reset_index(drop=True)
+        _plot_stat(
+            ax,
+            end["r1_block"],
+            end,
+            "cos_dist_x_r1",
+            label=r"$\cos(x^{(\mathrm{end})}, x_{\mathrm{R1},k})$",
+            transform=cos_from_dist,
+        )
+        _finish(
+            ax,
+            xlabel="reference block k",
+            ylabel=r"$\cos(x^{(\mathrm{end})}, x_{\mathrm{R1},k})$",
+            title="cosine to R1 at the end of each block",
+            unit_ylim=True,
         )
 
     has_decomp = has_acc and all(c in pairs.columns for c in ACCEL_DECOMP_COLUMNS)
@@ -2555,8 +2601,12 @@ def _metric_panel_specs(res: dict) -> list[dict]:
     if has_r1:
         panels.append(_panel("geometry", "dist_to_parallel_R1", draw_dist_r1))
         panels.append(_panel("geometry", "dist_to_parallel_R1_relative", draw_dist_r1_rel))
+    if has_cos_r1:
+        panels.append(_panel("geometry", "cos_dist_to_parallel_R1", draw_cos_dist_r1))
     if has_block_end:
         panels.append(_panel("geometry", "dist_to_R1_block_end", draw_dist_r1_block_end))
+        if has_cos_r1:
+            panels.append(_panel("geometry", "cos_dist_to_R1_block_end", draw_cos_dist_r1_block_end))
     if has_cos_x_a:
         cxa_all, cxa_no_ib = _both(_draw_cos_state_vs_acc)
         panels.append(_panel("geometry", "cos_state_vs_acceleration", cxa_all))
@@ -3804,8 +3854,8 @@ def parse_args() -> argparse.Namespace:
         help=(
             "Only refresh metrics/ (plots + CSVs). Skips videos/scatters. "
             "Re-integrates the trajectory when the cache lacks new metric columns "
-            "(acc_h, dist_x_r1, acceleration decomposition) or was built with another "
-            "--accel-eps; use --force to always re-integrate."
+            "(acc_h, dist_x_r1, cos_dist_x_r1, acceleration decomposition) or was built "
+            "with another --accel-eps; use --force to always re-integrate."
         ),
     )
     p.add_argument(

@@ -1,0 +1,24 @@
+% WRITE LAST
+\section{Introduction}
+\label{sec:intro}
+Skip Connections-NN (SCNN) wanted to solve grad vanishing problem that VGG introduced. By defining $x = f(x) + x$ it induced some properties: Works in the same feature representation. P.e. A given channel
+will have the same purpose in the next layer.
+
+\citep{sander2022residualneuralnetworksdiscretize, queiruga2020continuousindepthneuralnetworks} says that resnets just have the algebraic form of Euler ODE solver, that if params are steps they won'r be ODEs.
+We apport evidence that residual blocks are 1-step ODE solvers and we therefore have a sum of Ode solvers that are constantly changing of domain and we can accomplish the same dynamics by sharing the weights and
+we augmentate the resolution of the feature dynamics to study with better quality how X moves along the latent-space manifold in time / depth.
+
+Questions we want to solve:
+
+\begin{itemize}
+    \item Can SCNN's blocks be looped indefinitely?
+        $\rightarrow$ Yes
+    \item Are all this weights necessary? + Shared networks can reach similar performance?
+        $\rightarrow$ No + Yes
+    \item What are the dynamics of the features in this two types of models?
+    Statement: The over-parametrized networks undo what the previous layer does, that's why SCNNs and weight-tied are equal.
+        Tangential acceleration is crucial for this affirmation.
+        Here we analyze the geometry of trajectories.
+        Take into account the massive activations here.
+    \item How can we improve discrete models given this evidence? -> Delta networks?
+\end{itemize}
