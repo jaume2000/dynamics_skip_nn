@@ -55,6 +55,20 @@ def test_coeff_zero_matches_shared_only():
     assert torch.allclose(y_delta, y_shared, atol=1e-5, rtol=1e-5)
 
 
+def test_coeff_zero_still_connects_deltas_for_ddp():
+    """0*δ must stay in the graph so DDP does not see unused Parameters."""
+    model = DeltaConvNext(useDeltas=True)
+    model.rewire()
+    model.set_delta_coeff(0.0)
+    model.train()
+    x = torch.randn(2, 3, 224, 224)
+    y = model(x).sum()
+    y.backward()
+    for name, delta in model.deltifiedStage3[0].deltas():
+        assert delta.grad is not None, name
+        assert torch.all(delta.grad == 0), name
+
+
 def test_reparametrize_preserves_effective_weights_with_coeff():
     stage3_length = 9
     coeff = 0.5

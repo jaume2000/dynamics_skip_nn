@@ -155,8 +155,12 @@ class DeltaConvnextBlock(nn.Module):
         dw, ln, pw1, _, pw2, ls = self._shared
         weights = dw.weight
         biases = dw.bias
-        c = self.delta_coeff if (self.useDeltas and self.has_deltas()) else 0.0
-        if c:
+        # Always add coeff*δ when deltas exist — even if coeff==0 — so DDP still
+        # sees every Parameter. Skipping the add when coeff is 0 left unused params
+        # and crashed the ramp runs (d9_ramp / scratch_ramp) on the first step.
+        use = self.useDeltas and self.has_deltas()
+        c = self.delta_coeff if use else 0.0
+        if use:
             weights = weights + c * self.dwWDelta
             biases = biases + c * self.dwBDelta
         h = F.conv2d(x, weights, biases, padding=dw.padding, groups=dw.groups)
@@ -165,7 +169,7 @@ class DeltaConvnextBlock(nn.Module):
 
         weights = ln.weight
         biases = ln.bias
-        if c:
+        if use:
             weights = weights + c * self.lnWDelta
             biases = biases + c * self.lnBDelta
         h = F.layer_norm(h, ln.normalized_shape, weights, biases, ln.eps)
@@ -173,7 +177,7 @@ class DeltaConvnextBlock(nn.Module):
 
         weights = pw1.weight
         biases = pw1.bias
-        if c:
+        if use:
             weights = weights + c * self.pw1WDelta
             biases = biases + c * self.pw1BDelta
         h = F.conv2d(h, weights, biases)
@@ -182,13 +186,13 @@ class DeltaConvnextBlock(nn.Module):
 
         weights = pw2.weight
         biases = pw2.bias
-        if c:
+        if use:
             weights = weights + c * self.pw2WDelta
             biases = biases + c * self.pw2BDelta
         h = F.conv2d(h, weights, biases)
 
         gamma = ls.gamma
-        if c:
+        if use:
             gamma = gamma + c * self.lsDelta
         h = h * gamma.view(1, -1, 1, 1)
         return x + self.stochasticDepth(h) * self.eulerStep

@@ -146,8 +146,13 @@ class MetricHistory:
     def save(self):
         Path(self.path / "history").mkdir(parents=True, exist_ok=True)
         Path(self.path / "results").mkdir(parents=True, exist_ok=True)
-        with open(self.path / "history" / f"{self.name}_history.pkl", "wb") as f:
+        # Atomic write: a killed job mid-dump left a truncated .pkl that made
+        # RETAKE crash with EOFError on the next segment.
+        final = self.history_path()
+        tmp = final.with_suffix(".pkl.tmp")
+        with open(tmp, "wb") as f:
             pickle.dump(self.metricHistory, f)
+        tmp.replace(final)
         self.toCSV()
 
     def toCSV(self):
@@ -161,22 +166,84 @@ class MetricHistory:
                 if key not in columns:
                     columns.append(key)
             rows.append((i, float(metric.compute_metric()), components))
-        with open(self.path / "results" / f"{self.name}_history.csv", "w", newline="") as f:
+        csv_path = self.path / "results" / f"{self.name}_history.csv"
+        tmp = csv_path.with_suffix(".csv.tmp")
+        with open(tmp, "w", newline="") as f:
             writer = csv.writer(f)
             writer.writerow(["Epoch", "value", *columns])
             for i, value, components in rows:
                 writer.writerow([i, value, *(components.get(key, "") for key in columns)])
+        tmp.replace(csv_path)
 
     def history_path(self) -> Path:
         return self.path / "history" / f"{self.name}_history.pkl"
 
+    def csv_path(self) -> Path:
+        return self.path / "results" / f"{self.name}_history.csv"
+
     def load(self) -> bool:
         path = self.history_path()
-        if not path.is_file():
+        if path.is_file():
+            try:
+                with open(path, "rb") as f:
+                    self.metricHistory = pickle.load(f)
+                return True
+            except (EOFError, pickle.UnpicklingError, AttributeError) as exc:
+                print(f"Warning: corrupt history pickle {path} ({exc}); trying CSV")
+        return self._load_from_csv()
+
+    def _load_from_csv(self) -> bool:
+        """Rebuild a minimal history from the CSV so RETAKE can continue after a truncated pickle."""
+        csv_path = self.csv_path()
+        if not csv_path.is_file():
             return False
-        with open(path, "rb") as f:
-            self.metricHistory = pickle.load(f)
+        rows: list[tuple[int, float]] = []
+        with open(csv_path, newline="") as f:
+            reader = csv.DictReader(f)
+            if "Epoch" not in (reader.fieldnames or []) or "value" not in (reader.fieldnames or []):
+                return False
+            for row in reader:
+                rows.append((int(float(row["Epoch"])), float(row["value"])))
+        if not rows:
+            return False
+        by_epoch = {epoch: value for epoch, value in rows}
+        n = max(by_epoch) + 1
+        history: list[Metric] = []
+        for epoch in range(n):
+            metric = self.metric_cls(**self.metric_kwargs)
+            if epoch in by_epoch:
+                self._seed_metric_value(metric, by_epoch[epoch])
+            history.append(metric)
+        self.metricHistory = history
+        print(f"Rebuilt {self.name} history from CSV ({len(by_epoch)} epochs)")
         return True
+
+    @staticmethod
+    def _seed_metric_value(metric: Metric, value: float) -> None:
+        """Make ``compute_metric()`` return ``value`` without replaying batches."""
+        metric.total_samples = 1
+        if hasattr(metric, "total_loss"):
+            metric.total_loss = float(value)
+            metric.last_loss = float(value)
+        elif hasattr(metric, "total_correct"):
+            metric.total_correct = float(value)
+        elif hasattr(metric, "total_grad_norm"):
+            metric.total_grad_norm = float(value)
+            metric.last_grad_norm = float(value)
+        elif hasattr(metric, "total_lr"):
+            metric.total_lr = float(value)
+            metric.last_lr = float(value)
+        elif hasattr(metric, "total_coeff"):
+            metric.total_coeff = float(value)
+            metric.last_coeff = float(value)
+        elif hasattr(metric, "total_ratios"):
+            # Delta-ratio plots need the per-part series; CSV rebuild only keeps the mean.
+            metric.total_ratios = {"mean": float(value)}
+            metric.last_mean = float(value)
+        else:
+            # Unknown metric shape: leave empty (pad/truncate still keep epoch alignment).
+            metric.total_samples = 0
+
 
     def drop_empty_trailing(self):
         while self.metricHistory and self.metricHistory[-1].total_samples == 0:
