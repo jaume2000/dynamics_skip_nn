@@ -1,7 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=delta_train
 # Short segments schedule sooner than the 4-day cap; chain with RETAKE=1.
-#SBATCH --time=12:00:00
+# 24h is allowed on boost_qos_lprod (same as D27).
+#SBATCH --time=24:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 # Full booster node (32 cores / 4 GPUs). Finetunes use global batch 512
