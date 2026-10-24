@@ -17,11 +17,12 @@ We did a similar analysis and concluded the same as \cite{sun2024massiveactivati
 
 
 \subsubsection{Trajectory analysis of weight-tied convnext}
-\label{sec:refinement_error}
+\label{sec:tied-trajectory-shape}
 Inpired by some of the metrics of \cite{pandey2026trajectorygeometrytransformerrepresentations} we perform an analysis of the trajectories
 ignoring the massive channels of Convnext and the massive tokens of swin. Resnet does not show signs of massive activations.
 
-In weight-tied convnext we can see in Figure \ref{fig:teaser} right the norm of the velocity, that is $f(x(t))$ that has a shape of a bell curve.
+In weight-tied convnext we can see in \cref{fig:refinement}~(right) and
+\cref{fig:teaser}~(bottom left) the norm of the velocity, that is $f(x(t))$ that has a shape of a bell curve.
 This information only shows if the point is moving or not, but it doesn't tell if it rotates or move towards the same direction.
 That's why we plot several new metrics:
 

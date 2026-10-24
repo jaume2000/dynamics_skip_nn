@@ -1,6 +1,32 @@
 % WRITE LAST
 \section{Introduction}
 \label{sec:intro}
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=\textwidth]{figures/hero_trajectories.png}
+    \caption{Stage-3 feature trajectories of a weight-tied ConvNeXt (left) and a
+    standard ConvNeXt-T (right), refined at inference with $\Delta t{=}0.01$
+    ($T{=}9$; massive channel removed).
+    \textbf{Top:} PCA of all states, paths coloured by depth $t$; white dots mark
+    integer $t$.
+    \textbf{Bottom:} residual speed $\|f(x(t))\|$ (class means; shade: spread).
+    One shared block is a single autonomous field $\dot x = f(x)$; nine independent
+    blocks switch the field at every integer, $\dot x = f_{\lfloor t\rfloor}(x)$.
+    We analyse this contrast throughout the paper.}
+    \label{fig:teaser}
+\end{figure*}
+
+A residual block $x + f(x)$ has the algebraic form of one Euler step of size~$1$.
+That observation has been used to read residual networks as discretisations of an
+ODE, but a trained stack need not be a \emph{smooth} field in depth:
+\cref{fig:teaser} shows two ConvNeXt stage-3 transports of the same horizon $T{=}9$.
+Sharing one block yields a single autonomous flow whose speed rises and falls as a
+bell; independent blocks produce a new field every unit of time, with kinks and
+speed jumps at every integer.
+The rest of the paper makes that contrast quantitative---and asks how much of the
+accuracy of the switched stack is already carried by the shared field.
+
 Skip Connections-NN (SCNN) wanted to solve grad vanishing problem that VGG introduced. By defining $x = f(x) + x$ it induced some properties: Works in the same feature representation. P.e. A given channel
 will have the same purpose in the next layer.
 

@@ -1,14 +1,14 @@
 #!/bin/bash
 #SBATCH --job-name=shared_D27
 # Short segments schedule much sooner than the 4-day cap; chain with RETAKE=1.
-#SBATCH --time=9:45:00
+# 24h is allowed on boost_qos_lprod; ~22 epochs remain after the 2-GPU timeout.
+#SBATCH --time=24:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-# Half a booster node (16 cores / 2 GPUs): on a full machine it fits where a whole
-# node cannot. 8 dataloader workers per rank (see available_cpus() in the train
-# script). Must match NPROC_PER_NODE below.
-#SBATCH --cpus-per-task=16
-#SBATCH --gres=gpu:2
+# Full booster node (32 cores / 4 GPUs). Matches GLOBAL_BATCH_SIZE=1024 at
+# 256/GPU (no grad accum). Must match NPROC_PER_NODE below.
+#SBATCH --cpus-per-task=32
+#SBATCH --gres=gpu:4
 #SBATCH --partition=boost_usr_prod
 #SBATCH --qos=boost_qos_lprod
 #SBATCH --output=logs/train_shared_convnext_D27_%j.out
@@ -50,7 +50,7 @@ if [[ -z "${SLURM_JOB_ID:-}" ]]; then
     exit 1
   fi
   mkdir -p "${PROJECT_ROOT}/logs"
-  exec sbatch --account="${SLURM_ACCOUNT}" "${BASH_SOURCE[0]}" "$@"
+  exec sbatch --account="${SLURM_ACCOUNT}" --export=ALL "${BASH_SOURCE[0]}" "$@"
 fi
 
 cd "${PROJECT_ROOT}"
@@ -76,7 +76,7 @@ fi
 export PYTHONNOUSERSITE=1
 export PYTHONPATH="${PROJECT_ROOT}:${VENV_SITE}${PYTHONPATH:+:${PYTHONPATH}}"
 # 1, not 2: this is inherited by every dataloader worker, and the 16 workers already fill
-# the job's 16 cores on their own. The main processes only feed the GPUs, so they have no
+# the job's 32 cores on their own. The main processes only feed the GPUs, so they have no
 # use for a second thread either.
 export OMP_NUM_THREADS=1
 
@@ -100,7 +100,7 @@ fi
 # Not EXPERIMENT_NAME: .env points it at the D9 shared run, which this job must not touch.
 EXPERIMENT_NAME="${D27_EXPERIMENT_NAME:-shared_convnextv1_D27_imagenet}"
 EXPERIMENT="${PROJECT_ROOT}/outputs/${EXPERIMENT_NAME}"
-NPROC_PER_NODE="${NPROC_PER_NODE:-2}"
+NPROC_PER_NODE="${NPROC_PER_NODE:-4}"
 
 if [[ "${RETAKE}" == "1" ]]; then
   if [[ ! -f "${EXPERIMENT}/weights/last.pth" ]]; then

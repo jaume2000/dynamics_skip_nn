@@ -12,7 +12,7 @@
     (mean and P5--P95 over 500 images). ConvNeXt is piecewise constant in depth;
     the weight-tied model is a single smooth autonomous field.
     See \cref{sec:teaser-b}.}
-    \label{fig:teaser}
+    \label{fig:refinement}
 \end{figure*}
 
 \Cref{sec:weight_tied} showed that one shared block nearly matches a standard
@@ -124,7 +124,7 @@ Inference uses $nR$ applications of $f$ with $\Delta t{=}1/R$; training uses $R{
 We apply the refinement~\eqref{eq:refined-stage} (plain interpolation, $T$ conserved via
 $\Delta t{=}1/R$) to our ConvNeXt-T, our weight-tied ConvNeXt-T, Swin-T, ResNet-50 and
 ResNet-101 (ImageNet-1k validation, top-1).
-\Cref{fig:teaser} (left) summarises the sweep over $R$; numbers are in
+\Cref{fig:refinement} (left) summarises the sweep over $R$; numbers are in
 \cref{tab:r-ablation}.
 
 Accuracy decreases monotonically as $R$ grows and plateaus at a continuous limit that
@@ -327,7 +327,9 @@ $R{=}128$ vs.\ plain); full numbers and the residual-norm trajectories are in
 \subsubsection{Piecewise vs.\ smooth residual fields}
 \label{sec:teaser-b}
 
-\Cref{fig:teaser}~(right) makes the dynamical difference between the two regimes concrete.
+\Cref{fig:teaser} showed the two regimes on individual trajectories;
+\cref{fig:refinement}~(right) makes the same contrast on the residual-field norm
+over 500 images.
 In the non-tied ConvNeXt, $\|f_k(x)\|$ is approximately constant inside each block and
 jumps at integer depths: a \emph{smooth function by parts}, i.e.\ an autonomous field on
 each unit interval $[i,i+1]$ with discontinuous switches of $\theta$ between blocks

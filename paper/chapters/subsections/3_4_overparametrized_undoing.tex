@@ -1,2 +1,97 @@
 \subsection{Are over-parametrized networks undoing what the previous layers have done?}
 \label{sec:overparametrized_undoing}
+
+\Cref{sec:weight_tied} showed that one shared stage-3 block nearly matches nine
+independent ones ($-0.61$ top-1 points, $33\%$ fewer parameters).
+A natural explanation is that the untied stack is over-parametrised along depth:
+consecutive blocks need not push the state in a coherent direction, and part of
+what block $k{+}1$ does can cancel what block $k$ just did.
+We test that claim directly on feature trajectories, using the same 500 ImageNet
+validation images (one per class) as in \cref{sec:geometrical_analysis}, stage~3
+only, with the massive channel removed (\cref{sec:massive_activations}).
+
+\paragraph{Setup.}
+For each image we integrate the stage from $t{=}0$ to $t{=}9$ at native resolution
+($R{=}1$) and under Euler refinement ($R{=}100$, $\Delta t{=}0.01$), and reduce every
+spatial feature coordinate whose net displacement $|\Delta_i|=|x_i(9)-x_i(0)|$ is above
+the per-image median.
+We partition the trajectory into the nine unit intervals $[k,k{+}1]$ (native blocks
+in ConvNeXt-T; the same time bins in the weight-tied model) and write
+$\mathrm{d}x_k$ for the displacement of a coordinate over interval $k$.
+The scalars we report are means $\pm$ std over the 500 images
+(\cref{tab:undo}):
+\begin{itemize}
+    \item \emph{straightness}: $\|\sum_k\mathrm{d}x_k\|\,/\,\sum_k\|\mathrm{d}x_k\|$
+    in feature space (path length vs.\ net displacement);
+    \item \emph{wasted motion}: $1-\sum_i|\mathrm{net}_i|/\sum_{k,i}|\mathrm{d}x_{k,i}|$,
+    the fraction of per-coordinate travel that cancels before $t{=}9$;
+    \item $\cos(\mathrm{d}x_k,\mathrm{d}x_{k+1})$: mean cosine between consecutive
+    block displacements;
+    \item \emph{undo fraction}: when $\mathrm{sign}(\mathrm{d}x_k)$ flips at the next
+    block, the cancelled mass
+    $\min(|\mathrm{d}x_k|,|\mathrm{d}x_{k+1}|)$ normalised by $\sum|\mathrm{d}x_k|$;
+    \item \emph{zig-zag share}: mass-weighted share of coordinates that reverse at
+    least twice across the nine blocks;
+    \item \emph{sign flips at $t\in\mathbb{N}$}: fraction of consecutive steps whose
+    sign changes exactly at integer depths (block boundaries).
+\end{itemize}
+
+\begin{table*}[t]
+    \centering
+    \caption{Pooled stage-3 trajectory statistics over 500 ImageNet images
+    (massive channel ignored; coordinates with $|\Delta_i|$ above the per-image median).
+    Weight-tied vs.\ standard ConvNeXt-T at native ($R{=}1$) and refined ($R{=}100$)
+    resolution. Mean $\pm$ std across images.}
+    \label{tab:undo}
+    \scriptsize
+    \setlength{\tabcolsep}{3.5pt}
+    \resizebox{\textwidth}{!}{%
+    \input{figures/pooled_dynamics_table}
+    }
+\end{table*}
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=\textwidth]{figures/pooled_dynamics.png}
+    \caption{Stage-3 coordinates pooled over 500 images ($R{=}100$; massive channel
+    removed; $|\Delta_i|$ above the per-image median).
+    \textbf{Top:} weight-tied ConvNeXt; \textbf{bottom:} ConvNeXt-T.
+    \textbf{Left:} progress $p_i(t)=(x_i(t)-x_i(0))/\Delta_i$ (median and P5--P95;
+    thin lines: random coordinates).
+    \textbf{Middle:} velocity toward the final value, coordinates sorted by peak time
+    (red: toward the end state; blue: away).
+    \textbf{Right:} phase density $(p_i,\,h_i/\Delta_i)$.
+    The shared field advances mostly monotonically; the switched stack reverses and
+    rewrites features between blocks.}
+    \label{fig:pooled-dynamics}
+\end{figure*}
+
+\paragraph{Results.}
+\Cref{tab:undo} and \cref{fig:pooled-dynamics} give a consistent picture.
+Under refinement ($R{=}100$), the weight-tied model is nearly monotone along depth:
+straightness $0.78$, wasted motion $0.19$, consecutive-block cosine $0.92$, undo
+fraction $0.02$, and zig-zag share $0.14$.
+Sign changes at integer times are essentially absent ($0.00$).
+ConvNeXt-T, with nine independent blocks, sits at the opposite extreme: straightness
+$0.50$, wasted motion $0.48$ (almost half of the travel cancels), cosine $0.17$,
+undo fraction $0.25$ ($\approx 12\times$ the shared value), and zig-zag share $0.90$.
+Nearly half of the sign flips ($0.45$) fall exactly on block boundaries---the
+discontinuities of the switched field in \cref{sec:teaser-b}, not an artefact of a
+coarse step.
+Native resolution ($R{=}1$) barely changes the ConvNeXt-T numbers; refining only
+makes the shared field look cleaner (undo $0.05\to 0.02$), which matches the bounded
+refinement error of \cref{sec:refinement_error}.
+
+\paragraph{Reading.}
+Untied stage~3 does not implement nine steps of one transport: consecutive blocks
+often point in weakly related or opposing directions and cancel a large fraction of
+each other's work.
+The weight-tied network cannot cancel itself in that way---a single autonomous field
+has no ``next block'' with different weights---and the geometry shows almost no
+undoing.
+That is why sharing the nine blocks costs less than one top-1 point
+(\cref{sec:weight_tied}): much of the untied capacity along depth is spent
+rewriting features rather than accumulating a coherent displacement toward $x_T$.
+The residual accuracy gap to the baseline is then more plausibly attributed to the
+small, non-cancellable specialization that independent $\theta_k$ still provide, not to
+a fundamentally different dynamical mechanism.
