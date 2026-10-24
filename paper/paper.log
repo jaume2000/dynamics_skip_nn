@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.2.9)  18 OCT 2026 02:27
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.2.9)  19 OCT 2026 20:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -910,148 +910,178 @@ LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 1
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 ))
-(./chapters/2_related_work.tex) (./chapters/3_method.tex
-(./chapters/subsections/3_1_weight_tied.tex [1{/home/jaume/.texlive2023/texmf-v
-ar/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texlive/texmf-dist/fonts/enc/
-dvips/base/8r.enc}
+(./chapters/2_related_work.tex) (./chapters/3_method.tex [1{/home/jaume/.texliv
+e2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texlive/texmf-di
+st/fonts/enc/dvips/base/8r.enc}
 
 
 
-]
-Underfull \hbox (badness 1052) in paragraph at lines 19--23
+] (./chapters/subsections/3_1_weight_tied.tex
+Underfull \hbox (badness 1052) in paragraph at lines 20--24
 []\OT1/ptm/m/n/10 (+20) The weight-tied model (18.97M params, 33% fewer)
  []
 
-) (./chapters/subsections/3_2_indefinite_looping.tex [2]
-<figures/teaser.png, id=103, 731.3724pt x 250.536pt>
+) (./chapters/subsections/3_2_indefinite_looping.tex
+<figures/teaser.png, id=50, 731.3724pt x 250.536pt>
 File: figures/teaser.png Graphic file (type png)
 <use figures/teaser.png>
-Package pdftex.def Info: figures/teaser.png  used on input line 121.
+Package pdftex.def Info: figures/teaser.png  used on input line 7.
 (pdftex.def)             Requested size: 487.8225pt x 167.10895pt.
-
-Overfull \hbox (39.64171pt too wide) in paragraph at lines 140--158
- [][] 
- []
-
-<figures/shared_fractional.png, id=111, 355.8093pt x 249.3315pt>
-File: figures/shared_fractional.png Graphic file (type png)
-<use figures/shared_fractional.png>
-Package pdftex.def Info: figures/shared_fractional.png  used on input line 202.
-
-(pdftex.def)             Requested size: 234.8775pt x 164.59352pt.
-<figures/horizon_ablation.png, id=113, 372.6723pt x 236.082pt>
-File: figures/horizon_ablation.png Graphic file (type png)
-<use figures/horizon_ablation.png>
-Package pdftex.def Info: figures/horizon_ablation.png  used on input line 219.
-(pdftex.def)             Requested size: 234.8775pt x 148.79367pt.
-[3
-pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
- been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.247 
-      
-pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
- been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.247 
-      ]
-<figures/dist_to_parallel_R1.png, id=134, 469.755pt x 274.626pt>
-File: figures/dist_to_parallel_R1.png Graphic file (type png)
-<use figures/dist_to_parallel_R1.png>
-Package pdftex.def Info: figures/dist_to_parallel_R1.png  used on input line 25
-0.
-(pdftex.def)             Requested size: 234.8775pt x 137.31265pt.
-<figures/state_norm_r100_ignore1.png, id=135, 469.755pt x 274.626pt>
-File: figures/state_norm_r100_ignore1.png Graphic file (type png)
-<use figures/state_norm_r100_ignore1.png>
-Package pdftex.def Info: figures/state_norm_r100_ignore1.png  used on input lin
-e 260.
-(pdftex.def)             Requested size: 234.8775pt x 137.31265pt.
-) (./chapters/subsections/3_3_geometrical_analysis.tex
-Underfull \vbox (badness 1394) has occurred while \output is active []
-
- [4
+ [2] [3
 pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1 \subsection
-               {Geometrical analysis of feature trajectories}
+l.190 
+       <./figures/teaser.png>]
+<figures/shared_fractional.png, id=139, 355.8093pt x 249.3315pt>
+File: figures/shared_fractional.png Graphic file (type png)
+<use figures/shared_fractional.png>
+Package pdftex.def Info: figures/shared_fractional.png  used on input line 193.
+
+(pdftex.def)             Requested size: 234.8775pt x 164.59352pt.
+<figures/horizon_ablation.png, id=141, 372.6723pt x 236.082pt>
+File: figures/horizon_ablation.png Graphic file (type png)
+<use figures/horizon_ablation.png>
+Package pdftex.def Info: figures/horizon_ablation.png  used on input line 210.
+(pdftex.def)             Requested size: 234.8775pt x 148.79367pt.
+<figures/dist_cos_r1.pdf, id=144, 236.42326pt x 271.92592pt>
+File: figures/dist_cos_r1.pdf Graphic file (type pdf)
+<use figures/dist_cos_r1.pdf>
+Package pdftex.def Info: figures/dist_cos_r1.pdf  used on input line 246.
+(pdftex.def)             Requested size: 234.8775pt x 270.14522pt.
+
+Underfull \hbox (badness 2689) in paragraph at lines 258--274
+\OT1/ptm/m/n/10 (+20) on the un-rolled trans-port (hori-zon $\OML/cmm/m/it/10 T
+[]\OT1/cmr/m/n/10 9$ \OT1/ptm/m/n/10 (+20) con-served).
+ []
+
+
+Underfull \hbox (badness 2111) in paragraph at lines 258--274
+\OT1/ptm/m/n/10 (+20) On ConvNeXt-T with $\OML/cmm/m/it/10 R[]\OT1/cmr/m/n/10 3
+$ \OT1/ptm/m/n/10 (+20) ($\OT1/cmr/m/n/10 ^^A\OML/cmm/m/it/10 t[]\OT1/cmr/m/n/1
+0 1\OML/cmm/m/it/10 =\OT1/cmr/m/n/10 3$\OT1/ptm/m/n/10 (+20) ) this re-cov-ers
+ []
+
+
+Underfull \hbox (badness 2310) in paragraph at lines 258--274
+\OT1/ptm/m/n/10 (+20) ing rate $\OT1/cmr/m/n/10 10[]$ \OT1/ptm/m/n/10 (+20) (\O
+T1/pcr/m/n/10 finetune[]s4[]r100[]convnext.sh\OT1/ptm/m/n/10 (+20) ,
+ []
+
+
+Underfull \hbox (badness 3449) in paragraph at lines 258--274
+\OT1/pcr/m/n/10 finetune[]s4[]d900[]shared[]convnext.sh\OT1/ptm/m/n/10 (+20) ).
+ So
+ []
+
+[4
+pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.274 
+      
 pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1 \subsection
-               {Geometrical analysis of feature trajectories}
+l.274 
+      
 pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1 \subsection
-               {Geometrical analysis of feature trajectories} <./figures/teaser
-.png> <./figures/shared_fractional.png> <./figures/horizon_ablation.png>]
-Underfull \vbox (badness 1210) has occurred while \output is active []
+l.274 
+       <./figures/shared_fractional.png> <./figures/horizon_ablation.png>])
+(./chapters/subsections/3_3_geometrical_analysis.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-)
-(./chapters/subsections/3_4_overparametrized_undoing.tex)
-(./chapters/subsections/3_5_deltas.tex)) (./chapters/4_results.tex)
-(./chapters/5_conclusion.tex) (./paper.bbl [5
+ [5
 pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.72 
-     
+l.1 \subsection
+               {Geometrical analysis of feature trajectories} <./figures/dist_c
+os_r1.pdf>]
+<figures/dist_cos_r1_compare.pdf, id=236, 482.14127pt x 270.27975pt>
+File: figures/dist_cos_r1_compare.pdf Graphic file (type pdf)
+<use figures/dist_cos_r1_compare.pdf>
+Package pdftex.def Info: figures/dist_cos_r1_compare.pdf  used on input line 12
+.
+(pdftex.def)             Requested size: 487.8225pt x 273.47116pt.
+) (./chapters/subsections/3_4_overparametrized_undoing.tex)
+(./chapters/subsections/3_5_deltas.tex)) (./chapters/4_results.tex)
+(./chapters/5_conclusion.tex) (./paper.bbl
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [6])
+(./chapters/appendix.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [7
 pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.72 
-      <./figures/dist_to_parallel_R1.png> <./figures/state_norm_r100_ignore1.pn
-g>]) (./chapters/appendix.tex
-Overfull \hbox (47.19275pt too wide) in paragraph at lines 149--164
- [][] 
+l.168 
+       <./figures/dist_cos_r1_compare.pdf>]
+Underfull \hbox (badness 1024) in paragraph at lines 182--195
+ \OT1/ptm/b/n/10 (+20) Setup. \OT1/ptm/m/n/10 (+20) Ev-ery con-vo-lu-tion and l
+in-ear layer is drawn
  []
 
-<figures/bilinear_norm.png, id=193, 388.0899pt x 249.5724pt>
-File: figures/bilinear_norm.png Graphic file (type png)
-<use figures/bilinear_norm.png>
-Package pdftex.def Info: figures/bilinear_norm.png  used on input line 175.
-(pdftex.def)             Requested size: 234.8775pt x 151.04697pt.
-) [6] [7
+[8
+pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.279 
+      
 pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.81 \end{document}
-                   
+l.279 
+      
 pdfTeX warning (ext4): destination with the same identifier (name{table.4}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.81 \end{document}
-                   
+l.279 
+      
 pdfTeX warning (ext4): destination with the same identifier (name{table.5}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.81 \end{document}
-                   
+l.279 
+      ] [9
 pdfTeX warning (ext4): destination with the same identifier (name{table.6}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.81 \end{document}
-                   
+l.350 
+      
 pdfTeX warning (ext4): destination with the same identifier (name{table.7}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.81 \end{document}
-                   
+l.350 
+      
 pdfTeX warning (ext4): destination with the same identifier (name{table.8}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.350 
+      ]
+<figures/bilinear_norm.png, id=371, 388.0899pt x 249.5724pt>
+File: figures/bilinear_norm.png Graphic file (type png)
+<use figures/bilinear_norm.png>
+Package pdftex.def Info: figures/bilinear_norm.png  used on input line 353.
+(pdftex.def)             Requested size: 234.8775pt x 151.04697pt.
+) [10
+pdfTeX warning (ext4): destination with the same identifier (name{table.9}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
@@ -1067,42 +1097,39 @@ l.81 \end{document}
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
  ***********
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `paper.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 26800 strings out of 476182
- 496211 string characters out of 5795596
- 1954975 words of memory out of 5000000
- 47964 multiletter control sequences out of 15000+600000
- 596785 words of font info for 263 fonts, out of 8000000 for 9000
+ 26876 strings out of 476182
+ 497340 string characters out of 5795596
+ 1973975 words of memory out of 5000000
+ 47995 multiletter control sequences out of 15000+600000
+ 600008 words of font info for 286 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  99i,12n,101p,1002b,639s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy9.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr
-/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share
-/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf
--dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
-msy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.p
-fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></us
-r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share
-/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/ty
-pe1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/u
-tmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on paper.pdf (7 pages, 914826 bytes).
+></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/
+share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/
+texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.p
+fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texliv
+e/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/
+fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw
+/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.p
+fb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on paper.pdf (10 pages, 994771 bytes).
 PDF statistics:
- 309 PDF objects out of 1000 (max. 8388607)
- 245 compressed objects within 3 object streams
- 65 named destinations out of 1000 (max. 500000)
- 60971 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 480 PDF objects out of 1000 (max. 8388607)
+ 312 compressed objects within 4 object streams
+ 77 named destinations out of 1000 (max. 500000)
+ 63531 words of extra memory for PDF output out of 74296 (max. 10000000)
 

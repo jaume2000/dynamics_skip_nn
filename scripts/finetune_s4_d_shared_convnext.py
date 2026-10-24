@@ -5,7 +5,7 @@ to ``D`` with Euler step ``9/D`` (horizon T=9), freezes stem/S1/S2/S3, trains on
 stage4 + globalPool + fc.
 
 Env:
-  D                default 100
+  D                default 900 (Δt=0.01, same step as R=100)
   EULER_STEP       default 9/D (keep T=9)
   EPOCHS           default 10
   LR               default 1e-6
@@ -49,7 +49,7 @@ from utils.env import load_dotenv
 
 load_dotenv()
 
-D = int(os.environ.get("D", "100"))
+D = int(os.environ.get("D", "900"))
 _es_env = os.environ.get("EULER_STEP")
 EULER_STEP = float(_es_env) if _es_env is not None else 9.0 / D
 METHOD = os.environ.get("METHOD", "RK1")  # logged only; DeltaConvnextBlock uses eulerStep

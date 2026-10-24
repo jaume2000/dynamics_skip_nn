@@ -1,19 +1,19 @@
 #!/bin/bash
-#SBATCH --job-name=ft_s4_d100
-#SBATCH --time=12:00:00
+#SBATCH --job-name=ft_s4_d900
+#SBATCH --time=24:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=32
 #SBATCH --gres=gpu:4
 #SBATCH --partition=boost_usr_prod
 #SBATCH --qos=boost_qos_lprod
-#SBATCH --output=logs/finetune_s4_d100_shared_%j.out
-#SBATCH --error=logs/finetune_s4_d100_shared_%j.err
+#SBATCH --output=logs/finetune_s4_d900_shared_%j.out
+#SBATCH --error=logs/finetune_s4_d900_shared_%j.err
 
-# Finetune shared ConvNeXt-T S4+head with stage-3 unrolled to D=100 (Δt=0.09, T=9).
+# Finetune shared ConvNeXt-T S4+head with stage-3 unrolled to D=900 (Δt=0.01, T=9; same step as R=100).
 # 10 epochs, LR=1e-6. Stem/S1/S2/S3 frozen.
 #
-#   source .env && sbatch --account="$SLURM_ACCOUNT" jobs/finetune_s4_d100_shared_convnext.sh
+#   source .env && sbatch --account="$SLURM_ACCOUNT" jobs/finetune_s4_d900_shared_convnext.sh
 
 set -euo pipefail
 
@@ -75,8 +75,8 @@ if [[ ! -d "${HF_DATASETS_CACHE}/${DATASET_DIR}" ]]; then
   exit 1
 fi
 
-export D="${D:-100}"
-export EULER_STEP="${EULER_STEP:-0.09}"
+export D="${D:-900}"
+export EULER_STEP="${EULER_STEP:-0.01}"
 export EPOCHS="${EPOCHS:-10}"
 export WARMUP_EPOCHS="${WARMUP_EPOCHS:-1}"
 export LR="${LR:-1e-6}"
@@ -85,7 +85,7 @@ export METHOD="${METHOD:-RK1}"
 export RETAKE="${RETAKE:-0}"
 export NPROC_PER_NODE="${NPROC_PER_NODE:-4}"
 export BASELINE_WEIGHTS="${BASELINE_WEIGHTS:-${PROJECT_ROOT}/outputs/shared_convnextv1_imagenet/weights/last.pth}"
-export EXPERIMENT_NAME="${EXPERIMENT_NAME:-convnext_shared_D100_ES0p09_finetune_s4}"
+export EXPERIMENT_NAME="${EXPERIMENT_NAME:-convnext_shared_D900_ES0p01_finetune_s4}"
 EXPERIMENT="${PROJECT_ROOT}/outputs/${EXPERIMENT_NAME}"
 TRAIN_SCRIPT="${TRAIN_SCRIPT:-scripts/finetune_s4_d_shared_convnext.py}"
 

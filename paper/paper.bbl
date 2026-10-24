@@ -1,4 +1,4 @@
-\begin{thebibliography}{10}
+\begin{thebibliography}{13}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -33,16 +33,36 @@ Entezari, R., Sedghi, H., Saukh, O., and Neyshabur, B.
 \newblock In \emph{International Conference on Learning Representations
   (ICLR)}, 2022.
 
+\bibitem[Glorot \& Bengio(2010)Glorot and Bengio]{glorot2010understanding}
+Glorot, X. and Bengio, Y.
+\newblock Understanding the difficulty of training deep feedforward neural
+  networks.
+\newblock In \emph{Proceedings of the Thirteenth International Conference on
+  Artificial Intelligence and Statistics (AISTATS)}, pp.\  249--256, 2010.
+
 \bibitem[Haber \& Ruthotto(2017)Haber and Ruthotto]{haber2017stable}
 Haber, E. and Ruthotto, L.
 \newblock Stable architectures for deep neural networks.
 \newblock \emph{Inverse Problems}, 34\penalty0 (1):\penalty0 014004, 2017.
+
+\bibitem[Hairer et~al.(1993)Hairer, N{\o}rsett, and Wanner]{hairer1993solving}
+Hairer, E., N{\o}rsett, S.~P., and Wanner, G.
+\newblock \emph{Solving Ordinary Differential Equations {I}: Nonstiff
+  Problems}, volume~8 of \emph{Springer Series in Computational Mathematics}.
+\newblock Springer, 2 edition, 1993.
 
 \bibitem[He et~al.(2016)He, Zhang, Ren, and Sun]{he2016resnet}
 He, K., Zhang, X., Ren, S., and Sun, J.
 \newblock Deep residual learning for image recognition.
 \newblock In \emph{Proceedings of the IEEE Conference on Computer Vision and
   Pattern Recognition (CVPR)}, pp.\  770--778, 2016.
+
+\bibitem[Liu et~al.(2022)Liu, Mao, Wu, Feichtenhofer, Darrell, and
+  Xie]{liu2022convnext}
+Liu, Z., Mao, H., Wu, C.-Y., Feichtenhofer, C., Darrell, T., and Xie, S.
+\newblock A {ConvNet} for the 2020s.
+\newblock In \emph{Proceedings of the IEEE/CVF Conference on Computer Vision
+  and Pattern Recognition (CVPR)}, 2022.
 
 \bibitem[Lu et~al.(2018)Lu, Zhong, Li, and Dong]{lu2018beyond}
 Lu, Y., Zhong, A., Li, Q., and Dong, B.

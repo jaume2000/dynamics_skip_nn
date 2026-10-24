@@ -50,7 +50,8 @@ class Trainer():
     collapse_patience: int | None = 3,
     collapse_margin: float = 0.01,
     grad_accum_steps: int = 1,
-    retake: bool = False):
+    retake: bool = False,
+    on_epoch_start=None):
         self.experiment_name = experiment_name
         self.model = model
         self.optimizer = optimizer          # SGD, AdamW, ...
@@ -74,6 +75,9 @@ class Trainer():
         self._collapsed_epochs = 0
         self._collapse_armed = False
         self.retake = retake
+        # Optional (epoch, unwrapped_model) hook. Used to set the delta coefficient
+        # before each epoch; every rank must run it so DDP replicas stay identical.
+        self.on_epoch_start = on_epoch_start
         if grad_accum_steps < 1:
             raise ValueError(f"grad_accum_steps must be >= 1, got {grad_accum_steps}")
         self.grad_accum_steps = grad_accum_steps
@@ -414,6 +418,8 @@ class Trainer():
         """
         start_epoch = self._retake(train_history_metrics, val_history_metrics) if self.retake else 0
         for epoch in range(start_epoch, epochs):
+            if self.on_epoch_start is not None:
+                self.on_epoch_start(epoch, self._unwrap_model())
             self.train_epoch(train_history_metrics, epoch=epoch, epochs=epochs)
             # Rank 0 alone validates the full set; others wait so the next DDP train step stays synced.
             if self._is_main_process():

@@ -13,15 +13,29 @@ $\Delta t{=}1/R$ (\cref{sec:indefinite_looping}).
 
 The question is whether this transport requires $n$ independent residual maps, or
 whether it is (approximately) the integration of one vector field.
+A natural test is to refine the discretisation and check that it converges, but that
+test is weaker than it looks.
+Residual blocks are Lipschitz maps, so refining them at fixed $T$ always converges to
+a unique continuous limit, whatever the weights: we observe the same first-order
+convergence for randomly initialised ConvNeXt, ResNet and Swin blocks, and the distance
+from the native one-step path to that limit is mainly set by how far each block moves
+the state, with training shifting it in an architecture-dependent direction
+(\cref{app:random-init}).
+Evidence for the ODE reading must therefore come from properties a random network
+cannot have: that one shared field can replace the nine blocks, that the continuous
+limit keeps the network's function, and how the trajectory towards $x_T$ is organised.
 We organise the section accordingly:
 \begin{enumerate}
     \item \cref{sec:weight_tied} shows that a weight-tied stage~3 nearly matches an
-    untied ConvNeXt-T, so one shared field already carries most of the accuracy;
-    \item \cref{sec:indefinite_looping} tests the Euler expansion over the residual blocks by
-    looping them at inference without fine-tuning, on both weight-tied and standard
-    networks;
+    untied ConvNeXt-T ($80.36\%$ vs.\ $80.97\%$ top-1), so one shared field already
+    carries most of the accuracy;
+    \item \cref{sec:indefinite_looping} loops the residual blocks at inference without
+    fine-tuning, on both weight-tied and standard networks: at fixed $T$ every solver
+    reaches the same limit, which retains almost all the accuracy, whereas breaking $T$
+    collapses the networks;
     \item \cref{sec:geometrical_analysis} compares the geometry of the resulting
-    trajectories (autonomous vs.\ switched fields);
+    trajectories, contrasting one block reused throughout the stage (autonomous field)
+    with nine blocks used once each (switched field);
     \item \cref{sec:overparametrized_undoing} examines how untied blocks redirect
     and partially undo each other along depth;
     \item \cref{sec:deltas} asks whether small per-block corrections on top of a

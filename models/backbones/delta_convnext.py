@@ -18,6 +18,7 @@ class DeltaConvNext(ConvNextV1):
         self.stage3_length = stage3_length
         self.useDeltas = useDeltas
         self.eulerStep = 1.0
+        self.delta_coeff = 1.0
 
     def _stage3_drop_paths(self) -> list[float]:
         """Drop-path rates for the (possibly unrolled) stage3 steps."""
@@ -49,6 +50,7 @@ class DeltaConvNext(ConvNextV1):
         self.tail = self.stage3[self.depths[2]:]
         self.deltifiedStage3 = nn.Sequential(*deltablocks, *self.tail)
         del self.stage3
+        self.set_delta_coeff(self.delta_coeff)
         mode = "shared-only (no delta params)" if not self.useDeltas else f"{self.stage3_length} delta blocks"
         print(f"Rewired: stage3 -> 1 shared block + {mode} + {len(self.tail)} tail layers")
 
@@ -132,6 +134,18 @@ class DeltaConvNext(ConvNextV1):
                 for _, delta in block.deltas():
                     delta.requires_grad_(True)
 
+    def set_delta_coeff(self, coeff: float):
+        """Multiply every delta in forward by ``coeff`` (0 = shared-only, 1 = full)."""
+        self.delta_coeff = float(coeff)
+        if not hasattr(self, "deltifiedStage3"):
+            return
+        for block in self.deltifiedStage3:
+            if isinstance(block, DeltaConvnextBlock):
+                block.delta_coeff = self.delta_coeff
+
+    def get_delta_coeff(self) -> float:
+        return float(getattr(self, "delta_coeff", 1.0))
+
     def getSharedWeights(self):
         return DeltaConvnextBlock.sharedWeights(self.sharedBlock)
 
@@ -170,9 +184,11 @@ class DeltaConvNext(ConvNextV1):
 
     @torch.no_grad()
     def _reparametrize_shared(self, mean_deltas: dict[str, torch.Tensor]):
+        # Fold the *effective* mean (coeff · δ) so W + coeff·δ is unchanged.
+        coeff = self.get_delta_coeff()
         for name, weight in self.getSharedWeights():
             n_meanDelta = mean_deltas[name]
-            self.setSharedWeights({name: weight + n_meanDelta})
+            self.setSharedWeights({name: weight + coeff * n_meanDelta})
 
     @torch.no_grad()
     def _reparametrize_deltas(self, mean_deltas: dict[str, torch.Tensor]):
@@ -216,6 +232,7 @@ class DeltaConvNext(ConvNextV1):
         ]
         self.deltifiedStage3 = nn.Sequential(*deltablocks, *self.tail)
         self.stage3_length = stage3Length
+        self.set_delta_coeff(self.delta_coeff)
         mode = "shared-only" if not self.useDeltas else f"{stage3Length} delta blocks"
         print(f"Stage3 length -> {stage3Length} ({mode}, eulerStep={self.eulerStep:g})")
 

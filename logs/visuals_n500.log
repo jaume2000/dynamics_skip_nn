@@ -1,0 +1,354 @@
+device=cuda  backbone=interpoled  feature_map_root=/home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs
+  out_shared=/home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps
+  out_interpoled=/home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled
+models=['convnext_shared_rand', 'convnext_rand', 'convnext_shared', 'convnext', 'convnext_droppath0', 'resnet50', 'resnet101', 'swin']
+random_init probes=6  seed=0  LayerScale=1
+shared ckpt=/home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/shared_convnextv1_imagenet/weights/last.pth
+convnext ckpt=/home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/convnextv1_imagenet/weights/last.pth
+convnext_droppath0 ckpt=/home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/convnextv1_imagenet_droppath0/weights/last.pth
+total runs=94
+validation: 50000 images, 1000 classes
+suite n500: 28 runs, metrics + visuals
+runs:
+  convnext_shared_D900_ES0.01_N500: model=convnext_shared, [B] 500 random classes (seed 0), D=900, wi=plain, n=500, bs=8, fps=1, ignore_top_k=0
+  convnext_shared_D900_ES0.01_N500_ignore1: model=convnext_shared, [B] 500 random classes (seed 0), D=900, wi=plain, n=500, bs=8, fps=1, ignore_top_k=1
+  convnext_R100_ES0.01_N500: model=convnext, [B] 500 random classes (seed 0), repeats=100 ES=0.01, wi=plain, n=500, bs=8, fps=1, ignore_top_k=0
+  convnext_R100_ES0.01_N500_ignore1: model=convnext, [B] 500 random classes (seed 0), repeats=100 ES=0.01, wi=plain, n=500, bs=8, fps=1, ignore_top_k=1
+  swin_R100_ES0.01_N500: model=swin, [B] 500 random classes (seed 0), repeats=100 ES=0.01, wi=plain, n=500, bs=8, fps=1, ignore_top_k=0
+  swin_R100_ES0.01_N500_ignore1: model=swin, [B] 500 random classes (seed 0), repeats=100 ES=0.01, wi=plain, n=500, bs=8, fps=1, ignore_top_k=1
+  resnet50_R100_ES0.01_N500: model=resnet50, [B] 500 random classes (seed 0), repeats=100 ES=0.01, wi=plain, n=500, bs=8, fps=1, ignore_top_k=0
+  resnet101_R100_ES0.01_N500: model=resnet101, [B] 500 random classes (seed 0), repeats=100 ES=0.01, wi=plain, n=500, bs=8, fps=1, ignore_top_k=0
+Loaded interpoled convnext /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/convnextv1_imagenet/weights/last.pth (epoch 299)
+Rewired: stage3 -> 1 shared block + shared-only (no delta params) + 2 tail layers
+Loaded shared /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/shared_convnextv1_imagenet/weights/last.pth (epoch 299)
+Loaded torchvision ResNet-101 DEFAULT, n_blocks=22
+Loaded torchvision ResNet-50 DEFAULT, n_blocks=5
+Loaded torchvision Swin-T DEFAULT, n_blocks=6
+
+=== convnext_shared_D900_ES0.01_N500 ===
+  skip existing inputs.png
+  loaded mean_maps.pt (skip trajectory) D=900 ES=0.01 method=RK1
+channels=[236, 56, 17]
+  skip existing metrics/
+  skip existing h_ch236
+  skip existing h_ch056
+  skip existing h_ch017
+  skip existing x_ch236
+  skip existing x_ch056
+  skip existing x_ch017
+  skip existing cos_h
+  skip existing norm_h
+  skip existing l2_h
+  skip existing h_CH
+  skip existing x_CH
+  skip existing h_CH_W0
+  skip existing x_CH_W0
+  skip existing h_CH_Wlast
+  skip existing x_CH_Wlast
+  skip existing scatter_ch_x
+  skip existing scatter_ch_h
+  skip existing scatter_h
+  skip existing scatter_ch_x_means
+  skip existing scatter_ch_h_means
+  skip existing scatter_h_means
+  skip existing scatter_ch_x.png
+  skip existing scatter_ch_h.png
+  skip existing scatter_h.png
+  skip existing scatter_ch_x_means.png
+  skip existing scatter_ch_h_means.png
+  skip existing scatter_h_means.png
+  skip existing spaghetti_x.png
+  skip existing spaghetti_h.png
+  skip existing spaghetti_x_means.png
+  skip existing spaghetti_h_means.png
+  skip existing scatter_h_traj_means.png
+  skip existing scatter_h_traj_50.png
+  skip existing spaghetti_x_50.png
+  skip existing spaghetti_h_50.png
+  writing feature_progress.png …
+  writing feature_recruitment.png …
+  writing feature_phase_density.png …
+done -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps/convnext_shared_D900_ES0.01_N500
+
+=== convnext_shared_D900_ES0.01_N500_ignore1 ===
+  skip existing inputs.png
+  loaded mean_maps.pt (skip trajectory) D=900 ES=0.01 method=RK1
+channels=[56, 17, 202]
+  skip existing metrics/
+  skip existing h_ch056
+  skip existing h_ch017
+  skip existing h_ch202
+  skip existing x_ch056
+  skip existing x_ch017
+  skip existing x_ch202
+  skip existing cos_h
+  skip existing norm_h
+  skip existing l2_h
+  skip existing h_CH
+  skip existing x_CH
+  skip existing h_CH_W0
+  skip existing x_CH_W0
+  skip existing h_CH_Wlast
+  skip existing x_CH_Wlast
+  skip existing scatter_ch_x
+  skip existing scatter_ch_h
+  skip existing scatter_h
+  skip existing scatter_ch_x_means
+  skip existing scatter_ch_h_means
+  skip existing scatter_h_means
+  skip existing scatter_ch_x.png
+  skip existing scatter_ch_h.png
+  skip existing scatter_h.png
+  skip existing scatter_ch_x_means.png
+  skip existing scatter_ch_h_means.png
+  skip existing scatter_h_means.png
+  skip existing spaghetti_x.png
+  skip existing spaghetti_h.png
+  skip existing spaghetti_x_means.png
+  skip existing spaghetti_h_means.png
+  skip existing scatter_h_traj_means.png
+  skip existing scatter_h_traj_50.png
+  skip existing spaghetti_x_50.png
+  skip existing spaghetti_h_50.png
+  writing feature_progress.png …
+  writing feature_recruitment.png …
+  writing feature_phase_density.png …
+done -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps/convnext_shared_D900_ES0.01_N500_ignore1
+
+=== convnext_R100_ES0.01_N500 ===
+  skip existing inputs.png
+  loaded mean_maps.pt (skip trajectory) D=900 ES=0.01 method=RK1
+channels=[195, 136, 331]
+  skip existing metrics/
+  skip existing h_ch195
+  skip existing h_ch136
+  skip existing h_ch331
+  skip existing x_ch195
+  skip existing x_ch136
+  skip existing x_ch331
+  skip existing cos_h
+  skip existing norm_h
+  skip existing l2_h
+  skip existing h_CH
+  skip existing x_CH
+  skip existing h_CH_W0
+  skip existing x_CH_W0
+  skip existing h_CH_Wlast
+  skip existing x_CH_Wlast
+  skip existing scatter_ch_x
+  skip existing scatter_ch_h
+  skip existing scatter_h
+  skip existing scatter_ch_x_means
+  skip existing scatter_ch_h_means
+  skip existing scatter_h_means
+  skip existing scatter_ch_x.png
+  skip existing scatter_ch_h.png
+  skip existing scatter_h.png
+  skip existing scatter_ch_x_means.png
+  skip existing scatter_ch_h_means.png
+  skip existing scatter_h_means.png
+  skip existing spaghetti_x.png
+  skip existing spaghetti_h.png
+  skip existing spaghetti_x_means.png
+  skip existing spaghetti_h_means.png
+  skip existing scatter_h_traj_means.png
+  skip existing scatter_h_traj_50.png
+  skip existing spaghetti_x_50.png
+  skip existing spaghetti_h_50.png
+  writing feature_progress.png …
+  writing feature_recruitment.png …
+  writing feature_phase_density.png …
+done -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/convnext_R100_ES0.01_N500
+
+=== convnext_R100_ES0.01_N500_ignore1 ===
+  skip existing inputs.png
+  loaded mean_maps.pt (skip trajectory) D=900 ES=0.01 method=RK1
+channels=[136, 331, 45]
+  skip existing metrics/
+  skip existing h_ch136
+  skip existing h_ch331
+  skip existing h_ch045
+  skip existing x_ch136
+  skip existing x_ch331
+  skip existing x_ch045
+  skip existing cos_h
+  skip existing norm_h
+  skip existing l2_h
+  skip existing h_CH
+  skip existing x_CH
+  skip existing h_CH_W0
+  skip existing x_CH_W0
+  skip existing h_CH_Wlast
+  skip existing x_CH_Wlast
+  scatter_ch_x: ['scatter_ch_x.mp4']
+  scatter_ch_h: ['scatter_ch_h.mp4']
+  scatter_h: ['scatter_h.mp4']
+  scatter_ch_x_means: ['scatter_ch_x_means.mp4']
+  scatter_ch_h_means: ['scatter_ch_h_means.mp4']
+  scatter_h_means: ['scatter_h_means.mp4']
+  writing scatter_ch_x.png …
+  writing scatter_ch_h.png …
+  writing scatter_h.png …
+  writing scatter_ch_x_means.png …
+  writing scatter_ch_h_means.png …
+  writing scatter_h_means.png …
+  writing spaghetti_x.png …
+  writing spaghetti_h.png …
+  writing spaghetti_x_means.png …
+  writing spaghetti_h_means.png …
+  writing scatter_h_traj_means.png …
+  writing scatter_h_traj_50.png …
+  writing spaghetti_x_50.png …
+  writing spaghetti_h_50.png …
+  writing feature_progress.png …
+  writing feature_recruitment.png …
+  writing feature_phase_density.png …
+done -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/convnext_R100_ES0.01_N500_ignore1
+
+=== swin_R100_ES0.01_N500 ===
+  skip existing inputs.png
+swin schedule=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5] (D=600) euler_step=0.01 method=RK1 weight_interpolation=plain batch=8 n=500
+D=600 h=0.01 m=RK1:   0%|          | 0/63 [00:00<?, ?it/s]D=600 h=0.01 m=RK1:   2%|▏         | 1/63 [00:07<07:49,  7.57s/it]D=600 h=0.01 m=RK1:   3%|▎         | 2/63 [00:14<07:14,  7.12s/it]D=600 h=0.01 m=RK1:   5%|▍         | 3/63 [00:21<06:58,  6.98s/it]D=600 h=0.01 m=RK1:   6%|▋         | 4/63 [00:28<06:48,  6.93s/it]D=600 h=0.01 m=RK1:   8%|▊         | 5/63 [00:34<06:41,  6.92s/it]D=600 h=0.01 m=RK1:  10%|▉         | 6/63 [00:41<06:32,  6.89s/it]D=600 h=0.01 m=RK1:  11%|█         | 7/63 [00:48<06:25,  6.89s/it]D=600 h=0.01 m=RK1:  13%|█▎        | 8/63 [00:55<06:19,  6.90s/it]D=600 h=0.01 m=RK1:  14%|█▍        | 9/63 [01:02<06:12,  6.90s/it]D=600 h=0.01 m=RK1:  16%|█▌        | 10/63 [01:09<06:06,  6.91s/it]D=600 h=0.01 m=RK1:  17%|█▋        | 11/63 [01:16<05:59,  6.91s/it]D=600 h=0.01 m=RK1:  19%|█▉        | 12/63 [01:23<05:51,  6.90s/it]D=600 h=0.01 m=RK1:  21%|██        | 13/63 [01:30<05:44,  6.90s/it]D=600 h=0.01 m=RK1:  22%|██▏       | 14/63 [01:36<05:38,  6.90s/it]D=600 h=0.01 m=RK1:  24%|██▍       | 15/63 [01:43<05:30,  6.89s/it]D=600 h=0.01 m=RK1:  25%|██▌       | 16/63 [01:50<05:23,  6.88s/it]D=600 h=0.01 m=RK1:  27%|██▋       | 17/63 [01:57<05:15,  6.87s/it]D=600 h=0.01 m=RK1:  29%|██▊       | 18/63 [02:04<05:08,  6.86s/it]D=600 h=0.01 m=RK1:  30%|███       | 19/63 [02:11<05:02,  6.88s/it]D=600 h=0.01 m=RK1:  32%|███▏      | 20/63 [02:18<04:56,  6.89s/it]D=600 h=0.01 m=RK1:  33%|███▎      | 21/63 [02:25<04:49,  6.90s/it]D=600 h=0.01 m=RK1:  35%|███▍      | 22/63 [02:32<04:43,  6.90s/it]D=600 h=0.01 m=RK1:  37%|███▋      | 23/63 [02:38<04:35,  6.89s/it]D=600 h=0.01 m=RK1:  38%|███▊      | 24/63 [02:45<04:28,  6.88s/it]D=600 h=0.01 m=RK1:  40%|███▉      | 25/63 [02:52<04:21,  6.87s/it]D=600 h=0.01 m=RK1:  41%|████▏     | 26/63 [02:59<04:13,  6.86s/it]D=600 h=0.01 m=RK1:  43%|████▎     | 27/63 [03:06<04:08,  6.89s/it]D=600 h=0.01 m=RK1:  44%|████▍     | 28/63 [03:13<04:01,  6.90s/it]D=600 h=0.01 m=RK1:  46%|████▌     | 29/63 [03:20<03:55,  6.93s/it]D=600 h=0.01 m=RK1:  48%|████▊     | 30/63 [03:27<03:49,  6.95s/it]D=600 h=0.01 m=RK1:  49%|████▉     | 31/63 [03:34<03:42,  6.95s/it]D=600 h=0.01 m=RK1:  51%|█████     | 32/63 [03:41<03:35,  6.95s/it]D=600 h=0.01 m=RK1:  52%|█████▏    | 33/63 [03:48<03:28,  6.95s/it]D=600 h=0.01 m=RK1:  54%|█████▍    | 34/63 [03:55<03:21,  6.95s/it]D=600 h=0.01 m=RK1:  56%|█████▌    | 35/63 [04:02<03:14,  6.96s/it]D=600 h=0.01 m=RK1:  57%|█████▋    | 36/63 [04:09<03:08,  6.97s/it]D=600 h=0.01 m=RK1:  59%|█████▊    | 37/63 [04:16<03:00,  6.95s/it]D=600 h=0.01 m=RK1:  60%|██████    | 38/63 [04:22<02:53,  6.94s/it]D=600 h=0.01 m=RK1:  62%|██████▏   | 39/63 [04:29<02:46,  6.94s/it]D=600 h=0.01 m=RK1:  63%|██████▎   | 40/63 [04:36<02:39,  6.95s/it]D=600 h=0.01 m=RK1:  65%|██████▌   | 41/63 [04:43<02:32,  6.95s/it]D=600 h=0.01 m=RK1:  67%|██████▋   | 42/63 [04:50<02:26,  6.96s/it]D=600 h=0.01 m=RK1:  68%|██████▊   | 43/63 [04:57<02:19,  6.97s/it]D=600 h=0.01 m=RK1:  70%|██████▉   | 44/63 [05:04<02:12,  6.97s/it]D=600 h=0.01 m=RK1:  71%|███████▏  | 45/63 [05:11<02:05,  6.98s/it]D=600 h=0.01 m=RK1:  73%|███████▎  | 46/63 [05:18<01:58,  6.98s/it]D=600 h=0.01 m=RK1:  75%|███████▍  | 47/63 [05:25<01:51,  6.97s/it]D=600 h=0.01 m=RK1:  76%|███████▌  | 48/63 [05:32<01:44,  6.98s/it]D=600 h=0.01 m=RK1:  78%|███████▊  | 49/63 [05:39<01:37,  6.97s/it]D=600 h=0.01 m=RK1:  79%|███████▉  | 50/63 [05:46<01:30,  6.96s/it]D=600 h=0.01 m=RK1:  81%|████████  | 51/63 [05:53<01:23,  6.96s/it]D=600 h=0.01 m=RK1:  83%|████████▎ | 52/63 [06:00<01:16,  6.97s/it]D=600 h=0.01 m=RK1:  84%|████████▍ | 53/63 [06:07<01:09,  6.97s/it]D=600 h=0.01 m=RK1:  86%|████████▌ | 54/63 [06:14<01:02,  6.97s/it]D=600 h=0.01 m=RK1:  87%|████████▋ | 55/63 [06:21<00:55,  6.98s/it]D=600 h=0.01 m=RK1:  89%|████████▉ | 56/63 [06:28<00:49,  7.04s/it]D=600 h=0.01 m=RK1:  90%|█████████ | 57/63 [06:35<00:42,  7.08s/it]D=600 h=0.01 m=RK1:  92%|█████████▏| 58/63 [06:43<00:35,  7.13s/it]D=600 h=0.01 m=RK1:  94%|█████████▎| 59/63 [06:50<00:28,  7.17s/it]D=600 h=0.01 m=RK1:  95%|█████████▌| 60/63 [06:57<00:21,  7.21s/it]D=600 h=0.01 m=RK1:  97%|█████████▋| 61/63 [07:04<00:14,  7.20s/it]D=600 h=0.01 m=RK1:  98%|█████████▊| 62/63 [07:11<00:07,  7.19s/it]D=600 h=0.01 m=RK1: 100%|██████████| 63/63 [07:16<00:00,  6.29s/it]D=600 h=0.01 m=RK1: 100%|██████████| 63/63 [07:16<00:00,  6.92s/it]
+  accel decomposition [D=600 h=0.01 m=RK1]: v=midpoint eps=1e-06 | ||v||≈0: 0/300000, ||a||≈0: 0/300000, clamped a_n²<0: 0, max | ||a||²-a_t²-a_n² |/||a||² = 9.354e-16
+channels=[322, 183, 96]
+  skip existing metrics/
+  h_ch322: ['h_ch322.mp4']
+  h_ch183: ['h_ch183.mp4']
+  h_ch096: ['h_ch096.mp4']
+  x_ch322: ['x_ch322.mp4']
+  x_ch183: ['x_ch183.mp4']
+  x_ch096: ['x_ch096.mp4']
+  cos_h: ['cos_h.mp4']
+  norm_h: ['norm_h.mp4']
+  l2_h: ['l2_h.mp4']
+  h_CH: ['h_CH.mp4']
+  x_CH: ['x_CH.mp4']
+  h_CH_W0: ['h_CH_W0.mp4']
+  x_CH_W0: ['x_CH_W0.mp4']
+  h_CH_Wlast: ['h_CH_Wlast.mp4']
+  x_CH_Wlast: ['x_CH_Wlast.mp4']
+  scatter_ch_x: ['scatter_ch_x.mp4']
+  scatter_ch_h: ['scatter_ch_h.mp4']
+  scatter_h: ['scatter_h.mp4']
+  scatter_ch_x_means: ['scatter_ch_x_means.mp4']
+  scatter_ch_h_means: ['scatter_ch_h_means.mp4']
+  scatter_h_means: ['scatter_h_means.mp4']
+  writing scatter_ch_x.png …
+  writing scatter_ch_h.png …
+  writing scatter_h.png …
+  writing scatter_ch_x_means.png …
+  writing scatter_ch_h_means.png …
+  writing scatter_h_means.png …
+  writing spaghetti_x.png …
+  writing spaghetti_h.png …
+  writing spaghetti_x_means.png …
+  writing spaghetti_h_means.png …
+  writing scatter_h_traj_means.png …
+  writing scatter_h_traj_50.png …
+  writing spaghetti_x_50.png …
+  writing spaghetti_h_50.png …
+  writing feature_progress.png …
+  writing feature_recruitment.png …
+  writing feature_phase_density.png …
+done -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/swin_R100_ES0.01_N500
+
+=== swin_R100_ES0.01_N500_ignore1 ===
+  skip existing inputs.png
+swin schedule=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5] (D=600) euler_step=0.01 method=RK1 weight_interpolation=plain batch=8 n=500
+  ranking channels on cached unmasked sibling (mean_maps.pt)
+ignoring top-1 channels by ||h|| (WxH) in all metrics: [322]
+D=600 h=0.01 m=RK1:   0%|          | 0/63 [00:00<?, ?it/s]D=600 h=0.01 m=RK1:   2%|▏         | 1/63 [00:06<07:11,  6.96s/it]D=600 h=0.01 m=RK1:   3%|▎         | 2/63 [00:13<07:00,  6.90s/it]D=600 h=0.01 m=RK1:   5%|▍         | 3/63 [00:20<06:53,  6.90s/it]D=600 h=0.01 m=RK1:   6%|▋         | 4/63 [00:27<06:46,  6.90s/it]D=600 h=0.01 m=RK1:   8%|▊         | 5/63 [00:34<06:40,  6.91s/it]D=600 h=0.01 m=RK1:  10%|▉         | 6/63 [00:41<06:32,  6.88s/it]D=600 h=0.01 m=RK1:  11%|█         | 7/63 [00:48<06:25,  6.89s/it]D=600 h=0.01 m=RK1:  13%|█▎        | 8/63 [00:55<06:18,  6.88s/it]D=600 h=0.01 m=RK1:  14%|█▍        | 9/63 [01:02<06:11,  6.88s/it]D=600 h=0.01 m=RK1:  16%|█▌        | 10/63 [01:08<06:04,  6.88s/it]D=600 h=0.01 m=RK1:  17%|█▋        | 11/63 [01:15<05:57,  6.88s/it]D=600 h=0.01 m=RK1:  19%|█▉        | 12/63 [01:22<05:50,  6.87s/it]D=600 h=0.01 m=RK1:  21%|██        | 13/63 [01:29<05:44,  6.89s/it]D=600 h=0.01 m=RK1:  22%|██▏       | 14/63 [01:36<05:37,  6.89s/it]D=600 h=0.01 m=RK1:  24%|██▍       | 15/63 [01:43<05:30,  6.88s/it]D=600 h=0.01 m=RK1:  25%|██▌       | 16/63 [01:50<05:23,  6.88s/it]D=600 h=0.01 m=RK1:  27%|██▋       | 17/63 [01:57<05:16,  6.87s/it]D=600 h=0.01 m=RK1:  29%|██▊       | 18/63 [02:03<05:09,  6.87s/it]D=600 h=0.01 m=RK1:  30%|███       | 19/63 [02:10<05:02,  6.87s/it]D=600 h=0.01 m=RK1:  32%|███▏      | 20/63 [02:17<04:55,  6.87s/it]D=600 h=0.01 m=RK1:  33%|███▎      | 21/63 [02:24<04:50,  6.93s/it]D=600 h=0.01 m=RK1:  35%|███▍      | 22/63 [02:31<04:45,  6.97s/it]D=600 h=0.01 m=RK1:  37%|███▋      | 23/63 [02:38<04:39,  7.00s/it]D=600 h=0.01 m=RK1:  38%|███▊      | 24/63 [02:45<04:33,  7.01s/it]D=600 h=0.01 m=RK1:  40%|███▉      | 25/63 [02:53<04:28,  7.05s/it]D=600 h=0.01 m=RK1:  41%|████▏     | 26/63 [03:00<04:22,  7.10s/it]D=600 h=0.01 m=RK1:  43%|████▎     | 27/63 [03:07<04:17,  7.14s/it]D=600 h=0.01 m=RK1:  44%|████▍     | 28/63 [03:14<04:09,  7.12s/it]D=600 h=0.01 m=RK1:  46%|████▌     | 29/63 [03:21<04:00,  7.08s/it]D=600 h=0.01 m=RK1:  48%|████▊     | 30/63 [03:28<03:52,  7.05s/it]D=600 h=0.01 m=RK1:  49%|████▉     | 31/63 [03:35<03:46,  7.06s/it]D=600 h=0.01 m=RK1:  51%|█████     | 32/63 [03:42<03:38,  7.05s/it]D=600 h=0.01 m=RK1:  52%|█████▏    | 33/63 [03:49<03:31,  7.06s/it]D=600 h=0.01 m=RK1:  54%|█████▍    | 34/63 [03:56<03:24,  7.05s/it]D=600 h=0.01 m=RK1:  56%|█████▌    | 35/63 [04:03<03:17,  7.04s/it]D=600 h=0.01 m=RK1:  57%|█████▋    | 36/63 [04:10<03:09,  7.03s/it]D=600 h=0.01 m=RK1:  59%|█████▊    | 37/63 [04:17<03:02,  7.02s/it]D=600 h=0.01 m=RK1:  60%|██████    | 38/63 [04:24<02:55,  7.01s/it]D=600 h=0.01 m=RK1:  62%|██████▏   | 39/63 [04:31<02:47,  7.00s/it]D=600 h=0.01 m=RK1:  63%|██████▎   | 40/63 [04:38<02:40,  6.98s/it]D=600 h=0.01 m=RK1:  65%|██████▌   | 41/63 [04:45<02:33,  6.97s/it]D=600 h=0.01 m=RK1:  67%|██████▋   | 42/63 [04:52<02:26,  6.97s/it]D=600 h=0.01 m=RK1:  68%|██████▊   | 43/63 [04:59<02:19,  6.99s/it]D=600 h=0.01 m=RK1:  70%|██████▉   | 44/63 [05:06<02:12,  6.99s/it]D=600 h=0.01 m=RK1:  71%|███████▏  | 45/63 [05:13<02:05,  6.98s/it]D=600 h=0.01 m=RK1:  73%|███████▎  | 46/63 [05:20<01:58,  6.98s/it]D=600 h=0.01 m=RK1:  75%|███████▍  | 47/63 [05:27<01:51,  7.00s/it]D=600 h=0.01 m=RK1:  76%|███████▌  | 48/63 [05:34<01:45,  7.01s/it]D=600 h=0.01 m=RK1:  78%|███████▊  | 49/63 [05:41<01:38,  7.02s/it]D=600 h=0.01 m=RK1:  79%|███████▉  | 50/63 [05:48<01:31,  7.03s/it]D=600 h=0.01 m=RK1:  81%|████████  | 51/63 [05:55<01:24,  7.03s/it]D=600 h=0.01 m=RK1:  83%|████████▎ | 52/63 [06:02<01:16,  7.00s/it]D=600 h=0.01 m=RK1:  84%|████████▍ | 53/63 [06:09<01:09,  6.97s/it]D=600 h=0.01 m=RK1:  86%|████████▌ | 54/63 [06:16<01:02,  6.95s/it]D=600 h=0.01 m=RK1:  87%|████████▋ | 55/63 [06:23<00:55,  6.95s/it]D=600 h=0.01 m=RK1:  89%|████████▉ | 56/63 [06:30<00:48,  6.95s/it]D=600 h=0.01 m=RK1:  90%|█████████ | 57/63 [06:37<00:41,  6.94s/it]D=600 h=0.01 m=RK1:  92%|█████████▏| 58/63 [06:44<00:34,  6.97s/it]D=600 h=0.01 m=RK1:  94%|█████████▎| 59/63 [06:51<00:27,  6.96s/it]D=600 h=0.01 m=RK1:  95%|█████████▌| 60/63 [06:58<00:20,  6.95s/it]D=600 h=0.01 m=RK1:  97%|█████████▋| 61/63 [07:05<00:13,  6.94s/it]D=600 h=0.01 m=RK1:  98%|█████████▊| 62/63 [07:12<00:06,  6.95s/it]D=600 h=0.01 m=RK1: 100%|██████████| 63/63 [07:16<00:00,  6.06s/it]D=600 h=0.01 m=RK1: 100%|██████████| 63/63 [07:16<00:00,  6.92s/it]
+  accel decomposition [D=600 h=0.01 m=RK1]: v=midpoint eps=1e-06 | ||v||≈0: 0/300000, ||a||≈0: 0/300000, clamped a_n²<0: 0, max | ||a||²-a_t²-a_n² |/||a||² = 8.628e-16
+channels=[183, 96, 35]
+  skip existing metrics/
+  h_ch183: ['h_ch183.mp4']
+  h_ch096: ['h_ch096.mp4']
+  h_ch035: ['h_ch035.mp4']
+  x_ch183: ['x_ch183.mp4']
+  x_ch096: ['x_ch096.mp4']
+  x_ch035: ['x_ch035.mp4']
+  cos_h: ['cos_h.mp4']
+  norm_h: ['norm_h.mp4']
+  l2_h: ['l2_h.mp4']
+  h_CH: ['h_CH.mp4']
+  x_CH: ['x_CH.mp4']
+  h_CH_W0: ['h_CH_W0.mp4']
+  x_CH_W0: ['x_CH_W0.mp4']
+  h_CH_Wlast: ['h_CH_Wlast.mp4']
+  x_CH_Wlast: ['x_CH_Wlast.mp4']
+  scatter_ch_x: ['scatter_ch_x.mp4']
+  scatter_ch_h: ['scatter_ch_h.mp4']
+  scatter_h: ['scatter_h.mp4']
+  scatter_ch_x_means: ['scatter_ch_x_means.mp4']
+  scatter_ch_h_means: ['scatter_ch_h_means.mp4']
+  scatter_h_means: ['scatter_h_means.mp4']
+  writing scatter_ch_x.png …
+  writing scatter_ch_h.png …
+  writing scatter_h.png …
+  writing scatter_ch_x_means.png …
+  writing scatter_ch_h_means.png …
+  writing scatter_h_means.png …
+  writing spaghetti_x.png …
+  writing spaghetti_h.png …
+  writing spaghetti_x_means.png …
+  writing spaghetti_h_means.png …
+  writing scatter_h_traj_means.png …
+  writing scatter_h_traj_50.png …
+  writing spaghetti_x_50.png …
+  writing spaghetti_h_50.png …
+  writing feature_progress.png …
+  writing feature_recruitment.png …
+  writing feature_phase_density.png …
+done -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/swin_R100_ES0.01_N500_ignore1
+
+=== resnet50_R100_ES0.01_N500 ===
+  skip existing inputs.png
+resnet50 schedule=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4] (D=500) euler_step=0.01 method=RK1 weight_interpolation=plain batch=8 n=500
+D=500 h=0.01 m=RK1:   0%|          | 0/63 [00:00<?, ?it/s]D=500 h=0.01 m=RK1:   2%|▏         | 1/63 [00:12<12:27, 12.06s/it]D=500 h=0.01 m=RK1:   3%|▎         | 2/63 [00:23<12:06, 11.90s/it]D=500 h=0.01 m=RK1:   5%|▍         | 3/63 [00:35<11:50, 11.84s/it]D=500 h=0.01 m=RK1:   6%|▋         | 4/63 [00:47<11:35, 11.80s/it]D=500 h=0.01 m=RK1:   8%|▊         | 5/63 [00:59<11:22, 11.76s/it]D=500 h=0.01 m=RK1:  10%|▉         | 6/63 [01:10<11:07, 11.71s/it]D=500 h=0.01 m=RK1:  11%|█         | 7/63 [01:22<10:54, 11.68s/it]D=500 h=0.01 m=RK1:  13%|█▎        | 8/63 [01:33<10:40, 11.65s/it]D=500 h=0.01 m=RK1:  14%|█▍        | 9/63 [01:45<10:27, 11.63s/it]D=500 h=0.01 m=RK1:  16%|█▌        | 10/63 [01:57<10:15, 11.62s/it]D=500 h=0.01 m=RK1:  17%|█▋        | 11/63 [02:08<10:03, 11.61s/it]D=500 h=0.01 m=RK1:  19%|█▉        | 12/63 [02:20<09:52, 11.61s/it]D=500 h=0.01 m=RK1:  21%|██        | 13/63 [02:31<09:40, 11.61s/it]D=500 h=0.01 m=RK1:  22%|██▏       | 14/63 [02:43<09:30, 11.65s/it]D=500 h=0.01 m=RK1:  24%|██▍       | 15/63 [02:55<09:20, 11.67s/it]D=500 h=0.01 m=RK1:  25%|██▌       | 16/63 [03:07<09:09, 11.68s/it]D=500 h=0.01 m=RK1:  27%|██▋       | 17/63 [03:18<08:58, 11.70s/it]D=500 h=0.01 m=RK1:  29%|██▊       | 18/63 [03:30<08:47, 11.71s/it]D=500 h=0.01 m=RK1:  30%|███       | 19/63 [03:42<08:35, 11.72s/it]D=500 h=0.01 m=RK1:  32%|███▏      | 20/63 [03:53<08:24, 11.72s/it]D=500 h=0.01 m=RK1:  33%|███▎      | 21/63 [04:05<08:12, 11.72s/it]D=500 h=0.01 m=RK1:  35%|███▍      | 22/63 [04:17<08:00, 11.72s/it]D=500 h=0.01 m=RK1:  37%|███▋      | 23/63 [04:29<07:49, 11.73s/it]D=500 h=0.01 m=RK1:  38%|███▊      | 24/63 [04:40<07:37, 11.73s/it]D=500 h=0.01 m=RK1:  40%|███▉      | 25/63 [04:52<07:27, 11.78s/it]D=500 h=0.01 m=RK1:  41%|████▏     | 26/63 [05:04<07:16, 11.78s/it]D=500 h=0.01 m=RK1:  43%|████▎     | 27/63 [05:16<07:05, 11.81s/it]D=500 h=0.01 m=RK1:  44%|████▍     | 28/63 [05:28<06:52, 11.80s/it]D=500 h=0.01 m=RK1:  46%|████▌     | 29/63 [05:40<06:41, 11.82s/it]D=500 h=0.01 m=RK1:  48%|████▊     | 30/63 [05:51<06:29, 11.79s/it]D=500 h=0.01 m=RK1:  49%|████▉     | 31/63 [06:03<06:16, 11.77s/it]D=500 h=0.01 m=RK1:  51%|█████     | 32/63 [06:15<06:04, 11.76s/it]D=500 h=0.01 m=RK1:  52%|█████▏    | 33/63 [06:27<05:52, 11.75s/it]D=500 h=0.01 m=RK1:  54%|█████▍    | 34/63 [06:38<05:40, 11.74s/it]D=500 h=0.01 m=RK1:  56%|█████▌    | 35/63 [06:50<05:28, 11.73s/it]D=500 h=0.01 m=RK1:  57%|█████▋    | 36/63 [07:02<05:16, 11.74s/it]D=500 h=0.01 m=RK1:  59%|█████▊    | 37/63 [07:13<05:04, 11.73s/it]D=500 h=0.01 m=RK1:  60%|██████    | 38/63 [07:25<04:53, 11.73s/it]D=500 h=0.01 m=RK1:  62%|██████▏   | 39/63 [07:37<04:41, 11.73s/it]D=500 h=0.01 m=RK1:  63%|██████▎   | 40/63 [07:49<04:29, 11.73s/it]D=500 h=0.01 m=RK1:  65%|██████▌   | 41/63 [08:00<04:18, 11.73s/it]D=500 h=0.01 m=RK1:  67%|██████▋   | 42/63 [08:12<04:06, 11.73s/it]D=500 h=0.01 m=RK1:  68%|██████▊   | 43/63 [08:24<03:54, 11.73s/it]D=500 h=0.01 m=RK1:  70%|██████▉   | 44/63 [08:35<03:42, 11.72s/it]D=500 h=0.01 m=RK1:  71%|███████▏  | 45/63 [08:47<03:30, 11.72s/it]D=500 h=0.01 m=RK1:  73%|███████▎  | 46/63 [08:59<03:19, 11.73s/it]D=500 h=0.01 m=RK1:  75%|███████▍  | 47/63 [09:11<03:07, 11.74s/it]D=500 h=0.01 m=RK1:  76%|███████▌  | 48/63 [09:22<02:56, 11.74s/it]D=500 h=0.01 m=RK1:  78%|███████▊  | 49/63 [09:34<02:44, 11.75s/it]D=500 h=0.01 m=RK1:  79%|███████▉  | 50/63 [09:46<02:32, 11.74s/it]D=500 h=0.01 m=RK1:  81%|████████  | 51/63 [09:58<02:20, 11.72s/it]D=500 h=0.01 m=RK1:  83%|████████▎ | 52/63 [10:09<02:08, 11.72s/it]D=500 h=0.01 m=RK1:  84%|████████▍ | 53/63 [10:21<01:57, 11.73s/it]D=500 h=0.01 m=RK1:  86%|████████▌ | 54/63 [10:33<01:45, 11.73s/it]D=500 h=0.01 m=RK1:  87%|████████▋ | 55/63 [10:45<01:33, 11.74s/it]D=500 h=0.01 m=RK1:  89%|████████▉ | 56/63 [10:56<01:22, 11.77s/it]D=500 h=0.01 m=RK1:  90%|█████████ | 57/63 [11:08<01:10, 11.74s/it]D=500 h=0.01 m=RK1:  92%|█████████▏| 58/63 [11:20<00:58, 11.74s/it]D=500 h=0.01 m=RK1:  94%|█████████▎| 59/63 [11:32<00:46, 11.73s/it]D=500 h=0.01 m=RK1:  95%|█████████▌| 60/63 [11:43<00:35, 11.71s/it]D=500 h=0.01 m=RK1:  97%|█████████▋| 61/63 [11:55<00:23, 11.71s/it]D=500 h=0.01 m=RK1:  98%|█████████▊| 62/63 [12:07<00:11, 11.70s/it]D=500 h=0.01 m=RK1: 100%|██████████| 63/63 [12:12<00:00,  9.92s/it]D=500 h=0.01 m=RK1: 100%|██████████| 63/63 [12:12<00:00, 11.63s/it]
+  accel decomposition [D=500 h=0.01 m=RK1]: v=midpoint eps=1e-06 | ||v||≈0: 0/250000, ||a||≈0: 0/250000, clamped a_n²<0: 0, max | ||a||²-a_t²-a_n² |/||a||² = 7.899e-16
+channels=[831, 765, 780]
+  skip existing metrics/
+  h_ch831: ['h_ch831.mp4']
+  h_ch765: ['h_ch765.mp4']
+  h_ch780: ['h_ch780.mp4']
+  x_ch831: ['x_ch831.mp4']
+  x_ch765: ['x_ch765.mp4']
+  x_ch780: ['x_ch780.mp4']
+  cos_h: ['cos_h.mp4']
+  norm_h: ['norm_h.mp4']
+  l2_h: ['l2_h.mp4']
+  h_CH: ['h_CH.mp4']
+  x_CH: ['x_CH.mp4']
+  h_CH_W0: ['h_CH_W0.mp4']
+  x_CH_W0: ['x_CH_W0.mp4']
+  h_CH_Wlast: ['h_CH_Wlast.mp4']
+  x_CH_Wlast: ['x_CH_Wlast.mp4']
+  scatter_ch_x: ['scatter_ch_x.mp4']
+  scatter_ch_h: ['scatter_ch_h.mp4']
+  scatter_h: ['scatter_h.mp4']
+  scatter_ch_x_means: ['scatter_ch_x_means.mp4']
+  scatter_ch_h_means: ['scatter_ch_h_means.mp4']
+  scatter_h_means: ['scatter_h_means.mp4']
+  writing scatter_ch_x.png …
+  writing scatter_ch_h.png …
+  writing scatter_h.png …
+  writing scatter_ch_x_means.png …
+  writing scatter_ch_h_means.png …
+  writing scatter_h_means.png …
+  writing spaghetti_x.png …
+  writing spaghetti_h.png …
+  writing spaghetti_x_means.png …
+  writing spaghetti_h_means.png …
+  writing scatter_h_traj_means.png …
+  writing scatter_h_traj_50.png …
+  writing spaghetti_x_50.png …
+  writing spaghetti_h_50.png …
+  writing feature_progress.png …
+  writing feature_recruitment.png …
+  writing feature_phase_density.png …
+done -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/resnet50_R100_ES0.01_N500
+
+=== resnet101_R100_ES0.01_N500 ===
+  skip existing inputs.png
+resnet101 schedule=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21] (D=2200) euler_step=0.01 method=RK1 weight_interpolation=plain batch=8 n=500
+D=2200 h=0.01 m=RK1:   0%|          | 0/63 [00:00<?, ?it/s]

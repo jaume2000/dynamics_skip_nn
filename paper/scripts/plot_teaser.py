@@ -28,7 +28,7 @@ SHARED_BASELINE_DEPTH = 9.0  # R=1 ↔ D=9, so N = D / 9
 # Residual-field norms: N500 means + variance bands (same style as feature_map_explorer).
 NORM_REFINED = ROOT / "outputs/featureMaps_interpoled/convnext_R100_ES0.01_N500/table_norms.csv"
 NORM_UNIT = ROOT / "outputs/featureMaps_interpoled/convnext_R1_ES1_N500/table_norms.csv"
-NORM_SHARED_REFINED = ROOT / "outputs/featureMaps/convnext_shared_D100_ES0.09_N500/table_norms.csv"
+NORM_SHARED_REFINED = ROOT / "outputs/featureMaps/convnext_shared_D900_ES0.01_N500/table_norms.csv"
 NORM_SHARED_UNIT = ROOT / "outputs/featureMaps/convnext_shared_D9_ES1_N500/table_norms.csv"
 
 COLORS = {
@@ -270,8 +270,13 @@ def plot_teaser(out_path: Path = OUT) -> Path:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path, bbox_inches="tight", dpi=300)
     fig.savefig(out_path.with_suffix(".png"), bbox_inches="tight", dpi=300)
+    fig.canvas.draw()
+    right = ax_r.get_tightbbox(fig.canvas.get_renderer())
+    right = right.transformed(fig.dpi_scale_trans.inverted()).padded(0.05)
+    speed_path = out_path.with_name("teaser_speed.png")
+    fig.savefig(speed_path, bbox_inches=right, dpi=300)
     plt.close(fig)
-    print(f"Saved {out_path}")
+    print(f"Saved {out_path} and {speed_path}")
     return out_path
 
 

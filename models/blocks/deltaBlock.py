@@ -14,6 +14,9 @@ class DeltaConvnextBlock(nn.Module):
         object.__setattr__(self, "_shared", sharedBlock)
         self.useDeltas = useDeltas
         self.eulerStep = eulerStep
+        # Scales every delta in forward: W + coeff * δ. 1 is the trained model;
+        # 0 is shared-only. Not a Parameter — the train script sets it per epoch.
+        self.delta_coeff = 1.0
         if useDeltas:
             dw, ln, pw1, _, pw2, ls = sharedBlock
             z = lambda t: nn.Parameter(torch.zeros_like(t))
@@ -152,40 +155,41 @@ class DeltaConvnextBlock(nn.Module):
         dw, ln, pw1, _, pw2, ls = self._shared
         weights = dw.weight
         biases = dw.bias
-        if self.useDeltas and self.has_deltas():
-            weights = weights + self.dwWDelta
-            biases = biases + self.dwBDelta
+        c = self.delta_coeff if (self.useDeltas and self.has_deltas()) else 0.0
+        if c:
+            weights = weights + c * self.dwWDelta
+            biases = biases + c * self.dwBDelta
         h = F.conv2d(x, weights, biases, padding=dw.padding, groups=dw.groups)
 
         h = h.permute(0, 2, 3, 1)
 
         weights = ln.weight
         biases = ln.bias
-        if self.useDeltas and self.has_deltas():
-            weights = weights + self.lnWDelta
-            biases = biases + self.lnBDelta
+        if c:
+            weights = weights + c * self.lnWDelta
+            biases = biases + c * self.lnBDelta
         h = F.layer_norm(h, ln.normalized_shape, weights, biases, ln.eps)
         h = h.permute(0, 3, 1, 2)
 
         weights = pw1.weight
         biases = pw1.bias
-        if self.useDeltas and self.has_deltas():
-            weights = weights + self.pw1WDelta
-            biases = biases + self.pw1BDelta
+        if c:
+            weights = weights + c * self.pw1WDelta
+            biases = biases + c * self.pw1BDelta
         h = F.conv2d(h, weights, biases)
 
         h = F.gelu(h)                                    # una sola vez
 
         weights = pw2.weight
         biases = pw2.bias
-        if self.useDeltas and self.has_deltas():
-            weights = weights + self.pw2WDelta
-            biases = biases + self.pw2BDelta
+        if c:
+            weights = weights + c * self.pw2WDelta
+            biases = biases + c * self.pw2BDelta
         h = F.conv2d(h, weights, biases)
 
         gamma = ls.gamma
-        if self.useDeltas and self.has_deltas():
-            gamma = gamma + self.lsDelta
+        if c:
+            gamma = gamma + c * self.lsDelta
         h = h * gamma.view(1, -1, 1, 1)
         return x + self.stochasticDepth(h) * self.eulerStep
 

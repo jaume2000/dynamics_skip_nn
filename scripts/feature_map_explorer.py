@@ -8,6 +8,8 @@ Default (``BACKBONE = "interpoled"``): all probes in one job —
 
 ``BACKBONE = "random_init"`` keeps only the six random-weight probes.
 ``BACKBONE = "shared"`` keeps the pretrained shared-only sweep.
+``BACKBONE = "delta"`` (or ``FEATURE_MAP_BACKBONE=delta``) runs the four
+trained delta ConvNeXt checkpoints at R1 and R100.
 
 Submit:
   source .env && sbatch --account="$SLURM_ACCOUNT" jobs/feature_map_explorer.sh
@@ -23,6 +25,8 @@ Or locally:
   python scripts/feature_map_explorer.py --only convnext_shared_baseline_D9_ES1_c289_n1
   python scripts/feature_map_explorer.py --force   # overwrite existing figures / recompute
   python scripts/feature_map_explorer.py --metrics-only  # refresh metrics/ (re-integrate if needed)
+  python scripts/feature_map_explorer.py --static-only   # static figures only, no videos
+  python scripts/feature_map_explorer.py --suite n500 --visuals --only convnext_R100_ES0.01_N500
 """
 
 from __future__ import annotations
@@ -62,6 +66,7 @@ from models.backbones.interpoled_resnet import InterpoledResNet50, InterpoledRes
 from models.backbones.interpoled_swin import InterpoledSwinT
 from models.backbones.rk_integrate import bilinear_time_steps, call_lerped
 from models.blocks.layerScale import LayerScale
+from scripts.trajectory_views import save_trajectory_views
 from utils.env import load_dotenv
 
 load_dotenv(_REPO_ROOT / ".env")
@@ -86,7 +91,8 @@ def _feature_map_root() -> Path:
 # "interpoled"   = random-init six + pretrained shared + interpoled sweeps (default)
 # "random_init"  = only the six random-weight probes
 # "shared"       = only pretrained DeltaConvNext shared residual × D
-BACKBONE = "interpoled"  # "interpoled" | "random_init" | "shared"
+# Override with FEATURE_MAP_BACKBONE=delta for the four delta ConvNeXt runs.
+BACKBONE = os.environ.get("FEATURE_MAP_BACKBONE", "interpoled")  # interpoled | random_init | shared | delta
 RANDOM_INIT_SEED = 0
 # Override LayerScale gamma after random init (recipe default is 1e-6).
 RANDOM_INIT_LAYERSCALE = 1.0
@@ -110,6 +116,15 @@ INTERPOLED_CONVNEXT_CHECKPOINT = (
 INTERPOLED_CONVNEXT_DROPPATH0_CHECKPOINT = (
     _REPO_ROOT / "outputs" / "convnextv1_imagenet_droppath0" / "weights" / "last.pth"
 )
+DELTA_CHECKPOINTS = {
+    "delta_d9_lowlr": _REPO_ROOT / "outputs" / "delta_from_D9_lr1e-5_e100" / "weights" / "last.pth",
+    "delta_d9_ramp": _REPO_ROOT / "outputs" / "delta_from_D9_ramp0to1_e80" / "weights" / "last.pth",
+    "delta_scratch_ramp": (
+        _REPO_ROOT / "outputs" / "delta_scratch_ramp150to250_e300" / "weights" / "last.pth"
+    ),
+    "delta_scratch_full": _REPO_ROOT / "outputs" / "delta_scratch_full_e300" / "weights" / "last.pth",
+}
+_DELTA_MODEL_KEYS = tuple(DELTA_CHECKPOINTS)
 _FEATURE_MAP_ROOT = _feature_map_root()
 OUT_DIR_SHARED = _FEATURE_MAP_ROOT / "featureMaps"
 OUT_DIR_INTERPOLED = _FEATURE_MAP_ROOT / "featureMaps_interpoled"
@@ -128,17 +143,17 @@ RUNS_SHARED: list[dict] = [
     # Baseline D=9 ES=1 ± ignore (Euler).
     {"name": "convnext_shared_baseline_D9_ES1_c289_n1", "D": 9, "euler_step": 1.0, "fps": 1, "ignore_top_k_channels": 0, "method": None, **_SHARED},
     {"name": "convnext_shared_baseline_D9_ES1_c289_n1_ignore1", "D": 9, "euler_step": 1.0, "fps": 1, "ignore_top_k_channels": 1, "method": None, **_SHARED},
-    # Refined / large-step Euler. Refined uses ES=9/D so T=D·ES=9 matches train (D=9, ES=1).
-    {"name": "convnext_shared_D100_ES0.09_c289_n1", "D": 100, "euler_step": 9 / 100, "fps": 80, "ignore_top_k_channels": 0, "method": None, **_SHARED},
-    {"name": "convnext_shared_D100_ES0.09_c289_n1_ignore1", "D": 100, "euler_step": 9 / 100, "fps": 80, "ignore_top_k_channels": 1, "method": None, **_SHARED},
+    # Refined Euler at the same step as interpoled R100 (D=900, ES=0.01, T=9).
+    {"name": "convnext_shared_D900_ES0.01_c289_n1", "D": 900, "euler_step": 0.01, "fps": 80, "ignore_top_k_channels": 0, "method": None, **_SHARED},
+    {"name": "convnext_shared_D900_ES0.01_c289_n1_ignore1", "D": 900, "euler_step": 0.01, "fps": 80, "ignore_top_k_channels": 1, "method": None, **_SHARED},
     # Horizon ×10 / ×100 of train (T=90 / T=900), mirroring interpoled R100 ES0.1 / ES1.
-    {"name": "convnext_shared_D100_ES0.9_c289_n1", "D": 100, "euler_step": 9 / 10, "fps": 80, "ignore_top_k_channels": 0, "method": None, **_SHARED},
-    {"name": "convnext_shared_D100_ES0.9_c289_n1_ignore1", "D": 100, "euler_step": 9 / 10, "fps": 80, "ignore_top_k_channels": 1, "method": None, **_SHARED},
-    {"name": "convnext_shared_D100_ES9_c289_n1", "D": 100, "euler_step": 9.0, "fps": 80, "ignore_top_k_channels": 0, "method": None, **_SHARED},
-    {"name": "convnext_shared_D100_ES9_c289_n1_ignore1", "D": 100, "euler_step": 9.0, "fps": 80, "ignore_top_k_channels": 1, "method": None, **_SHARED},
-    # RK4 probe at horizon-preserving refined step (vs Euler D100 ES=9/100).
-    {"name": "convnext_shared_D100_ES0.09_RK4_c289_n1", "D": 100, "euler_step": 9 / 100, "fps": 80, "ignore_top_k_channels": 0, "method": "RK4", **_SHARED},
-    {"name": "convnext_shared_D100_ES0.09_RK4_c289_n1_ignore1", "D": 100, "euler_step": 9 / 100, "fps": 80, "ignore_top_k_channels": 1, "method": "RK4", **_SHARED},
+    {"name": "convnext_shared_D900_ES0.1_c289_n1", "D": 900, "euler_step": 0.1, "fps": 80, "ignore_top_k_channels": 0, "method": None, **_SHARED},
+    {"name": "convnext_shared_D900_ES0.1_c289_n1_ignore1", "D": 900, "euler_step": 0.1, "fps": 80, "ignore_top_k_channels": 1, "method": None, **_SHARED},
+    {"name": "convnext_shared_D900_ES1_c289_n1", "D": 900, "euler_step": 1.0, "fps": 80, "ignore_top_k_channels": 0, "method": None, **_SHARED},
+    {"name": "convnext_shared_D900_ES1_c289_n1_ignore1", "D": 900, "euler_step": 1.0, "fps": 80, "ignore_top_k_channels": 1, "method": None, **_SHARED},
+    # RK4 probe at the refined step (vs Euler D900 ES=0.01).
+    {"name": "convnext_shared_D900_ES0.01_RK4_c289_n1", "D": 900, "euler_step": 0.01, "fps": 80, "ignore_top_k_channels": 0, "method": "RK4", **_SHARED},
+    {"name": "convnext_shared_D900_ES0.01_RK4_c289_n1_ignore1", "D": 900, "euler_step": 0.01, "fps": 80, "ignore_top_k_channels": 1, "method": "RK4", **_SHARED},
 ]
 
 # Interpoled: plain θ first (swin → … → convnext), then bilinear, then RK4.
@@ -219,7 +234,27 @@ INTERPOLED_MODEL_KEYS = (
     "resnet50",
     "resnet101",
     "swin",
+    *_DELTA_MODEL_KEYS,
 )
+
+_DELTA_FM_SPECS: list[tuple[str, dict]] = [
+    ("baseline_R1_ES1_c289_n1", {"repeats": 1, "euler_step": 1.0, "fps": 1, "ignore_top_k_channels": 0}),
+    ("baseline_R1_ES1_c289_n1_ignore1", {"repeats": 1, "euler_step": 1.0, "fps": 1, "ignore_top_k_channels": 1}),
+    ("R100_ES0.01_c289_n1", {"repeats": 100, "euler_step": 0.01, "fps": 80, "ignore_top_k_channels": 0}),
+    ("R100_ES0.01_c289_n1_ignore1", {"repeats": 100, "euler_step": 0.01, "fps": 80, "ignore_top_k_channels": 1}),
+]
+RUNS_DELTA: list[dict] = [
+    {
+        "model": model,
+        "name": f"{model}_{suffix}",
+        "class_id": 289,
+        "max_images": 1,
+        "batch_size": 1,
+        **kw,
+    }
+    for model in _DELTA_MODEL_KEYS
+    for suffix, kw in _DELTA_FM_SPECS
+]
 _CONVNEXT_KEYS = ("convnext", "convnext_rand", "convnext_droppath0")
 _SHARED_MODEL_KEY = "convnext_shared"
 _SHARED_RAND_MODEL_KEY = "convnext_shared_rand"
@@ -369,20 +404,22 @@ RUNS_N500 += _n500_runs("A", "convnext_shared", "D9_ES1", ignore=True, D=9, eule
 for _m in ("convnext", "convnext_droppath0", "swin", "resnet50", "resnet101"):
     RUNS_N500 += _n500_runs("A", _m, "R1_ES1", ignore=_m in _N500_MASSIVE, repeats=1, euler_step=1.0)
 # B. Fine Euler at the trained horizon (shared T=9; interpoled ES·R = 1 per block).
-RUNS_N500 += _n500_runs("B", "convnext_shared", "D100_ES0.09", ignore=True, D=100, euler_step=9 / 100)
+RUNS_N500 += _n500_runs("B", "convnext_shared", "D900_ES0.01", ignore=True, D=900, euler_step=9 / 900)
 for _m in ("convnext", "convnext_droppath0", "swin", "resnet50", "resnet101"):
     RUNS_N500 += _n500_runs(
         "B", _m, "R100_ES0.01", ignore=_m in _N500_MASSIVE, repeats=100, euler_step=0.01
     )
 # C. Integrator / weight-interpolation controls on the fine schedule.
 RUNS_N500 += _n500_runs(
-    "C", "convnext_shared", "D100_ES0.09_RK4", ignore=True, D=100, euler_step=9 / 100, method="RK4"
+    "C", "convnext_shared", "D900_ES0.01_RK4", ignore=True, D=900, euler_step=9 / 900, method="RK4"
 )
 for _m in ("convnext", "convnext_droppath0"):
     RUNS_N500 += _n500_runs(
         "C", _m, "R100_ES0.01_bilinear", ignore=True, repeats=100, euler_step=0.01,
         weight_interpolation="bilinear",
     )
+# D. Beyond the trained horizon: same 900 steps at the training step size (T = 900).
+RUNS_N500 += _n500_runs("D", "convnext_shared", "D900_ES1", ignore=True, D=900, euler_step=1.0)
 
 if BACKBONE == "random_init":
     OUT_DIR = OUT_DIR_INTERPOLED
@@ -398,9 +435,12 @@ elif BACKBONE == "interpoled":
         + list(RUNS_RANDOM_INIT)
         + build_shared_runs(RUNS_SHARED)
     )
+elif BACKBONE == "delta":
+    OUT_DIR = OUT_DIR_INTERPOLED
+    RUNS = list(RUNS_DELTA)
 else:
     raise ValueError(
-        f"Unknown BACKBONE={BACKBONE!r}; use 'interpoled', 'random_init', or 'shared'"
+        f"Unknown BACKBONE={BACKBONE!r}; use 'interpoled', 'random_init', 'shared', or 'delta'"
     )
 
 CHANNELS: list[int] | None = None
@@ -455,6 +495,13 @@ SCATTER_ANIM_CMAP = "turbo"
 # Spaghetti: trajectories d ↦ value for a fixed feature sample (colour = channel).
 SPAGHETTI_MAX_LINES = 200
 SPAGHETTI_SEED = 0
+# Sparse spaghetti / phase trajectories: this many features, each on a distinct channel.
+SPARSE_FEATURES = 50
+# Phase trajectories: line colour = channel, blended towards black along depth;
+# at the last depth it is this fraction black.
+PHASE_DARKEN = 0.5
+# --static-only: write static figures, skip videos / grids.
+STATIC_ONLY = False
 # Delete PNG frame dirs after the video is written (saves a lot of disk).
 KEEP_FRAMES = True
 MEAN_MAPS_NAME = "mean_maps.pt"
@@ -646,6 +693,22 @@ def load_shared_convnext(checkpoint: Path | None = None) -> DeltaConvNext:
     return model
 
 
+def load_delta_trained(checkpoint: Path) -> DeltaConvNext:
+    """Trained DeltaConvNext (shared + per-block δ, coefficient 1)."""
+    model = DeltaConvNext(useDeltas=True)
+    model.rewire()
+    model.set_delta_coeff(1.0)
+    ckpt = torch.load(checkpoint, map_location="cpu", weights_only=False)
+    state_dict = ckpt["model"] if isinstance(ckpt, dict) and "model" in ckpt else ckpt
+    missing, unexpected = model.load_state_dict(state_dict, strict=False)
+    stale = [k for k in missing if not k.startswith("tail.")]
+    if stale or unexpected:
+        raise RuntimeError(f"missing={stale} unexpected={unexpected}")
+    epoch = ckpt.get("epoch") if isinstance(ckpt, dict) else None
+    print(f"Loaded delta {checkpoint}" + (f" (epoch {epoch})" if epoch is not None else ""))
+    return model
+
+
 def load_interpoled_convnext(
     checkpoint: Path | None = None,
     *,
@@ -706,6 +769,11 @@ def load_interpoled_model(model_key: str, *, random_init: bool = False) -> nn.Mo
         return load_shared_convnext(SHARED_CHECKPOINT)
     if model_key == _SHARED_RAND_MODEL_KEY:
         return load_shared_convnext(None)
+    if model_key in _DELTA_MODEL_KEYS:
+        ckpt = DELTA_CHECKPOINTS[model_key]
+        if not ckpt.is_file():
+            raise FileNotFoundError(f"Delta ConvNeXt checkpoint not found: {ckpt}")
+        return load_delta_trained(ckpt)
     if model_key == "convnext":
         if random_init:
             return load_interpoled_convnext(None)
@@ -783,6 +851,8 @@ class _LerpedNHWCAsNCHW(nn.Module):
 
 
 def stage3_n_blocks(model_key: str, model: nn.Module) -> int:
+    if model_key in _DELTA_MODEL_KEYS:
+        return int(model.stage3_length)
     if model_key in _CONVNEXT_KEYS:
         return int(model.depths[2])
     if model_key in ("resnet50", "resnet101"):
@@ -795,6 +865,8 @@ def stage3_n_blocks(model_key: str, model: nn.Module) -> int:
 def stage3_raw_blocks(model_key: str, model: nn.Module) -> list[nn.Module]:
     """Native stage-3 residual modules (indices 0..n_blocks-1), NHWC for Swin."""
     n = stage3_n_blocks(model_key, model)
+    if model_key in _DELTA_MODEL_KEYS:
+        return [model.deltifiedStage3[i] for i in range(n)]
     if model_key in _CONVNEXT_KEYS:
         return [model.stage3[i] for i in range(n)]
     if model_key in ("resnet50", "resnet101"):
@@ -807,6 +879,8 @@ def stage3_raw_blocks(model_key: str, model: nn.Module) -> list[nn.Module]:
 
 def enter_stage3(model_key: str, model: nn.Module, batch: torch.Tensor) -> torch.Tensor:
     """Map images → stage-3 feature state in NCHW."""
+    if model_key in _DELTA_MODEL_KEYS:
+        return model._stage(2)(model._stage(1)(model.stem(batch)))
     if model_key in _CONVNEXT_KEYS:
         return model.stage2(model.stage1(model.stem(batch)))
     if model_key in ("resnet50", "resnet101"):
@@ -3003,8 +3077,12 @@ def spaghetti_trajectories(
     max_lines: int = SPAGHETTI_MAX_LINES,
     seed: int = SPAGHETTI_SEED,
     channel: int | None = SCATTER_CHANNEL,
+    feature_idx: torch.Tensor | None = None,
 ) -> None:
-    """Plot d ↦ value trajectories for a fixed random feature sample (colour = channel)."""
+    """Plot d ↦ value trajectories for a fixed feature sample (colour = channel).
+
+    ``feature_idx``: flat (C·H·W) indices to plot instead of a random sample.
+    """
     assert maps.ndim == 4
     n, n_c, n_h, n_w = maps.shape
     if channel is not None:
@@ -3014,7 +3092,10 @@ def spaghetti_trajectories(
         n_c = 1
     flat = maps.reshape(n, -1)
     spatial = n_h * n_w
-    idx = _sample_feature_indices(flat.shape[1], max_lines, seed)
+    if feature_idx is not None:
+        idx = feature_idx
+    else:
+        idx = _sample_feature_indices(flat.shape[1], max_lines, seed)
     ch = (idx // spatial).numpy()
     ys = flat[:, idx].numpy()  # [T, N]
     t = np.arange(n, dtype=np.float64) * float(euler_step)
@@ -3023,8 +3104,9 @@ def spaghetti_trajectories(
 
     fig, ax = plt.subplots(figsize=(8.0, 5.0), layout="constrained")
     ax.axhline(0.0, color="0.85", lw=1, zorder=0)
+    alpha = 0.85 if ys.shape[1] <= SPARSE_FEATURES else 0.35
     for i in range(ys.shape[1]):
-        ax.plot(t, ys[:, i], color=colors[i], alpha=0.35, lw=0.9, solid_capstyle="round")
+        ax.plot(t, ys[:, i], color=colors[i], alpha=alpha, lw=0.9, solid_capstyle="round")
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=0, vmax=max(n_c - 1, 1)))
     sm.set_array([])
     fig.colorbar(sm, ax=ax, fraction=0.046, pad=0.04, label="channel")
@@ -3073,6 +3155,121 @@ def spaghetti_trajectories_means(
     ax.grid(alpha=0.3)
     fig.savefig(path, dpi=140)
     plt.close(fig)
+
+
+def spread_feature_indices(
+    shape: tuple[int, int, int],
+    k: int = SPARSE_FEATURES,
+    *,
+    seed: int = SPAGHETTI_SEED,
+    skip_channels: list[int] | None = None,
+) -> torch.Tensor:
+    """``k`` flat (C·H·W) indices on ``k`` distinct random channels, one random H×W cell each."""
+    n_c, n_h, n_w = shape
+    skip = set(skip_channels or [])
+    pool = np.array([c for c in range(n_c) if c not in skip])
+    rng = np.random.default_rng(seed)
+    chans = np.sort(rng.choice(pool, size=min(k, len(pool)), replace=False))
+    cells = rng.integers(0, n_h * n_w, size=len(chans))
+    return torch.from_numpy(chans * (n_h * n_w) + cells)
+
+
+def phase_trajectories(
+    xs: np.ndarray,
+    ys: np.ndarray,
+    channels: np.ndarray,
+    n_channels: int,
+    *,
+    euler_step: float,
+    title: str,
+    path: Path,
+    xlabel: str,
+    ylabel: str,
+) -> None:
+    """Phase-plane trajectories t ↦ (x(t), h(t)), one line per column of ``xs`` / ``ys``.
+
+    Hue = channel (``SCATTER_ANIM_CMAP``); each line darkens with depth until it is
+    ``PHASE_DARKEN`` black at the last step, so direction and time read off the colour.
+    """
+    from matplotlib.collections import LineCollection
+    from matplotlib.colors import LinearSegmentedColormap, ListedColormap
+
+    n_t, n_lines = xs.shape
+    # Drop the already-dark ends of the colormap so the depth darkening stays visible.
+    cmap = ListedColormap(plt.get_cmap(SCATTER_ANIM_CMAP)(np.linspace(0.1, 0.9, 256)))
+    base = cmap(channels / max(n_channels - 1, 1))[:, :3]  # [L, 3]
+    shade = 1.0 - PHASE_DARKEN * np.linspace(0.0, 1.0, max(n_t - 1, 1))  # [T-1]
+    pts = np.stack([xs, ys], axis=-1)  # [T, L, 2]
+    segs = np.stack([pts[:-1], pts[1:]], axis=2)  # [T-1, L, 2, 2]
+    seg_rgb = shade[:, None, None] * base[None, :, :]  # [T-1, L, 3]
+    finite = np.isfinite(segs).all(axis=(2, 3))
+
+    fig, ax = plt.subplots(figsize=(7.5, 6.0), layout="constrained")
+    ax.axhline(0.0, color="0.85", lw=1, zorder=0)
+    ax.axvline(0.0, color="0.85", lw=1, zorder=0)
+    lw = 1.0 if n_lines <= SPARSE_FEATURES else 0.6
+    ax.add_collection(
+        LineCollection(segs[finite], colors=seg_rgb[finite], linewidths=lw, alpha=0.9, capstyle="round")
+    )
+    ax.scatter(xs[0], ys[0], s=10, facecolors="none", edgecolors=base, linewidths=0.8, zorder=4)
+    ax.scatter(xs[-1], ys[-1], s=10, color=(1.0 - PHASE_DARKEN) * base, zorder=4)
+    ax.set_xlim(*_padded_finite_limits(torch.from_numpy(xs)))
+    ax.set_ylim(*_padded_finite_limits(torch.from_numpy(ys)))
+
+    sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=0, vmax=max(n_channels - 1, 1)))
+    sm.set_array([])
+    fig.colorbar(sm, ax=ax, fraction=0.046, pad=0.02, label="channel")
+    lo = 1.0 - PHASE_DARKEN
+    shade_cmap = LinearSegmentedColormap.from_list("depth_shade", [(1, 1, 1), (lo, lo, lo)])
+    t_end = (n_t - 1) * float(euler_step)
+    sm_t = plt.cm.ScalarMappable(cmap=shade_cmap, norm=plt.Normalize(vmin=0, vmax=t_end))
+    sm_t.set_array([])
+    fig.colorbar(sm_t, ax=ax, fraction=0.046, pad=0.02, label="t = d · ES (darker = later)")
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.set_title(f"{title}\n({n_lines} trajectories; ○ start, ● end)")
+    ax.grid(alpha=0.3)
+    fig.savefig(path, dpi=160)
+    plt.close(fig)
+
+
+def phase_trajectories_means(res: dict, *, path: Path) -> None:
+    """(mean_{H,W} x_c, mean_{H,W} h_c) along depth, one trajectory per channel."""
+    skip = set(res.get("ignored_channels") or [])
+    mx = _channel_spatial_means(res["mean_x"])
+    mh = _channel_spatial_means(res["mean_h"])
+    n_c = mx.shape[1]
+    keep = np.array([c for c in range(n_c) if c not in skip])
+    phase_trajectories(
+        mx[:, keep].numpy(),
+        mh[:, keep].numpy(),
+        keep,
+        n_c,
+        euler_step=res["euler_step"],
+        title=f"{res['name']}\nphase portrait of channel means",
+        path=path,
+        xlabel=r"$\mathrm{mean}_{H,W}(x_d)$",
+        ylabel=r"$\mathrm{mean}_{H,W}(h_d)$",
+    )
+
+
+def phase_trajectories_features(res: dict, *, path: Path, idx: torch.Tensor) -> None:
+    """(x_d, h_d) along depth for the features ``idx`` (flat C·H·W)."""
+    n = res["mean_x"].shape[0]
+    n_c, n_h, n_w = res["mean_x"].shape[1:]
+    fx = res["mean_x"].reshape(n, -1)[:, idx].numpy()
+    fh = res["mean_h"].reshape(n, -1)[:, idx].numpy()
+    phase_trajectories(
+        fx,
+        fh,
+        (idx // (n_h * n_w)).numpy(),
+        n_c,
+        euler_step=res["euler_step"],
+        title=f"{res['name']}\nphase portrait of {len(idx)} features (distinct channels)",
+        path=path,
+        xlabel="x_d",
+        ylabel=r"$h_d\ (=\Delta x_d/\mathrm{ES})$",
+    )
 
 
 def scatter_vs_channel(
@@ -3529,7 +3726,8 @@ def write_videos(res: dict, channels: list[int], run_dir: Path) -> None:
 def save_visuals(res: dict, channels: list[int], run_dir: Path) -> None:
     """Videos / grids (``VIDEO_MAPS``) + static scatters and spaghetti for one run."""
     name = res["name"]
-    write_videos(res, channels, run_dir)
+    if not STATIC_ONLY:
+        write_videos(res, channels, run_dir)
 
     # Static overlays (always). Animations are gated by VIDEO_MAPS via write_videos.
     write_static(
@@ -3625,6 +3823,53 @@ def save_visuals(res: dict, channels: list[int], run_dir: Path) -> None:
             euler_step=res["euler_step"],
             channel=SCATTER_CHANNEL,
         ),
+    )
+
+    # Sparse set: SPARSE_FEATURES features on distinct channels (ignored channels excluded).
+    sparse_idx = spread_feature_indices(
+        tuple(res["mean_x"].shape[1:]), skip_channels=res.get("ignored_channels")
+    )
+    k = len(sparse_idx)
+    write_static(
+        run_dir / "scatter_h_traj_means.png",
+        lambda: phase_trajectories_means(res, path=run_dir / "scatter_h_traj_means.png"),
+    )
+    write_static(
+        run_dir / f"scatter_h_traj_{k}.png",
+        lambda: phase_trajectories_features(
+            res, path=run_dir / f"scatter_h_traj_{k}.png", idx=sparse_idx
+        ),
+    )
+    for var, maps, ylabel in (
+        ("x", res["mean_x"], "x_d"),
+        ("h", res["mean_h"], r"$h_d\ (=\Delta x_d/\mathrm{ES})$"),
+    ):
+        out = run_dir / f"spaghetti_{var}_{k}.png"
+        write_static(
+            out,
+            lambda maps=maps, out=out, var=var, ylabel=ylabel: spaghetti_trajectories(
+                maps,
+                title=f"{name} | spaghetti {var}_d(t), {k} features on distinct channels",
+                path=out,
+                ylabel=ylabel,
+                euler_step=res["euler_step"],
+                channel=None,
+                feature_idx=sparse_idx,
+            ),
+        )
+
+    schedule = res.get("blocks") or []
+    es = float(res["euler_step"])
+    bounds = [(d + 1) * es for d in range(len(schedule) - 1) if schedule[d] != schedule[d + 1]]
+    save_trajectory_views(
+        res["mean_x"],
+        res["mean_h"],
+        run_dir,
+        euler_step=es,
+        ignored_channels=res.get("ignored_channels"),
+        title=name,
+        block_bounds=bounds,
+        write=write_static,
     )
 
 
@@ -3869,6 +4114,16 @@ def parse_args() -> argparse.Namespace:
     )
     p.add_argument("--keep-frames", action="store_true", help="Keep PNG frame directories")
     p.add_argument(
+        "--visuals",
+        action="store_true",
+        help="With --suite n500: also write videos / static figures (reuses mean_maps.pt)",
+    )
+    p.add_argument(
+        "--static-only",
+        action="store_true",
+        help="Write static figures (scatters, spaghetti, phase trajectories) but no videos",
+    )
+    p.add_argument(
         "--suite",
         choices=("default", "n500"),
         default="default",
@@ -3881,7 +4136,8 @@ def parse_args() -> argparse.Namespace:
         "--section",
         nargs="+",
         default=None,
-        help="With --suite n500: only these sections (A trained schedule, B fine Euler, C RK4/bilinear)",
+        help="With --suite n500: only these sections (A trained schedule, B fine Euler, C RK4/bilinear, "
+        "D beyond the horizon)",
     )
     p.add_argument(
         "--n-classes",
@@ -3900,7 +4156,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     global KEEP_FRAMES, FORCE_RECOMPUTE, METRICS_ONLY, OUT_DIR_SHARED, OUT_DIR_INTERPOLED, OUT_DIR
-    global ACCEL_DECOMP_EPS
+    global ACCEL_DECOMP_EPS, STATIC_ONLY
     load_dotenv(_REPO_ROOT / ".env")
     # Re-resolve after dotenv / job exports (WORK, FEATURE_MAP_ROOT).
     root = _feature_map_root()
@@ -3923,6 +4179,11 @@ def main() -> None:
     if args.metrics_only:
         METRICS_ONLY = True
         print("METRICS_ONLY: refresh metrics/ only (skip videos / static scatters)")
+    if args.static_only:
+        STATIC_ONLY = True
+        print("STATIC_ONLY: static figures only (skip videos / grids)")
+    if args.visuals and (args.suite != "n500" or args.metrics_only):
+        raise SystemExit("--visuals only applies to --suite n500 without --metrics-only")
 
     OUT_DIR_SHARED.mkdir(parents=True, exist_ok=True)
     OUT_DIR_INTERPOLED.mkdir(parents=True, exist_ok=True)
@@ -3946,6 +4207,11 @@ def main() -> None:
         print(f"total runs={len(RUNS)}")
     elif BACKBONE == "shared":
         print(f"shared ckpt={SHARED_CHECKPOINT}")
+    elif BACKBONE == "delta":
+        print("delta checkpoints:")
+        for key, ckpt in DELTA_CHECKPOINTS.items():
+            print(f"  {key}: {ckpt} ({'ok' if ckpt.is_file() else 'missing'})")
+        print(f"total runs={len(RUNS)}")
 
     dataset = ImageNetDataset(split=SPLIT, transforms=build_val_transforms())
     labels: list[int] = dataset.ds.data.column("label").to_pylist()
@@ -3954,7 +4220,7 @@ def main() -> None:
 
     run_specs = RUNS
     if args.suite == "n500":
-        METRICS_ONLY = True
+        METRICS_ONLY = not args.visuals
         run_specs = RUNS_N500
         if args.section:
             wanted_sections = {s.upper() for s in args.section}
@@ -3970,7 +4236,8 @@ def main() -> None:
                 {**s, "batch_size": min(int(s["batch_size"]), int(args.max_batch_size))}
                 for s in run_specs
             ]
-        print(f"suite n500: {len(run_specs)} runs, metrics only (videos / scatters skipped)")
+        mode = "metrics + visuals" if args.visuals else "metrics only (videos / scatters skipped)"
+        print(f"suite n500: {len(run_specs)} runs, {mode}")
     elif args.section or args.n_classes is not None or args.max_batch_size is not None:
         raise SystemExit("--section / --n-classes / --max-batch-size require --suite n500")
     runs = [resolve_run(spec, labels=labels, class_names=class_names) for spec in run_specs]
@@ -3980,6 +4247,17 @@ def main() -> None:
         missing = wanted - {r["name"] for r in runs}
         if missing:
             raise SystemExit(f"unknown --only names: {sorted(missing)}")
+    if BACKBONE == "delta":
+        ready = []
+        for spec in runs:
+            ckpt = DELTA_CHECKPOINTS[spec["model"]]
+            if ckpt.is_file():
+                ready.append(spec)
+            else:
+                print(f"skip {spec['name']}: missing {ckpt}")
+        if args.only and not ready:
+            raise SystemExit("Requested delta runs have no checkpoint yet")
+        runs = ready
 
     print("runs:")
     for spec in runs:

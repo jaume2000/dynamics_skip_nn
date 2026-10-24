@@ -1,0 +1,507 @@
+device=cuda  backbone=interpoled  feature_map_root=/home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs
+  out_shared=/home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps
+  out_interpoled=/home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled
+models=['convnext_shared_rand', 'convnext_rand', 'convnext_shared', 'convnext', 'convnext_droppath0', 'resnet50', 'resnet101', 'swin']
+random_init probes=6  seed=0  LayerScale=1
+shared ckpt=/home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/shared_convnextv1_imagenet/weights/last.pth
+convnext ckpt=/home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/convnextv1_imagenet/weights/last.pth
+convnext_droppath0 ckpt=/home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/convnextv1_imagenet_droppath0/weights/last.pth
+total runs=94
+validation: 50000 images, 1000 classes
+runs:
+  swin_R100_ES0.01_c289_n1: model=swin, class 289 — snow leopard, ounce, Panthera uncia, repeats=100 ES=0.01, wi=plain, n=1, bs=1, fps=80, ignore_top_k=0
+  swin_R100_ES0.01_c289_n1_ignore1: model=swin, class 289 — snow leopard, ounce, Panthera uncia, repeats=100 ES=0.01, wi=plain, n=1, bs=1, fps=80, ignore_top_k=1
+  resnet101_R100_ES0.01_c289_n1: model=resnet101, class 289 — snow leopard, ounce, Panthera uncia, repeats=100 ES=0.01, wi=plain, n=1, bs=1, fps=80, ignore_top_k=0
+  resnet101_R100_ES0.01_c289_n1_ignore1: model=resnet101, class 289 — snow leopard, ounce, Panthera uncia, repeats=100 ES=0.01, wi=plain, n=1, bs=1, fps=80, ignore_top_k=1
+  resnet50_R100_ES0.01_c289_n1: model=resnet50, class 289 — snow leopard, ounce, Panthera uncia, repeats=100 ES=0.01, wi=plain, n=1, bs=1, fps=80, ignore_top_k=0
+  resnet50_R100_ES0.01_c289_n1_ignore1: model=resnet50, class 289 — snow leopard, ounce, Panthera uncia, repeats=100 ES=0.01, wi=plain, n=1, bs=1, fps=80, ignore_top_k=1
+  convnext_R100_ES0.01_c289_n1: model=convnext, class 289 — snow leopard, ounce, Panthera uncia, repeats=100 ES=0.01, wi=plain, n=1, bs=1, fps=80, ignore_top_k=0
+  convnext_R100_ES0.01_c289_n1_ignore1: model=convnext, class 289 — snow leopard, ounce, Panthera uncia, repeats=100 ES=0.01, wi=plain, n=1, bs=1, fps=80, ignore_top_k=1
+  convnext_shared_D900_ES0.01_c289_n1: model=convnext_shared, class 289 — snow leopard, ounce, Panthera uncia, D=900, wi=plain, n=1, bs=1, fps=80, ignore_top_k=0
+  convnext_shared_D900_ES0.01_c289_n1_ignore1: model=convnext_shared, class 289 — snow leopard, ounce, Panthera uncia, D=900, wi=plain, n=1, bs=1, fps=80, ignore_top_k=1
+Loaded interpoled convnext /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/convnextv1_imagenet/weights/last.pth (epoch 299)
+Rewired: stage3 -> 1 shared block + shared-only (no delta params) + 2 tail layers
+Loaded shared /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/shared_convnextv1_imagenet/weights/last.pth (epoch 299)
+Loaded torchvision ResNet-101 DEFAULT, n_blocks=22
+Loaded torchvision ResNet-50 DEFAULT, n_blocks=5
+Loaded torchvision Swin-T DEFAULT, n_blocks=6
+
+=== swin_R100_ES0.01_c289_n1 ===
+  skip existing inputs.png
+  loaded mean_maps.pt (skip trajectory) D=600 ES=0.01 method=RK1
+channels=[322, 183, 96]
+  skip existing metrics/
+  skip existing h_ch322
+  skip existing h_ch183
+  skip existing h_ch096
+  skip existing x_ch322
+  skip existing x_ch183
+  skip existing x_ch096
+  skip existing cos_h
+  skip existing norm_h
+  skip existing l2_h
+  skip existing h_CH
+  skip existing x_CH
+  skip existing h_CH_W0
+  skip existing x_CH_W0
+  skip existing h_CH_Wlast
+  skip existing x_CH_Wlast
+  skip existing scatter_ch_x
+  skip existing scatter_ch_h
+  skip existing scatter_h
+  skip existing scatter_ch_x_means
+  skip existing scatter_ch_h_means
+  skip existing scatter_h_means
+  skip existing scatter_ch_x.png
+  skip existing scatter_ch_h.png
+  skip existing scatter_h.png
+  skip existing scatter_ch_x_means.png
+  skip existing scatter_ch_h_means.png
+  skip existing scatter_h_means.png
+  skip existing spaghetti_x.png
+  skip existing spaghetti_h.png
+  skip existing spaghetti_x_means.png
+  skip existing spaghetti_h_means.png
+  skip existing scatter_h_traj_means.png
+  skip existing scatter_h_traj_50.png
+  skip existing spaghetti_x_50.png
+  skip existing spaghetti_h_50.png
+done -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/swin_R100_ES0.01_c289_n1
+
+=== swin_R100_ES0.01_c289_n1_ignore1 ===
+  skip existing inputs.png
+  loaded mean_maps.pt (skip trajectory) D=600 ES=0.01 method=RK1
+channels=[183, 96, 35]
+  skip existing metrics/
+  skip existing h_ch183
+  skip existing h_ch096
+  skip existing h_ch035
+  skip existing x_ch183
+  skip existing x_ch096
+  skip existing x_ch035
+  skip existing cos_h
+  skip existing norm_h
+  skip existing l2_h
+  skip existing h_CH
+  skip existing x_CH
+  skip existing h_CH_W0
+  skip existing x_CH_W0
+  skip existing h_CH_Wlast
+  skip existing x_CH_Wlast
+  skip existing scatter_ch_x
+  skip existing scatter_ch_h
+  skip existing scatter_h
+  skip existing scatter_ch_x_means
+  skip existing scatter_ch_h_means
+  skip existing scatter_h_means
+  skip existing scatter_ch_x.png
+  skip existing scatter_ch_h.png
+  skip existing scatter_h.png
+  skip existing scatter_ch_x_means.png
+  skip existing scatter_ch_h_means.png
+  skip existing scatter_h_means.png
+  skip existing spaghetti_x.png
+  skip existing spaghetti_h.png
+  skip existing spaghetti_x_means.png
+  skip existing spaghetti_h_means.png
+  skip existing scatter_h_traj_means.png
+  skip existing scatter_h_traj_50.png
+  skip existing spaghetti_x_50.png
+  skip existing spaghetti_h_50.png
+done -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/swin_R100_ES0.01_c289_n1_ignore1
+
+=== resnet101_R100_ES0.01_c289_n1 ===
+  skip existing inputs.png
+  loaded mean_maps.pt (skip trajectory) D=2200 ES=0.01 method=RK1
+channels=[913, 750, 278]
+  skip existing metrics/
+  skip existing h_ch913
+  skip existing h_ch750
+  skip existing h_ch278
+  skip existing x_ch913
+  skip existing x_ch750
+  skip existing x_ch278
+  skip existing cos_h
+  skip existing norm_h
+  skip existing l2_h
+  skip existing h_CH
+  skip existing x_CH
+  skip existing h_CH_W0
+  skip existing x_CH_W0
+  h_CH_Wlast: ['h_CH_Wlast.mp4']
+  x_CH_Wlast: ['x_CH_Wlast.mp4']
+  skip existing scatter_ch_x
+  skip existing scatter_ch_h
+  skip existing scatter_h
+  skip existing scatter_ch_x_means
+  skip existing scatter_ch_h_means
+  skip existing scatter_h_means
+  skip existing scatter_ch_x.png
+  skip existing scatter_ch_h.png
+  skip existing scatter_h.png
+  skip existing scatter_ch_x_means.png
+  skip existing scatter_ch_h_means.png
+  skip existing scatter_h_means.png
+  skip existing spaghetti_x.png
+  skip existing spaghetti_h.png
+  skip existing spaghetti_x_means.png
+  skip existing spaghetti_h_means.png
+  writing scatter_h_traj_means.png …
+  writing scatter_h_traj_50.png …
+  writing spaghetti_x_50.png …
+  writing spaghetti_h_50.png …
+done -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/resnet101_R100_ES0.01_c289_n1
+
+=== resnet101_R100_ES0.01_c289_n1_ignore1 ===
+  skip existing inputs.png
+resnet101 schedule=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21] (D=2200) euler_step=0.01 method=RK1 weight_interpolation=plain batch=1 n=1
+  ranking channels on cached unmasked sibling (mean_maps.pt)
+ignoring top-1 channels by ||h|| (WxH) in all metrics: [750]
+D=2200 h=0.01 m=RK1:   0%|          | 0/1 [00:00<?, ?it/s]D=2200 h=0.01 m=RK1: 100%|██████████| 1/1 [00:14<00:00, 14.88s/it]D=2200 h=0.01 m=RK1: 100%|██████████| 1/1 [00:14<00:00, 14.88s/it]
+  accel decomposition [D=2200 h=0.01 m=RK1]: v=midpoint eps=1e-06 | ||v||≈0: 0/2200, ||a||≈0: 0/2200, clamped a_n²<0: 0, max | ||a||²-a_t²-a_n² |/||a||² = 5.982e-16
+channels=[913, 278, 401]
+  skip existing metrics/
+  skip existing h_ch913
+  skip existing h_ch278
+  skip existing h_ch401
+  skip existing x_ch913
+  x_ch278: ['x_ch278.mp4']
+  x_ch401: ['x_ch401.mp4']
+  cos_h: ['cos_h.mp4']
+  norm_h: ['norm_h.mp4']
+  l2_h: ['l2_h.mp4']
+  h_CH: ['h_CH.mp4']
+  x_CH: ['x_CH.mp4']
+  h_CH_W0: ['h_CH_W0.mp4']
+  x_CH_W0: ['x_CH_W0.mp4']
+  h_CH_Wlast: ['h_CH_Wlast.mp4']
+  x_CH_Wlast: ['x_CH_Wlast.mp4']
+  scatter_ch_x: ['scatter_ch_x.mp4']
+  scatter_ch_h: ['scatter_ch_h.mp4']
+  scatter_h: ['scatter_h.mp4']
+  scatter_ch_x_means: ['scatter_ch_x_means.mp4']
+  scatter_ch_h_means: ['scatter_ch_h_means.mp4']
+  scatter_h_means: ['scatter_h_means.mp4']
+  writing scatter_ch_x.png …
+  writing scatter_ch_h.png …
+  writing scatter_h.png …
+  writing scatter_ch_x_means.png …
+  writing scatter_ch_h_means.png …
+  writing scatter_h_means.png …
+  writing spaghetti_x.png …
+  writing spaghetti_h.png …
+  writing spaghetti_x_means.png …
+  writing spaghetti_h_means.png …
+  writing scatter_h_traj_means.png …
+  writing scatter_h_traj_50.png …
+  writing spaghetti_x_50.png …
+  writing spaghetti_h_50.png …
+done -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/resnet101_R100_ES0.01_c289_n1_ignore1
+
+=== resnet50_R100_ES0.01_c289_n1 ===
+  skip existing inputs.png
+resnet50 schedule=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4] (D=500) euler_step=0.01 method=RK1 weight_interpolation=plain batch=1 n=1
+D=500 h=0.01 m=RK1:   0%|          | 0/1 [00:00<?, ?it/s]D=500 h=0.01 m=RK1: 100%|██████████| 1/1 [00:02<00:00,  2.13s/it]D=500 h=0.01 m=RK1: 100%|██████████| 1/1 [00:02<00:00,  2.13s/it]
+  accel decomposition [D=500 h=0.01 m=RK1]: v=midpoint eps=1e-06 | ||v||≈0: 0/500, ||a||≈0: 0/500, clamped a_n²<0: 0, max | ||a||²-a_t²-a_n² |/||a||² = 5.906e-16
+channels=[110, 765, 361]
+  skip existing metrics/
+  skip existing h_ch110
+  skip existing h_ch765
+  skip existing h_ch361
+  skip existing x_ch110
+  skip existing x_ch765
+  skip existing x_ch361
+  skip existing cos_h
+  skip existing norm_h
+  skip existing l2_h
+  skip existing h_CH
+  skip existing x_CH
+  h_CH_W0: ['h_CH_W0.mp4']
+  x_CH_W0: ['x_CH_W0.mp4']
+  h_CH_Wlast: ['h_CH_Wlast.mp4']
+  x_CH_Wlast: ['x_CH_Wlast.mp4']
+  skip existing scatter_ch_x
+  skip existing scatter_ch_h
+  skip existing scatter_h
+  skip existing scatter_ch_x_means
+  skip existing scatter_ch_h_means
+  skip existing scatter_h_means
+  skip existing scatter_ch_x.png
+  skip existing scatter_ch_h.png
+  skip existing scatter_h.png
+  skip existing scatter_ch_x_means.png
+  skip existing scatter_ch_h_means.png
+  skip existing scatter_h_means.png
+  skip existing spaghetti_x.png
+  skip existing spaghetti_h.png
+  skip existing spaghetti_x_means.png
+  skip existing spaghetti_h_means.png
+  writing scatter_h_traj_means.png …
+  writing scatter_h_traj_50.png …
+  writing spaghetti_x_50.png …
+  writing spaghetti_h_50.png …
+done -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/resnet50_R100_ES0.01_c289_n1
+
+=== resnet50_R100_ES0.01_c289_n1_ignore1 ===
+  skip existing inputs.png
+resnet50 schedule=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4] (D=500) euler_step=0.01 method=RK1 weight_interpolation=plain batch=1 n=1
+  ranking channels on cached unmasked sibling (mean_maps.pt)
+ignoring top-1 channels by ||h|| (WxH) in all metrics: [780]
+D=500 h=0.01 m=RK1:   0%|          | 0/1 [00:00<?, ?it/s]D=500 h=0.01 m=RK1: 100%|██████████| 1/1 [00:02<00:00,  2.13s/it]D=500 h=0.01 m=RK1: 100%|██████████| 1/1 [00:02<00:00,  2.13s/it]
+  accel decomposition [D=500 h=0.01 m=RK1]: v=midpoint eps=1e-06 | ||v||≈0: 0/500, ||a||≈0: 0/500, clamped a_n²<0: 0, max | ||a||²-a_t²-a_n² |/||a||² = 6.441e-16
+channels=[110, 765, 361]
+  skip existing metrics/
+  skip existing h_ch110
+  skip existing h_ch765
+  skip existing h_ch361
+  skip existing x_ch110
+  skip existing x_ch765
+  skip existing x_ch361
+  skip existing cos_h
+  skip existing norm_h
+  skip existing l2_h
+  skip existing h_CH
+  skip existing x_CH
+  h_CH_W0: ['h_CH_W0.mp4']
+  x_CH_W0: ['x_CH_W0.mp4']
+  h_CH_Wlast: ['h_CH_Wlast.mp4']
+  x_CH_Wlast: ['x_CH_Wlast.mp4']
+  skip existing scatter_ch_x
+  skip existing scatter_ch_h
+  skip existing scatter_h
+  skip existing scatter_ch_x_means
+  skip existing scatter_ch_h_means
+  skip existing scatter_h_means
+  skip existing scatter_ch_x.png
+  skip existing scatter_ch_h.png
+  skip existing scatter_h.png
+  skip existing scatter_ch_x_means.png
+  skip existing scatter_ch_h_means.png
+  skip existing scatter_h_means.png
+  skip existing spaghetti_x.png
+  skip existing spaghetti_h.png
+  skip existing spaghetti_x_means.png
+  skip existing spaghetti_h_means.png
+  writing scatter_h_traj_means.png …
+  writing scatter_h_traj_50.png …
+  writing spaghetti_x_50.png …
+  writing spaghetti_h_50.png …
+done -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/resnet50_R100_ES0.01_c289_n1_ignore1
+
+=== convnext_R100_ES0.01_c289_n1 ===
+  skip existing inputs.png
+convnext schedule=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8] (D=900) euler_step=0.01 method=RK1 weight_interpolation=plain batch=1 n=1
+D=900 h=0.01 m=RK1:   0%|          | 0/1 [00:00<?, ?it/s]D=900 h=0.01 m=RK1: 100%|██████████| 1/1 [00:02<00:00,  2.52s/it]D=900 h=0.01 m=RK1: 100%|██████████| 1/1 [00:02<00:00,  2.52s/it]
+  accel decomposition [D=900 h=0.01 m=RK1]: v=midpoint eps=1e-06 | ||v||≈0: 0/900, ||a||≈0: 0/900, clamped a_n²<0: 0, max | ||a||²-a_t²-a_n² |/||a||² = 6.182e-16
+channels=[195, 261, 331]
+  skip existing metrics/
+  skip existing h_ch195
+  skip existing h_ch261
+  skip existing h_ch331
+  skip existing x_ch195
+  skip existing x_ch261
+  skip existing x_ch331
+  skip existing cos_h
+  skip existing norm_h
+  skip existing l2_h
+  skip existing h_CH
+  skip existing x_CH
+  h_CH_W0: ['h_CH_W0.mp4']
+  x_CH_W0: ['x_CH_W0.mp4']
+  h_CH_Wlast: ['h_CH_Wlast.mp4']
+  x_CH_Wlast: ['x_CH_Wlast.mp4']
+  skip existing scatter_ch_x
+  skip existing scatter_ch_h
+  skip existing scatter_h
+  skip existing scatter_ch_x_means
+  skip existing scatter_ch_h_means
+  skip existing scatter_h_means
+  skip existing scatter_ch_x.png
+  skip existing scatter_ch_h.png
+  skip existing scatter_h.png
+  skip existing scatter_ch_x_means.png
+  skip existing scatter_ch_h_means.png
+  skip existing scatter_h_means.png
+  skip existing spaghetti_x.png
+  skip existing spaghetti_h.png
+  skip existing spaghetti_x_means.png
+  skip existing spaghetti_h_means.png
+  writing scatter_h_traj_means.png …
+  writing scatter_h_traj_50.png …
+  writing spaghetti_x_50.png …
+  writing spaghetti_h_50.png …
+done -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/convnext_R100_ES0.01_c289_n1
+
+=== convnext_R100_ES0.01_c289_n1_ignore1 ===
+  skip existing inputs.png
+  loaded mean_maps.pt (skip trajectory) D=900 ES=0.01 method=RK1
+channels=[261, 331, 34]
+  skip existing metrics/
+  skip existing h_ch261
+  skip existing h_ch331
+  skip existing h_ch034
+  skip existing x_ch261
+  skip existing x_ch331
+  skip existing x_ch034
+  skip existing cos_h
+  skip existing norm_h
+  skip existing l2_h
+  skip existing h_CH
+  skip existing x_CH
+  h_CH_W0: ['h_CH_W0.mp4']
+  x_CH_W0: ['x_CH_W0.mp4']
+  h_CH_Wlast: ['h_CH_Wlast.mp4']
+  x_CH_Wlast: ['x_CH_Wlast.mp4']
+  skip existing scatter_ch_x
+  skip existing scatter_ch_h
+  skip existing scatter_h
+  skip existing scatter_ch_x_means
+  skip existing scatter_ch_h_means
+  skip existing scatter_h_means
+  skip existing scatter_ch_x.png
+  skip existing scatter_ch_h.png
+  skip existing scatter_h.png
+  skip existing scatter_ch_x_means.png
+  skip existing scatter_ch_h_means.png
+  skip existing scatter_h_means.png
+  skip existing spaghetti_x.png
+  skip existing spaghetti_h.png
+  skip existing spaghetti_x_means.png
+  skip existing spaghetti_h_means.png
+  skip existing scatter_h_traj_means.png
+  skip existing scatter_h_traj_50.png
+  skip existing spaghetti_x_50.png
+  skip existing spaghetti_h_50.png
+done -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/convnext_R100_ES0.01_c289_n1_ignore1
+
+=== convnext_shared_D900_ES0.01_c289_n1 ===
+shared D=900 euler_step=0.01 method=RK1 batch=1 n=1
+D=900 h=0.01 m=RK1:   0%|          | 0/1 [00:00<?, ?it/s]D=900 h=0.01 m=RK1: 100%|██████████| 1/1 [00:02<00:00,  2.48s/it]D=900 h=0.01 m=RK1: 100%|██████████| 1/1 [00:02<00:00,  2.48s/it]
+  accel decomposition [D=900 h=0.01 m=RK1]: v=midpoint eps=1e-06 | ||v||≈0: 0/900, ||a||≈0: 0/900, clamped a_n²<0: 0, max | ||a||²-a_t²-a_n² |/||a||² = 6.953e-16
+channels=[236, 56, 169]
+  metrics/ → 34 panels in norms/ geometry/ dynamics/ variability/ + metrics.png + scalars/*.csv
+  accel decomposition: v=midpoint eps=1e-06 | ||v||≈0: 0/900, ||a||≈0: 0/900, clamped a_n²<0: 0, max | ||a||²-a_t²-a_n² |/||a||² = 6.953e-16
+  L: mean=3258 95%CI=[nan, nan] median=3258 IQR=[3258, 3258] n=1
+  N: mean=3181 95%CI=[nan, nan] median=3181 IQR=[3181, 3181] n=1
+  R: mean=0.9761 95%CI=[nan, nan] median=0.9761 IQR=[0.9761, 0.9761] n=1
+  PR_depth: mean=1.07 95%CI=[nan, nan] median=1.07 IQR=[1.07, 1.07] n=1
+  PR_spatial_mid: mean=1.027 95%CI=[nan, nan] median=1.027 IQR=[1.027, 1.027] n=1
+  corr_omega_flat_spatial: mean=0.7534 95%CI=[nan, nan] median=0.7534 IQR=[0.7534, 0.7534] n=1
+  acceleration_tangential: mean=-12.27 95%CI=[nan, nan] median=-12.27 IQR=[-12.27, -12.27] n=1
+  acceleration_normal: mean=50.64 95%CI=[nan, nan] median=50.64 IQR=[50.64, 50.64] n=1
+  acceleration_tangential_ratio: mean=-0.08364 95%CI=[nan, nan] median=-0.08364 IQR=[-0.08364, -0.08364] n=1
+  acceleration_normal_ratio: mean=0.5791 95%CI=[nan, nan] median=0.5791 IQR=[0.5791, 0.5791] n=1
+  curvature: mean=0.0004905 95%CI=[nan, nan] median=0.0004905 IQR=[0.0004905, 0.0004905] n=1
+  h_ch236: ['h_ch236.mp4']
+  h_ch056: ['h_ch056.mp4']
+  h_ch169: ['h_ch169.mp4']
+  x_ch236: ['x_ch236.mp4']
+  x_ch056: ['x_ch056.mp4']
+  x_ch169: ['x_ch169.mp4']
+  cos_h: ['cos_h.mp4']
+  norm_h: ['norm_h.mp4']
+  l2_h: ['l2_h.mp4']
+  h_CH: ['h_CH.mp4']
+  x_CH: ['x_CH.mp4']
+  h_CH_W0: ['h_CH_W0.mp4']
+  x_CH_W0: ['x_CH_W0.mp4']
+  h_CH_Wlast: ['h_CH_Wlast.mp4']
+  x_CH_Wlast: ['x_CH_Wlast.mp4']
+  scatter_ch_x: ['scatter_ch_x.mp4']
+  scatter_ch_h: ['scatter_ch_h.mp4']
+  scatter_h: ['scatter_h.mp4']
+  scatter_ch_x_means: ['scatter_ch_x_means.mp4']
+  scatter_ch_h_means: ['scatter_ch_h_means.mp4']
+  scatter_h_means: ['scatter_h_means.mp4']
+  writing scatter_ch_x.png …
+  writing scatter_ch_h.png …
+  writing scatter_h.png …
+  writing scatter_ch_x_means.png …
+  writing scatter_ch_h_means.png …
+  writing scatter_h_means.png …
+  writing spaghetti_x.png …
+  writing spaghetti_h.png …
+  writing spaghetti_x_means.png …
+  writing spaghetti_h_means.png …
+  writing scatter_h_traj_means.png …
+  writing scatter_h_traj_50.png …
+  writing spaghetti_x_50.png …
+  writing spaghetti_h_50.png …
+done -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps/convnext_shared_D900_ES0.01_c289_n1
+
+=== convnext_shared_D900_ES0.01_c289_n1_ignore1 ===
+shared D=900 euler_step=0.01 method=RK1 batch=1 n=1
+  ranking channels on cached unmasked sibling (mean_maps.pt)
+ignoring top-1 channels by ||h|| (WxH) in all metrics: [236]
+D=900 h=0.01 m=RK1:   0%|          | 0/1 [00:00<?, ?it/s]D=900 h=0.01 m=RK1: 100%|██████████| 1/1 [00:02<00:00,  2.49s/it]D=900 h=0.01 m=RK1: 100%|██████████| 1/1 [00:02<00:00,  2.49s/it]
+  accel decomposition [D=900 h=0.01 m=RK1]: v=midpoint eps=1e-06 | ||v||≈0: 0/900, ||a||≈0: 0/900, clamped a_n²<0: 0, max | ||a||²-a_t²-a_n² |/||a||² = 5.682e-16
+channels=[56, 169, 269]
+  metrics/ → 34 panels in norms/ geometry/ dynamics/ variability/ + metrics.png + scalars/*.csv
+  accel decomposition: v=midpoint eps=1e-06 | ||v||≈0: 0/900, ||a||≈0: 0/900, clamped a_n²<0: 0, max | ||a||²-a_t²-a_n² |/||a||² = 5.682e-16
+  L: mean=582.8 95%CI=[nan, nan] median=582.8 IQR=[582.8, 582.8] n=1
+  N: mean=464.7 95%CI=[nan, nan] median=464.7 IQR=[464.7, 464.7] n=1
+  R: mean=0.7973 95%CI=[nan, nan] median=0.7973 IQR=[0.7973, 0.7973] n=1
+  PR_depth: mean=1.787 95%CI=[nan, nan] median=1.787 IQR=[1.787, 1.787] n=1
+  PR_spatial_mid: mean=3.823 95%CI=[nan, nan] median=3.823 IQR=[3.823, 3.823] n=1
+  corr_omega_flat_spatial: mean=0.9981 95%CI=[nan, nan] median=0.9981 IQR=[0.9981, 0.9981] n=1
+  acceleration_tangential: mean=-1.111 95%CI=[nan, nan] median=-1.111 IQR=[-1.111, -1.111] n=1
+  acceleration_normal: mean=26.88 95%CI=[nan, nan] median=26.88 IQR=[26.88, 26.88] n=1
+  acceleration_tangential_ratio: mean=-0.1009 95%CI=[nan, nan] median=-0.1009 IQR=[-0.1009, -0.1009] n=1
+  acceleration_normal_ratio: mean=0.9421 95%CI=[nan, nan] median=0.9421 IQR=[0.9421, 0.9421] n=1
+  curvature: mean=0.006953 95%CI=[nan, nan] median=0.006953 IQR=[0.006953, 0.006953] n=1
+  h_ch056: ['h_ch056.mp4']
+  h_ch169: ['h_ch169.mp4']
+  h_ch269: ['h_ch269.mp4']
+  x_ch056: ['x_ch056.mp4']
+  x_ch169: ['x_ch169.mp4']
+  x_ch269: ['x_ch269.mp4']
+  cos_h: ['cos_h.mp4']
+  norm_h: ['norm_h.mp4']
+  l2_h: ['l2_h.mp4']
+  h_CH: ['h_CH.mp4']
+  x_CH: ['x_CH.mp4']
+  h_CH_W0: ['h_CH_W0.mp4']
+  x_CH_W0: ['x_CH_W0.mp4']
+  h_CH_Wlast: ['h_CH_Wlast.mp4']
+  x_CH_Wlast: ['x_CH_Wlast.mp4']
+  scatter_ch_x: ['scatter_ch_x.mp4']
+  scatter_ch_h: ['scatter_ch_h.mp4']
+  scatter_h: ['scatter_h.mp4']
+  scatter_ch_x_means: ['scatter_ch_x_means.mp4']
+  scatter_ch_h_means: ['scatter_ch_h_means.mp4']
+  scatter_h_means: ['scatter_h_means.mp4']
+  writing scatter_ch_x.png …
+  writing scatter_ch_h.png …
+  writing scatter_h.png …
+  writing scatter_ch_x_means.png …
+  writing scatter_ch_h_means.png …
+  writing scatter_h_means.png …
+  writing spaghetti_x.png …
+  writing spaghetti_h.png …
+  writing spaghetti_x_means.png …
+  writing spaghetti_h_means.png …
+  writing scatter_h_traj_means.png …
+  writing scatter_h_traj_50.png …
+  writing spaghetti_x_50.png …
+  writing spaghetti_h_50.png …
+done -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps/convnext_shared_D900_ES0.01_c289_n1_ignore1
+  writing scatter_h_overlay_swin_R100_ES0.01_c289_n1-swin_R100_ES0.01_c289_n1_ignore1.png …
+overlay scatter -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/scatter_h_overlay_swin_R100_ES0.01_c289_n1-swin_R100_ES0.01_c289_n1_ignore1.png
+  writing scatter_h_means_overlay_swin_R100_ES0.01_c289_n1-swin_R100_ES0.01_c289_n1_ignore1.png …
+overlay scatter means -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/scatter_h_means_overlay_swin_R100_ES0.01_c289_n1-swin_R100_ES0.01_c289_n1_ignore1.png
+  writing scatter_h_overlay_resnet101_R100_ES0.01_c289_n1-resnet101_R100_ES0.01_c289_n1_ignore1.png …
+overlay scatter -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/scatter_h_overlay_resnet101_R100_ES0.01_c289_n1-resnet101_R100_ES0.01_c289_n1_ignore1.png
+  writing scatter_h_means_overlay_resnet101_R100_ES0.01_c289_n1-resnet101_R100_ES0.01_c289_n1_ignore1.png …
+overlay scatter means -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/scatter_h_means_overlay_resnet101_R100_ES0.01_c289_n1-resnet101_R100_ES0.01_c289_n1_ignore1.png
+  writing scatter_h_overlay_resnet50_R100_ES0.01_c289_n1-resnet50_R100_ES0.01_c289_n1_ignore1.png …
+overlay scatter -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/scatter_h_overlay_resnet50_R100_ES0.01_c289_n1-resnet50_R100_ES0.01_c289_n1_ignore1.png
+  writing scatter_h_means_overlay_resnet50_R100_ES0.01_c289_n1-resnet50_R100_ES0.01_c289_n1_ignore1.png …
+overlay scatter means -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/scatter_h_means_overlay_resnet50_R100_ES0.01_c289_n1-resnet50_R100_ES0.01_c289_n1_ignore1.png
+  writing scatter_h_overlay_convnext_R100_ES0.01_c289_n1-convnext_R100_ES0.01_c289_n1_ignore1.png …
+overlay scatter -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/scatter_h_overlay_convnext_R100_ES0.01_c289_n1-convnext_R100_ES0.01_c289_n1_ignore1.png
+  writing scatter_h_means_overlay_convnext_R100_ES0.01_c289_n1-convnext_R100_ES0.01_c289_n1_ignore1.png …
+overlay scatter means -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps_interpoled/scatter_h_means_overlay_convnext_R100_ES0.01_c289_n1-convnext_R100_ES0.01_c289_n1_ignore1.png
+  writing scatter_h_overlay_D=900-D=900.png …
+overlay scatter -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps/scatter_h_overlay_D=900-D=900.png
+  writing scatter_h_means_overlay_D=900-D=900.png …
+overlay scatter means -> /home/jaume/Projects/ML_and_DL/DeltaNeuralODE/outputs/featureMaps/scatter_h_means_overlay_D=900-D=900.png

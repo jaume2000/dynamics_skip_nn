@@ -38,7 +38,7 @@ OUT_DIR = _REPO_ROOT / "outputs" / "ignored_channel_histogram"
 # name -> (model key, repeats or shared depth D, euler step)
 RUNS: dict[str, tuple[str, int, float]] = {
     "shared_D9": (fme._SHARED_MODEL_KEY, 9, 1.0),
-    "shared_D100": (fme._SHARED_MODEL_KEY, 100, 0.09),
+    "shared_D900": (fme._SHARED_MODEL_KEY, 900, 0.01),
     "convnext_R1": ("convnext", 1, 1.0),
     "convnext_R100": ("convnext", 100, 0.01),
     "convnext_droppath0_R1": ("convnext_droppath0", 1, 1.0),

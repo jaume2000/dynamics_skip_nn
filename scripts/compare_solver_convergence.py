@@ -89,7 +89,8 @@ def integrate_r1(
 
 def pairwise_stats(xa: torch.Tensor, xb: torch.Tensor, ignore_chs: list[int] | None = None) -> dict:
     """Per-image L2 / relative / cosine between two endpoint clouds."""
-    a, b = xa.clone(), xb.clone()
+    # float64: in float32, cos rounds to 1 below ~0.2° and the angle reads 0.
+    a, b = xa.double(), xb.double()
     if ignore_chs:
         a[:, ignore_chs] = 0
         b[:, ignore_chs] = 0
@@ -168,7 +169,7 @@ def main() -> None:
     p.add_argument(
         "--skip-r200",
         action="store_true",
-        help="Skip ConvNeXt Euler R=100 vs R=200 Cauchy check",
+        help="Skip the Euler R=100 vs R=200 Cauchy checks (ConvNeXt and shared)",
     )
     args = p.parse_args()
 
@@ -179,10 +180,10 @@ def main() -> None:
     indices = fme.sample_one_per_class(labels, args.n_images, args.seed)
     print(f"n_images={len(indices)} seed={args.seed} ignore_top_k={args.ignore_top_k}")
 
-    # ----- Shared ConvNeXt: D=100, Δt=0.09 -----
-    print("\n=== shared ConvNeXt  D=100  Δt=0.09  Euler vs RK4 vs R1 ===")
+    # ----- Shared ConvNeXt: R=100 (D=900, Δt=0.01), same step as ConvNeXt R=100 -----
+    print("\n=== shared ConvNeXt  D=900  Δt=0.01  Euler vs RK4 vs R1 (+ D=1800 Cauchy) ===")
     shared = fme.load_interpoled_model("convnext_shared").to(device).eval()
-    enter, field, r1_blocks, step = build_shared(shared, D=100, euler_step=9 / 100)
+    enter, field, r1_blocks, step = build_shared(shared, D=900, euler_step=0.01)
     x_eu = integrate_x(
         enter, field, indices, euler_step=step, method="RK1",
         batch_size=args.batch_size, dataset=dataset, device=device,
@@ -194,13 +195,24 @@ def main() -> None:
     x_r1 = integrate_r1(
         enter, r1_blocks, indices, batch_size=args.batch_size, dataset=dataset, device=device,
     )
-    ign_s = rank_ignore_channels(x_eu, x_eu - x_r1, args.ignore_top_k)  # fallback ranking
-    # Prefer ranking by residual magnitude on Euler path vs enter: use |x_eu| channel energy
+    enter, field9, _, _ = build_shared(shared, D=9, euler_step=1.0)
+    x_rk9 = integrate_x(
+        enter, field9, indices, euler_step=1.0, method="RK4",
+        batch_size=args.batch_size, dataset=dataset, device=device,
+    )
     ign_s = rank_ignore_channels(x_eu, x_eu, args.ignore_top_k)
     run_pair("shared Euler↔RK4", x_eu, x_rk, ign_s)
     run_pair("shared Euler↔R1", x_eu, x_r1, ign_s)
     run_pair("shared RK4↔R1", x_rk, x_r1, ign_s)
-    del shared, x_eu, x_rk, x_r1
+    run_pair("shared RK4 D9↔RK4 D900", x_rk9, x_rk, ign_s)
+    if not args.skip_r200:
+        enter, field1800, _, _ = build_shared(shared, D=1800, euler_step=0.005)
+        x1800 = integrate_x(
+            enter, field1800, indices, euler_step=0.005, method="RK1",
+            batch_size=args.batch_size, dataset=dataset, device=device,
+        )
+        run_pair("shared Euler D900↔D1800", x_eu, x1800, ign_s)
+    del shared, x_eu, x_rk, x_r1, x_rk9
     torch.cuda.empty_cache()
 
     # ----- ConvNeXt: R=100 Euler vs RK4, and R=100 vs R=200 -----
