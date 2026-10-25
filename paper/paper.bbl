@@ -1,4 +1,4 @@
-\begin{thebibliography}{15}
+\begin{thebibliography}{16}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -18,6 +18,13 @@ Chang, B., Meng, L., Haber, E., Tung, F., and Begert, D.
 \newblock Multi-level residual networks from dynamical systems view.
 \newblock In \emph{International Conference on Learning Representations
   (ICLR)}, 2018.
+
+\bibitem[Deng et~al.(2009)Deng, Dong, Socher, Li, Li, and
+  Fei-Fei]{deng2009imagenet}
+Deng, J., Dong, W., Socher, R., Li, L.-J., Li, K., and Fei-Fei, L.
+\newblock {ImageNet}: A large-scale hierarchical image database.
+\newblock In \emph{Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition (CVPR)}, pp.\  248--255, 2009.
 
 \bibitem[E(2017)]{e2017proposal}
 E, W.

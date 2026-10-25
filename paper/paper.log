@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.2.9)  24 OCT 2026 19:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.2.9)  25 OCT 2026 11:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -940,7 +940,7 @@ s been already used, duplicate ignored
 l.1 \subsection
                {Indefinite looping without fine-tune} <./figures/hero_trajector
 ies.png>]
-<figures/teaser.png, id=74, 731.3724pt x 250.536pt>
+<figures/teaser.png, id=76, 731.3724pt x 250.536pt>
 File: figures/teaser.png Graphic file (type png)
 <use figures/teaser.png>
 Package pdftex.def Info: figures/teaser.png  used on input line 7.
@@ -951,13 +951,13 @@ Underfull \vbox (badness 2884) has occurred while \output is active []
  [3]
 Underfull \vbox (badness 1142) has occurred while \output is active []
 
-<figures/shared_fractional.png, id=135, 355.8093pt x 249.3315pt>
+<figures/shared_fractional.png, id=137, 355.8093pt x 249.3315pt>
 File: figures/shared_fractional.png Graphic file (type png)
 <use figures/shared_fractional.png>
 Package pdftex.def Info: figures/shared_fractional.png  used on input line 193.
 
 (pdftex.def)             Requested size: 234.8775pt x 164.59352pt.
-<figures/horizon_ablation.png, id=137, 372.6723pt x 236.082pt>
+<figures/horizon_ablation.png, id=139, 372.6723pt x 236.082pt>
 File: figures/horizon_ablation.png Graphic file (type png)
 <use figures/horizon_ablation.png>
 Package pdftex.def Info: figures/horizon_ablation.png  used on input line 210.
@@ -978,7 +978,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
                                                   \__shipout_drop_firstpage_...
 l.227 \begin{itemize}
                       <./figures/teaser.png>]
-<figures/dist_cos_r1.pdf, id=155, 236.42326pt x 271.92592pt>
+<figures/dist_cos_r1.pdf, id=157, 236.42326pt x 271.92592pt>
 File: figures/dist_cos_r1.pdf Graphic file (type pdf)
 <use figures/dist_cos_r1.pdf>
 Package pdftex.def Info: figures/dist_cos_r1.pdf  used on input line 246.
@@ -1036,7 +1036,7 @@ l.23
       <./figures/dist_cos_r1.pdf>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-<figures/dist_cos_r1_compare.pdf, id=254, 482.14127pt x 270.27975pt>
+<figures/dist_cos_r1_compare.pdf, id=256, 482.14127pt x 270.27975pt>
 File: figures/dist_cos_r1_compare.pdf Graphic file (type pdf)
 <use figures/dist_cos_r1_compare.pdf>
 Package pdftex.def Info: figures/dist_cos_r1_compare.pdf  used on input line 60
@@ -1045,7 +1045,7 @@ Package pdftex.def Info: figures/dist_cos_r1_compare.pdf  used on input line 60
 )
 (./chapters/subsections/3_4_overparametrized_undoing.tex [7]
 (./figures/pooled_dynamics_table.tex)
-<figures/pooled_dynamics.png, id=270, 875.55106pt x 441.93105pt>
+<figures/pooled_dynamics.png, id=272, 875.55106pt x 441.93105pt>
 File: figures/pooled_dynamics.png Graphic file (type png)
 <use figures/pooled_dynamics.png>
 Package pdftex.def Info: figures/pooled_dynamics.png  used on input line 55.
@@ -1067,65 +1067,71 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.47 
+l.49 
      
 pdfTeX warning (ext4): destination with the same identifier (name{figure.7}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.47 
+l.49 
       <./figures/pooled_dynamics.png>]) (./chapters/appendix.tex
-Underfull \hbox (badness 1024) in paragraph at lines 182--195
+Underfull \vbox (badness 4686) has occurred while \output is active []
+
+ [10]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Underfull \hbox (badness 1024) in paragraph at lines 268--281
  \OT1/ptm/b/n/10 (+20) Setup. \OT1/ptm/m/n/10 (+20) Ev-ery con-vo-lu-tion and l
 in-ear layer is drawn
  []
 
-[10]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [11
+[11
 pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.314 \end{equation}
-                    
+l.281 \begin{equation}
+                      
 pdfTeX warning (ext4): destination with the same identifier (name{table.4}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.314 \end{equation}
-                    
+l.281 \begin{equation}
+                      ]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [12
 pdfTeX warning (ext4): destination with the same identifier (name{table.5}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.314 \end{equation}
-                    
+l.396 \begin{equation}
+                      
 pdfTeX warning (ext4): destination with the same identifier (name{table.6}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.314 \end{equation}
-                    ]
-<figures/bilinear_norm.png, id=412, 388.0899pt x 249.5724pt>
-File: figures/bilinear_norm.png Graphic file (type png)
-<use figures/bilinear_norm.png>
-Package pdftex.def Info: figures/bilinear_norm.png  used on input line 353.
-(pdftex.def)             Requested size: 234.8775pt x 151.04697pt.
-) [12
+l.396 \begin{equation}
+                      
 pdfTeX warning (ext4): destination with the same identifier (name{table.7}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.81 \end{document}
-                   
+l.396 \begin{equation}
+                      
 pdfTeX warning (ext4): destination with the same identifier (name{table.8}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.81 \end{document}
-                   
+l.396 \begin{equation}
+                      ]
+<figures/bilinear_norm.png, id=431, 388.0899pt x 249.5724pt>
+File: figures/bilinear_norm.png Graphic file (type png)
+<use figures/bilinear_norm.png>
+Package pdftex.def Info: figures/bilinear_norm.png  used on input line 439.
+(pdftex.def)             Requested size: 234.8775pt x 151.04697pt.
+) [13
 pdfTeX warning (ext4): destination with the same identifier (name{table.9}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -1137,7 +1143,13 @@ s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
 l.81 \end{document}
-                   ] [13
+                   
+pdfTeX warning (ext4): destination with the same identifier (name{table.11}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.81 \end{document}
+                   ] [14
 pdfTeX warning (ext4): destination with the same identifier (name{figure.8}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -1154,11 +1166,11 @@ Package rerunfilecheck Info: File `paper.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 26937 strings out of 476182
- 498970 string characters out of 5795596
+ 26953 strings out of 476182
+ 499207 string characters out of 5795596
  1971975 words of memory out of 5000000
- 48030 multiletter control sequences out of 15000+600000
- 600563 words of font info for 294 fonts, out of 8000000 for 9000
+ 48037 multiletter control sequences out of 15000+600000
+ 600757 words of font info for 297 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  99i,12n,101p,1002b,639s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy9.pfb
@@ -1183,10 +1195,10 @@ ts/type1/public/amsfonts/symbols/msbm7.pfb></usr/share/texlive/texmf-dist/fonts
 mes/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
 </usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on paper.pdf (13 pages, 3426395 bytes).
+Output written on paper.pdf (14 pages, 3434159 bytes).
 PDF statistics:
- 549 PDF objects out of 1000 (max. 8388607)
- 366 compressed objects within 4 object streams
- 87 named destinations out of 1000 (max. 500000)
+ 569 PDF objects out of 1000 (max. 8388607)
+ 383 compressed objects within 4 object streams
+ 91 named destinations out of 1000 (max. 500000)
  63541 words of extra memory for PDF output out of 74296 (max. 10000000)
 

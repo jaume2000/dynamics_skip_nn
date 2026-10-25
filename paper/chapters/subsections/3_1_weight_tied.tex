@@ -11,7 +11,7 @@ if the stage can be run with a single repeated function, a network trained to us
 shared function should reach a similar accuracy level.
 
 We train a vanilla ConvNeXt-T and a weight-tied stage-3 variant under the same recipe
-(ImageNet-1k, batch size 1024; configuration in Appendix~X).
+(ImageNet-1k, batch size $1024$; configuration in \cref{app:training}).
 Our baseline reaches 80.97\% top-1 (28.59M params), slightly below the original
 ConvNeXt-T report of 82.1\%~\citep{liu2022convnext}---expected under our hardware
 constraints---but all comparisons below use models trained by us under matched

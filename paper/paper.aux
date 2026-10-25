@@ -75,10 +75,10 @@
 \bibdata{paper}
 \bibcite{ainsworth2023gitrebasin}{{1}{2023}{{Ainsworth et~al.}}{{Ainsworth, Hayase, and Srinivasa}}}
 \bibcite{chang2018multilevel}{{2}{2018}{{Chang et~al.}}{{Chang, Meng, Haber, Tung, and Begert}}}
-\bibcite{e2017proposal}{{3}{2017}{{E}}{{}}}
-\bibcite{entezari2022permutation}{{4}{2022}{{Entezari et~al.}}{{Entezari, Sedghi, Saukh, and Neyshabur}}}
-\bibcite{glorot2010understanding}{{5}{2010}{{Glorot \& Bengio}}{{Glorot and Bengio}}}
-\bibcite{haber2017stable}{{6}{2017}{{Haber \& Ruthotto}}{{Haber and Ruthotto}}}
+\bibcite{deng2009imagenet}{{3}{2009}{{Deng et~al.}}{{Deng, Dong, Socher, Li, Li, and Fei-Fei}}}
+\bibcite{e2017proposal}{{4}{2017}{{E}}{{}}}
+\bibcite{entezari2022permutation}{{5}{2022}{{Entezari et~al.}}{{Entezari, Sedghi, Saukh, and Neyshabur}}}
+\bibcite{glorot2010understanding}{{6}{2010}{{Glorot \& Bengio}}{{Glorot and Bengio}}}
 \newlabel{tab:undo}{{2}{9}{Pooled stage-3 trajectory statistics over 500 ImageNet images (massive channel ignored; coordinates with $|\Delta _i|$ above the per-image median). Weight-tied vs.\ standard ConvNeXt-T at native ($R{=}1$) and refined ($R{=}100$) resolution. Mean $\pm $ std across images}{table.2}{}}
 \newlabel{tab:undo@cref}{{[table][2][]2}{[1][8][]9}}
 \newlabel{fig:pooled-dynamics}{{7}{9}{Stage-3 coordinates pooled over 500 images ($R{=}100$; massive channel removed; $|\Delta _i|$ above the per-image median). \textbf {Top:} weight-tied ConvNeXt; \textbf {bottom:} ConvNeXt-T. \textbf {Left:} progress $p_i(t)=(x_i(t)-x_i(0))/\Delta _i$ (median and P5--P95; thin lines: random coordinates). \textbf {Middle:} velocity toward the final value, coordinates sorted by peak time (red: toward the end state; blue: away). \textbf {Right:} phase density $(p_i,\,h_i/\Delta _i)$. The shared field advances mostly monotonically; the switched stack reverses and rewrites features between blocks}{figure.7}{}}
@@ -89,50 +89,59 @@
 \newlabel{sec:results@cref}{{[section][4][]4}{[1][9][]9}}
 \newlabel{sec:conclusion}{{5}{9}{}{section.5}{}}
 \newlabel{sec:conclusion@cref}{{[section][5][]5}{[1][9][]9}}
-\bibcite{hairer1993solving}{{7}{1993}{{Hairer et~al.}}{{Hairer, N{\o }rsett, and Wanner}}}
-\bibcite{he2016resnet}{{8}{2016}{{He et~al.}}{{He, Zhang, Ren, and Sun}}}
-\bibcite{liu2022convnext}{{9}{2022}{{Liu et~al.}}{{Liu, Mao, Wu, Feichtenhofer, Darrell, and Xie}}}
-\bibcite{lu2018beyond}{{10}{2018}{{Lu et~al.}}{{Lu, Zhong, Li, and Dong}}}
-\bibcite{pandey2026trajectorygeometrytransformerrepresentations}{{11}{2026}{{Pandey et~al.}}{{Pandey, Singh, and Mahdid}}}
-\bibcite{queiruga2020continuousindepthneuralnetworks}{{12}{2020}{{Queiruga et~al.}}{{Queiruga, Erichson, Taylor, and Mahoney}}}
-\bibcite{sander2022residualneuralnetworksdiscretize}{{13}{2022}{{Sander et~al.}}{{Sander, Ablin, and Peyr{\'e}}}}
-\bibcite{sun2024massiveactivationslargelanguage}{{14}{2024}{{Sun et~al.}}{{Sun, Chen, Kolter, and Liu}}}
-\bibcite{sun2025painters}{{15}{2025}{{Sun et~al.}}{{Sun, Pickett, Nain, and Jones}}}
+\bibcite{haber2017stable}{{7}{2017}{{Haber \& Ruthotto}}{{Haber and Ruthotto}}}
+\bibcite{hairer1993solving}{{8}{1993}{{Hairer et~al.}}{{Hairer, N{\o }rsett, and Wanner}}}
+\bibcite{he2016resnet}{{9}{2016}{{He et~al.}}{{He, Zhang, Ren, and Sun}}}
+\bibcite{liu2022convnext}{{10}{2022}{{Liu et~al.}}{{Liu, Mao, Wu, Feichtenhofer, Darrell, and Xie}}}
+\bibcite{lu2018beyond}{{11}{2018}{{Lu et~al.}}{{Lu, Zhong, Li, and Dong}}}
+\bibcite{pandey2026trajectorygeometrytransformerrepresentations}{{12}{2026}{{Pandey et~al.}}{{Pandey, Singh, and Mahdid}}}
+\bibcite{queiruga2020continuousindepthneuralnetworks}{{13}{2020}{{Queiruga et~al.}}{{Queiruga, Erichson, Taylor, and Mahoney}}}
+\bibcite{sander2022residualneuralnetworksdiscretize}{{14}{2022}{{Sander et~al.}}{{Sander, Ablin, and Peyr{\'e}}}}
+\bibcite{sun2024massiveactivationslargelanguage}{{15}{2024}{{Sun et~al.}}{{Sun, Chen, Kolter, and Liu}}}
+\bibcite{sun2025painters}{{16}{2025}{{Sun et~al.}}{{Sun, Pickett, Nain, and Jones}}}
 \bibstyle{icml2025}
+\citation{deng2009imagenet}
+\citation{liu2022convnext}
+\citation{liu2022convnext}
+\citation{liu2022convnext}
+\newlabel{app:training}{{A}{10}{}{appendix.A}{}}
+\newlabel{app:training@cref}{{[appendix][1][2147483647]A}{[1][10][]10}}
+\newlabel{app:solvers}{{B}{10}{}{appendix.B}{}}
+\newlabel{app:solvers@cref}{{[appendix][2][2147483647]B}{[1][10][]10}}
 \citation{hairer1993solving}
 \citation{glorot2010understanding}
-\newlabel{app:solvers}{{A}{10}{}{appendix.A}{}}
-\newlabel{app:solvers@cref}{{[appendix][1][2147483647]A}{[1][10][]10}}
-\newlabel{app:solver-endpoints}{{B}{10}{}{appendix.B}{}}
-\newlabel{app:solver-endpoints@cref}{{[appendix][2][2147483647]B}{[1][10][]10}}
-\newlabel{app:random-init}{{C}{10}{}{appendix.C}{}}
-\newlabel{app:random-init@cref}{{[appendix][3][2147483647]C}{[1][10][]10}}
+\newlabel{tab:app-training}{{3}{11}{ImageNet-1k training settings. Official ConvNeXt-T from~\citet {liu2022convnext}; the remaining columns are the four models we train. CNX-T: untied baseline. Tied: stage~3 shares one block ($D{=}9$). All: one shared block per stage. dp0: untied ConvNeXt-T with stochastic depth off}{table.3}{}}
+\newlabel{tab:app-training@cref}{{[table][3][2147483647]3}{[1][10][]11}}
+\newlabel{app:solver-endpoints}{{C}{11}{}{appendix.C}{}}
+\newlabel{app:solver-endpoints@cref}{{[appendix][3][2147483647]C}{[1][11][]11}}
+\newlabel{app:random-init}{{D}{11}{}{appendix.D}{}}
+\newlabel{app:random-init@cref}{{[appendix][4][2147483647]D}{[1][11][]11}}
+\newlabel{tab:app-cnx}{{4}{11}{ConvNeXt-T, plain, top-1 (\%)}{table.4}{}}
+\newlabel{tab:app-cnx@cref}{{[table][4][2147483647]4}{[1][11][]11}}
 \citation{queiruga2020continuousindepthneuralnetworks,chang2018multilevel}
-\newlabel{tab:app-cnx}{{3}{11}{ConvNeXt-T, plain, top-1 (\%)}{table.3}{}}
-\newlabel{tab:app-cnx@cref}{{[table][3][2147483647]3}{[1][10][]11}}
-\newlabel{tab:app-swin}{{4}{11}{Swin-T, plain, top-1 (\%)}{table.4}{}}
-\newlabel{tab:app-swin@cref}{{[table][4][2147483647]4}{[1][10][]11}}
-\newlabel{eq:step-ratio}{{10}{11}{}{equation.C.10}{}}
-\newlabel{eq:step-ratio@cref}{{[equation][10][2147483647]10}{[1][11][]11}}
-\newlabel{tab:app-r50}{{5}{11}{ResNet-50, plain, top-1 (\%)}{table.5}{}}
-\newlabel{tab:app-r50@cref}{{[table][5][2147483647]5}{[1][10][]11}}
-\newlabel{tab:app-r101}{{6}{11}{ResNet-101, plain, top-1 (\%)}{table.6}{}}
-\newlabel{tab:app-r101@cref}{{[table][6][2147483647]6}{[1][10][]11}}
-\newlabel{app:block-ops}{{D}{11}{}{appendix.D}{}}
-\newlabel{app:block-ops@cref}{{[appendix][4][2147483647]D}{[1][11][]11}}
-\newlabel{app:bilinear}{{E}{11}{}{appendix.E}{}}
-\newlabel{app:bilinear@cref}{{[appendix][5][2147483647]E}{[1][11][]11}}
+\newlabel{tab:app-swin}{{5}{12}{Swin-T, plain, top-1 (\%)}{table.5}{}}
+\newlabel{tab:app-swin@cref}{{[table][5][2147483647]5}{[1][11][]12}}
+\newlabel{tab:app-r50}{{6}{12}{ResNet-50, plain, top-1 (\%)}{table.6}{}}
+\newlabel{tab:app-r50@cref}{{[table][6][2147483647]6}{[1][11][]12}}
+\newlabel{eq:step-ratio}{{10}{12}{}{equation.D.10}{}}
+\newlabel{eq:step-ratio@cref}{{[equation][10][2147483647]10}{[1][12][]12}}
+\newlabel{tab:app-r101}{{7}{12}{ResNet-101, plain, top-1 (\%)}{table.7}{}}
+\newlabel{tab:app-r101@cref}{{[table][7][2147483647]7}{[1][11][]12}}
+\newlabel{tab:app-shared-t9}{{8}{12}{Shared ConvNeXt-T, fixed $T{=}9$ ($\Delta t{=}1/R$; $9R$ shared steps), top-1 (\%)}{table.8}{}}
+\newlabel{tab:app-shared-t9@cref}{{[table][8][2147483647]8}{[1][11][]12}}
 \citation{entezari2022permutation,ainsworth2023gitrebasin}
-\newlabel{tab:app-shared-t9}{{7}{12}{Shared ConvNeXt-T, fixed $T{=}9$ ($\Delta t{=}1/R$; $9R$ shared steps), top-1 (\%)}{table.7}{}}
-\newlabel{tab:app-shared-t9@cref}{{[table][7][2147483647]7}{[1][10][]12}}
-\newlabel{tab:app-solver-endpoints}{{8}{12}{Pairwise stage-3 endpoint agreement (mean over $N{=}32$; ignore top-1 channel). Horizon $T{=}9$ in every row}{table.8}{}}
-\newlabel{tab:app-solver-endpoints@cref}{{[table][8][2147483647]8}{[1][10][]12}}
-\newlabel{eq:bilinear-theta}{{11}{12}{}{equation.E.11}{}}
-\newlabel{eq:bilinear-theta@cref}{{[equation][11][2147483647]11}{[1][11][]12}}
-\newlabel{tab:app-random-init}{{9}{12}{Angle between $x_T$ and the RK4 $R{=}100$ reference ($T{=}n$, mean over $N{=}32$). $g$: Xavier gain of the stage-3 blocks; $\rho $: mean relative step \eqref {eq:step-ratio}; $^\star $: gain matched to the trained $\rho $. Rows sorted by $\rho $}{table.9}{}}
-\newlabel{tab:app-random-init@cref}{{[table][9][2147483647]9}{[1][11][]12}}
-\newlabel{tab:app-bilinear}{{10}{12}{Bilinear weight interpolation, Euler, top-1 (\%)}{table.10}{}}
-\newlabel{tab:app-bilinear@cref}{{[table][10][2147483647]10}{[1][12][]12}}
-\newlabel{fig:bilinear-norm}{{8}{13}{ConvNeXt-T residual norm along stage~3 at $R{=}100$: plain vs.\ bilinear weight interpolation (mean and P5--P95 over 500 images)}{figure.8}{}}
-\newlabel{fig:bilinear-norm@cref}{{[figure][8][2147483647]8}{[1][12][]13}}
-\gdef \@abspage@last{13}
+\newlabel{tab:app-solver-endpoints}{{9}{13}{Pairwise stage-3 endpoint agreement (mean over $N{=}32$; ignore top-1 channel). Horizon $T{=}9$ in every row}{table.9}{}}
+\newlabel{tab:app-solver-endpoints@cref}{{[table][9][2147483647]9}{[1][11][]13}}
+\newlabel{app:block-ops}{{E}{13}{}{appendix.E}{}}
+\newlabel{app:block-ops@cref}{{[appendix][5][2147483647]E}{[1][12][]13}}
+\newlabel{app:bilinear}{{F}{13}{}{appendix.F}{}}
+\newlabel{app:bilinear@cref}{{[appendix][6][2147483647]F}{[1][12][]13}}
+\newlabel{eq:bilinear-theta}{{11}{13}{}{equation.F.11}{}}
+\newlabel{eq:bilinear-theta@cref}{{[equation][11][2147483647]11}{[1][13][]13}}
+\newlabel{tab:app-random-init}{{10}{13}{Angle between $x_T$ and the RK4 $R{=}100$ reference ($T{=}n$, mean over $N{=}32$). $g$: Xavier gain of the stage-3 blocks; $\rho $: mean relative step \eqref {eq:step-ratio}; $^\star $: gain matched to the trained $\rho $. Rows sorted by $\rho $}{table.10}{}}
+\newlabel{tab:app-random-init@cref}{{[table][10][2147483647]10}{[1][12][]13}}
+\newlabel{tab:app-bilinear}{{11}{13}{Bilinear weight interpolation, Euler, top-1 (\%)}{table.11}{}}
+\newlabel{tab:app-bilinear@cref}{{[table][11][2147483647]11}{[1][13][]13}}
+\newlabel{fig:bilinear-norm}{{8}{14}{ConvNeXt-T residual norm along stage~3 at $R{=}100$: plain vs.\ bilinear weight interpolation (mean and P5--P95 over 500 images)}{figure.8}{}}
+\newlabel{fig:bilinear-norm@cref}{{[figure][8][2147483647]8}{[1][13][]14}}
+\gdef \@abspage@last{14}

@@ -11,7 +11,7 @@
 #SBATCH --error=logs/finetune_s4_r100_convnext_%j.err
 
 # Finetune ConvNeXt-T S4+head with stage-3 unrolled to R=100 (Δt=0.01, T=9).
-# 10 epochs, LR=1e-6. Stem/S1/S2/S3 frozen.
+# 10 epochs, constant LR=5e-6. Stem/S1/S2/S3 frozen.
 #
 #   source .env && sbatch --account="$SLURM_ACCOUNT" jobs/finetune_s4_r100_convnext.sh
 
@@ -25,9 +25,9 @@ fi
 export REPEATS="${REPEATS:-100}"
 export EULER_STEP="${EULER_STEP:-0.01}"
 export EPOCHS="${EPOCHS:-10}"
-export WARMUP_EPOCHS="${WARMUP_EPOCHS:-1}"
-export LR="${LR:-1e-6}"
-export MIN_LR="${MIN_LR:-1e-8}"
+export WARMUP_EPOCHS="${WARMUP_EPOCHS:-0}"
+export LR="${LR:-5e-6}"
+export MIN_LR="${MIN_LR:-5e-6}"
 export METHOD="${METHOD:-RK1}"
 export WEIGHT_INTERPOLATION="${WEIGHT_INTERPOLATION:-plain}"
 export EXPERIMENT_NAME="${EXPERIMENT_NAME:-convnext_R100_ES0p01_finetune_s4}"
