@@ -10,11 +10,11 @@
 \newlabel{sec:method}{{3}{1}{}{section.3}{}}
 \newlabel{sec:method@cref}{{[section][3][]3}{[1][1][]1}}
 \citation{sun2025painters}
-\citation{liu2022convnext}
 \newlabel{fig:teaser}{{1}{2}{Stage-3 feature trajectories of a weight-tied ConvNeXt (left) and a standard ConvNeXt-T (right), refined at inference with $\Delta t{=}0.01$ ($T{=}9$; massive channel removed). \textbf {Top:} PCA of all states, paths coloured by depth $t$; white dots mark integer $t$. \textbf {Bottom:} residual speed $\|f(x(t))\|$ (class means; shade: spread). One shared block is a single autonomous field $\dot x = f(x)$; nine independent blocks switch the field at every integer, $\dot x = f_{\lfloor t\rfloor }(x)$. We analyse this contrast throughout the paper}{figure.1}{}}
 \newlabel{fig:teaser@cref}{{[figure][1][]1}{[1][1][]2}}
 \newlabel{sec:weight_tied}{{3.1}{2}{}{subsection.3.1}{}}
 \newlabel{sec:weight_tied@cref}{{[subsection][1][3]3.1}{[1][2][]2}}
+\citation{liu2022convnext}
 \citation{he2016resnet}
 \citation{e2017proposal,haber2017stable,lu2018beyond}
 \citation{e2017proposal,haber2017stable,lu2018beyond}
@@ -34,61 +34,61 @@
 \newlabel{eq:horizon-T@cref}{{[equation][5][]5}{[1][3][]3}}
 \newlabel{eq:delta-from-R}{{6}{3}{}{equation.3.6}{}}
 \newlabel{eq:delta-from-R@cref}{{[equation][6][]6}{[1][3][]3}}
-\newlabel{eq:plain-euler}{{7}{3}{}{equation.3.7}{}}
-\newlabel{eq:plain-euler@cref}{{[equation][7][]7}{[1][3][]3}}
-\newlabel{eq:refined-stage}{{8}{3}{}{equation.3.8}{}}
-\newlabel{eq:refined-stage@cref}{{[equation][8][]8}{[1][3][]3}}
-\newlabel{eq:weight-tied-ode}{{9}{3}{}{equation.3.9}{}}
-\newlabel{eq:weight-tied-ode@cref}{{[equation][9][]9}{[1][3][]3}}
 \newlabel{fig:refinement}{{2}{4}{\textbf {Left:} top-1 vs.\ repetitions $R$ (solid: Euler / RK1; dashed: RK4), with $\Delta t{=}1/R$ so $T{=}n$ is conserved (weight-tied: $nR$ applications of the shared block). \textbf {Right:} residual-field norm $\|f(x)\|$ along stage~3 (mean and P5--P95 over 500 images). ConvNeXt is piecewise constant in depth; the weight-tied model is a single smooth autonomous field. See \cref {sec:teaser-b}}{figure.2}{}}
 \newlabel{fig:refinement@cref}{{[figure][2][]2}{[1][3][]4}}
+\newlabel{eq:plain-euler}{{7}{4}{}{equation.3.7}{}}
+\newlabel{eq:plain-euler@cref}{{[equation][7][]7}{[1][3][]4}}
+\newlabel{eq:refined-stage}{{8}{4}{}{equation.3.8}{}}
+\newlabel{eq:refined-stage@cref}{{[equation][8][]8}{[1][4][]4}}
+\newlabel{eq:weight-tied-ode}{{9}{4}{}{equation.3.9}{}}
+\newlabel{eq:weight-tied-ode@cref}{{[equation][9][]9}{[1][4][]4}}
 \newlabel{sec:looping-ablations}{{3.2.1}{4}{}{subsubsection.3.2.1}{}}
-\newlabel{sec:looping-ablations@cref}{{[subsubsection][1][3,2]3.2.1}{[1][3][]4}}
-\newlabel{tab:r-ablation}{{1}{4}{Plain Euler refinement with $\Delta t{=}1/R$ ($T$ conserved). Top-1 (\%). For weight-tied, $R$ means $9R$ applications of the shared block (exact $9R$ when available; else nearest measured depth$^\ast $). ODE limit: RK4 at the finest step in each sweep}{table.1}{}}
-\newlabel{tab:r-ablation@cref}{{[table][1][]1}{[1][4][]4}}
+\newlabel{sec:looping-ablations@cref}{{[subsubsection][1][3,2]3.2.1}{[1][4][]4}}
+\newlabel{tab:r-ablation}{{1}{5}{Plain Euler refinement with $\Delta t{=}1/R$ ($T$ conserved). Top-1 (\%). For weight-tied, $R$ means $9R$ applications of the shared block (exact $9R$ when available; else nearest measured depth$^\ast $). ODE limit: RK4 at the finest step in each sweep}{table.1}{}}
+\newlabel{tab:r-ablation@cref}{{[table][1][]1}{[1][4][]5}}
 \newlabel{fig:shared-fractional}{{3}{5}{Shared ConvNeXt-T at fixed $T{=}9$ for fractional $R\leq 1$ (RK1 solid, RK4 dashed)}{figure.3}{}}
 \newlabel{fig:shared-fractional@cref}{{[figure][3][]3}{[1][4][]5}}
 \newlabel{fig:horizon}{{4}{5}{Shared ConvNeXt-T: top-1 vs.\ horizon $T$. Red: fixed $\Delta t{=}1$, more steps ($T$ grows). Purple: fixed $R{=}1$ (9 steps), varying $\Delta t$ ($T{=}9\cdot \Delta t$). Both peak at the trained horizon $T{=}9$}{figure.4}{}}
-\newlabel{fig:horizon@cref}{{[figure][4][]4}{[1][4][]5}}
+\newlabel{fig:horizon@cref}{{[figure][4][]4}{[1][5][]5}}
 \citation{queiruga2020continuousindepthneuralnetworks,chang2018multilevel}
-\citation{sun2024massiveactivationslargelanguage}
-\citation{sun2024massiveactivationslargelanguage}
-\citation{pandey2026trajectorygeometrytransformerrepresentations}
 \newlabel{fig:dist-r1}{{5}{6}{ConvNeXt-T, $R{=}100$, $\Delta t{=}0.01$, against the native $R{=}1$ path. \textbf {Top:} $\|x^{(R)}(t)-x_{R{=}1}\|$ (solid), with the state norms of both paths for scale (dashed: $R{=}100$; squares: $R{=}1$). \textbf {Bottom:} $\cos (x^{(R)},x_{R{=}1})$. Mean and P5--P95 over 500 images; massive channel ignored; dots mark block ends. The norms nearly coincide while the block-end gap grows with depth: the mismatch is mostly in angle}{figure.5}{}}
 \newlabel{fig:dist-r1@cref}{{[figure][5][]5}{[1][5][]6}}
 \newlabel{sec:teaser-b}{{3.2.2}{6}{}{subsubsection.3.2.2}{}}
 \newlabel{sec:teaser-b@cref}{{[subsubsection][2][3,2]3.2.2}{[1][6][]6}}
-\newlabel{sec:geometrical_analysis}{{3.3}{6}{}{subsection.3.3}{}}
-\newlabel{sec:geometrical_analysis@cref}{{[subsection][3][3]3.3}{[1][6][]6}}
-\newlabel{sec:massive_activations}{{3.3.1}{6}{}{subsubsection.3.3.1}{}}
-\newlabel{sec:massive_activations@cref}{{[subsubsection][1][3,3]3.3.1}{[1][6][]6}}
+\citation{sun2024massiveactivationslargelanguage}
+\citation{sun2024massiveactivationslargelanguage}
+\citation{pandey2026trajectorygeometrytransformerrepresentations}
+\newlabel{sec:geometrical_analysis}{{3.3}{7}{}{subsection.3.3}{}}
+\newlabel{sec:geometrical_analysis@cref}{{[subsection][3][3]3.3}{[1][7][]7}}
+\newlabel{sec:massive_activations}{{3.3.1}{7}{}{subsubsection.3.3.1}{}}
+\newlabel{sec:massive_activations@cref}{{[subsubsection][1][3,3]3.3.1}{[1][7][]7}}
 \newlabel{sec:tied-trajectory-shape}{{3.3.3}{7}{}{subsubsection.3.3.3}{}}
-\newlabel{sec:tied-trajectory-shape@cref}{{[subsubsection][3][3,3]3.3.3}{[1][6][]7}}
+\newlabel{sec:tied-trajectory-shape@cref}{{[subsubsection][3][3,3]3.3.3}{[1][7][]7}}
 \newlabel{sec:refinement_error}{{3.3.4}{7}{}{subsubsection.3.3.4}{}}
 \newlabel{sec:refinement_error@cref}{{[subsubsection][4][3,3]3.3.4}{[1][7][]7}}
-\newlabel{sec:beyond_horizon}{{3.3.5}{7}{}{subsubsection.3.3.5}{}}
-\newlabel{sec:beyond_horizon@cref}{{[subsubsection][5][3,3]3.3.5}{[1][7][]7}}
-\newlabel{sec:overparametrized_undoing}{{3.4}{7}{}{subsection.3.4}{}}
-\newlabel{sec:overparametrized_undoing@cref}{{[subsection][4][3]3.4}{[1][7][]7}}
 \newlabel{fig:dist-r1-compare}{{6}{8}{Refined vs.\ native ($R{=}1$) stage-3 path for the standard (left) and weight-tied (right) ConvNeXt-T. \textbf {Top:} $\|x^{(R)}-x_{R{=}1}\|$ (solid) with both state norms for scale (dashed: refined; squares: native). \textbf {Bottom:} $\cos (x^{(R)},x_{R{=}1})$. Mean and P5--P95 over the same 500 images; massive channel ignored; dots mark the end of each native step. The switched stack accumulates angle at every block; the shared field saturates}{figure.6}{}}
 \newlabel{fig:dist-r1-compare@cref}{{[figure][6][]6}{[1][7][]8}}
+\newlabel{sec:beyond_horizon}{{3.3.5}{8}{}{subsubsection.3.3.5}{}}
+\newlabel{sec:beyond_horizon@cref}{{[subsubsection][5][3,3]3.3.5}{[1][7][]8}}
+\newlabel{sec:overparametrized_undoing}{{3.4}{8}{}{subsection.3.4}{}}
+\newlabel{sec:overparametrized_undoing@cref}{{[subsection][4][3]3.4}{[1][8][]8}}
+\newlabel{sec:deltas}{{3.5}{9}{}{subsection.3.5}{}}
+\newlabel{sec:deltas@cref}{{[subsection][5][3]3.5}{[1][9][]9}}
+\newlabel{sec:discussion}{{4}{9}{}{section.4}{}}
+\newlabel{sec:discussion@cref}{{[section][4][]4}{[1][9][]9}}
 \bibdata{paper}
 \bibcite{ainsworth2023gitrebasin}{{1}{2023}{{Ainsworth et~al.}}{{Ainsworth, Hayase, and Srinivasa}}}
 \bibcite{chang2018multilevel}{{2}{2018}{{Chang et~al.}}{{Chang, Meng, Haber, Tung, and Begert}}}
 \bibcite{deng2009imagenet}{{3}{2009}{{Deng et~al.}}{{Deng, Dong, Socher, Li, Li, and Fei-Fei}}}
 \bibcite{e2017proposal}{{4}{2017}{{E}}{{}}}
 \bibcite{entezari2022permutation}{{5}{2022}{{Entezari et~al.}}{{Entezari, Sedghi, Saukh, and Neyshabur}}}
+\newlabel{tab:undo}{{2}{10}{Pooled stage-3 trajectory statistics over 500 ImageNet images (massive channel ignored; coordinates with $|\Delta _i|$ above the per-image median). Weight-tied vs.\ standard ConvNeXt-T at native ($R{=}1$) and refined ($R{=}100$) resolution. Mean $\pm $ std across images}{table.2}{}}
+\newlabel{tab:undo@cref}{{[table][2][]2}{[1][9][]10}}
+\newlabel{fig:pooled-dynamics}{{7}{10}{Stage-3 coordinates pooled over 500 images ($R{=}100$; massive channel removed; $|\Delta _i|$ above the per-image median). \textbf {Top:} weight-tied ConvNeXt; \textbf {bottom:} ConvNeXt-T. \textbf {Left:} progress $p_i(t)=(x_i(t)-x_i(0))/\Delta _i$ (median and P5--P95; thin lines: random coordinates). \textbf {Middle:} velocity toward the final value, coordinates sorted by peak time (red: toward the end state; blue: away). \textbf {Right:} phase density $(p_i,\,h_i/\Delta _i)$. The shared field advances mostly monotonically; the switched stack reverses and rewrites features between blocks}{figure.7}{}}
+\newlabel{fig:pooled-dynamics@cref}{{[figure][7][]7}{[1][9][]10}}
+\newlabel{sec:conclusion}{{5}{10}{}{section.5}{}}
+\newlabel{sec:conclusion@cref}{{[section][5][]5}{[1][10][]10}}
 \bibcite{glorot2010understanding}{{6}{2010}{{Glorot \& Bengio}}{{Glorot and Bengio}}}
-\newlabel{tab:undo}{{2}{9}{Pooled stage-3 trajectory statistics over 500 ImageNet images (massive channel ignored; coordinates with $|\Delta _i|$ above the per-image median). Weight-tied vs.\ standard ConvNeXt-T at native ($R{=}1$) and refined ($R{=}100$) resolution. Mean $\pm $ std across images}{table.2}{}}
-\newlabel{tab:undo@cref}{{[table][2][]2}{[1][8][]9}}
-\newlabel{fig:pooled-dynamics}{{7}{9}{Stage-3 coordinates pooled over 500 images ($R{=}100$; massive channel removed; $|\Delta _i|$ above the per-image median). \textbf {Top:} weight-tied ConvNeXt; \textbf {bottom:} ConvNeXt-T. \textbf {Left:} progress $p_i(t)=(x_i(t)-x_i(0))/\Delta _i$ (median and P5--P95; thin lines: random coordinates). \textbf {Middle:} velocity toward the final value, coordinates sorted by peak time (red: toward the end state; blue: away). \textbf {Right:} phase density $(p_i,\,h_i/\Delta _i)$. The shared field advances mostly monotonically; the switched stack reverses and rewrites features between blocks}{figure.7}{}}
-\newlabel{fig:pooled-dynamics@cref}{{[figure][7][]7}{[1][8][]9}}
-\newlabel{sec:deltas}{{3.5}{9}{}{subsection.3.5}{}}
-\newlabel{sec:deltas@cref}{{[subsection][5][3]3.5}{[1][9][]9}}
-\newlabel{sec:results}{{4}{9}{}{section.4}{}}
-\newlabel{sec:results@cref}{{[section][4][]4}{[1][9][]9}}
-\newlabel{sec:conclusion}{{5}{9}{}{section.5}{}}
-\newlabel{sec:conclusion@cref}{{[section][5][]5}{[1][9][]9}}
 \bibcite{haber2017stable}{{7}{2017}{{Haber \& Ruthotto}}{{Haber and Ruthotto}}}
 \bibcite{hairer1993solving}{{8}{1993}{{Hairer et~al.}}{{Hairer, N{\o }rsett, and Wanner}}}
 \bibcite{he2016resnet}{{9}{2016}{{He et~al.}}{{He, Zhang, Ren, and Sun}}}
@@ -100,48 +100,52 @@
 \bibcite{sun2024massiveactivationslargelanguage}{{15}{2024}{{Sun et~al.}}{{Sun, Chen, Kolter, and Liu}}}
 \bibcite{sun2025painters}{{16}{2025}{{Sun et~al.}}{{Sun, Pickett, Nain, and Jones}}}
 \bibstyle{icml2025}
+\newlabel{fig:prefix-acc}{{8}{11}{ImageNet top-1 of each model's trained stage~4+head on stage~3 prefixes: after $k$ residual blocks, skip the rest of stage~3 and decode. Weight-tied features become usable earlier and more evenly; ConvNeXt-T concentrates most of the gain toward the end of the stage}{figure.8}{}}
+\newlabel{fig:prefix-acc@cref}{{[figure][8][]8}{[1][9][]11}}
+\newlabel{tab:headline}{{3}{11}{Headline measurements on ImageNet-1k. Top-1 and ODE limit from the conserved-horizon sweep of \cref {tab:r-ablation} (ODE: RK4 at the finest step). Straightness and undo: stage-3 trajectories at $R{=}100$ (\cref {tab:undo}). Params and the all-stages run are from \cref {sec:weight_tied}. Swin-T and the ResNets are the standard pretrained checkpoints; we did not retrain them}{table.3}{}}
+\newlabel{tab:headline@cref}{{[table][3][]3}{[1][9][]11}}
 \citation{deng2009imagenet}
 \citation{liu2022convnext}
 \citation{liu2022convnext}
 \citation{liu2022convnext}
-\newlabel{app:training}{{A}{10}{}{appendix.A}{}}
-\newlabel{app:training@cref}{{[appendix][1][2147483647]A}{[1][10][]10}}
-\newlabel{app:solvers}{{B}{10}{}{appendix.B}{}}
-\newlabel{app:solvers@cref}{{[appendix][2][2147483647]B}{[1][10][]10}}
 \citation{hairer1993solving}
 \citation{glorot2010understanding}
-\newlabel{tab:app-training}{{3}{11}{ImageNet-1k training settings. Official ConvNeXt-T from~\citet {liu2022convnext}; the remaining columns are the four models we train. CNX-T: untied baseline. Tied: stage~3 shares one block ($D{=}9$). All: one shared block per stage. dp0: untied ConvNeXt-T with stochastic depth off}{table.3}{}}
-\newlabel{tab:app-training@cref}{{[table][3][2147483647]3}{[1][10][]11}}
-\newlabel{app:solver-endpoints}{{C}{11}{}{appendix.C}{}}
-\newlabel{app:solver-endpoints@cref}{{[appendix][3][2147483647]C}{[1][11][]11}}
-\newlabel{app:random-init}{{D}{11}{}{appendix.D}{}}
-\newlabel{app:random-init@cref}{{[appendix][4][2147483647]D}{[1][11][]11}}
-\newlabel{tab:app-cnx}{{4}{11}{ConvNeXt-T, plain, top-1 (\%)}{table.4}{}}
-\newlabel{tab:app-cnx@cref}{{[table][4][2147483647]4}{[1][11][]11}}
-\citation{queiruga2020continuousindepthneuralnetworks,chang2018multilevel}
-\newlabel{tab:app-swin}{{5}{12}{Swin-T, plain, top-1 (\%)}{table.5}{}}
-\newlabel{tab:app-swin@cref}{{[table][5][2147483647]5}{[1][11][]12}}
-\newlabel{tab:app-r50}{{6}{12}{ResNet-50, plain, top-1 (\%)}{table.6}{}}
-\newlabel{tab:app-r50@cref}{{[table][6][2147483647]6}{[1][11][]12}}
+\newlabel{app:training}{{A}{12}{}{appendix.A}{}}
+\newlabel{app:training@cref}{{[appendix][1][2147483647]A}{[1][12][]12}}
+\newlabel{app:solvers}{{B}{12}{}{appendix.B}{}}
+\newlabel{app:solvers@cref}{{[appendix][2][2147483647]B}{[1][12][]12}}
+\newlabel{app:solver-endpoints}{{C}{12}{}{appendix.C}{}}
+\newlabel{app:solver-endpoints@cref}{{[appendix][3][2147483647]C}{[1][12][]12}}
+\newlabel{app:random-init}{{D}{12}{}{appendix.D}{}}
+\newlabel{app:random-init@cref}{{[appendix][4][2147483647]D}{[1][12][]12}}
 \newlabel{eq:step-ratio}{{10}{12}{}{equation.D.10}{}}
 \newlabel{eq:step-ratio@cref}{{[equation][10][2147483647]10}{[1][12][]12}}
-\newlabel{tab:app-r101}{{7}{12}{ResNet-101, plain, top-1 (\%)}{table.7}{}}
-\newlabel{tab:app-r101@cref}{{[table][7][2147483647]7}{[1][11][]12}}
-\newlabel{tab:app-shared-t9}{{8}{12}{Shared ConvNeXt-T, fixed $T{=}9$ ($\Delta t{=}1/R$; $9R$ shared steps), top-1 (\%)}{table.8}{}}
-\newlabel{tab:app-shared-t9@cref}{{[table][8][2147483647]8}{[1][11][]12}}
+\newlabel{tab:app-training}{{4}{13}{ImageNet-1k training settings. Official ConvNeXt-T from~\citet {liu2022convnext}; the remaining columns are the four models we train. CNX-T: untied baseline. Tied: stage~3 shares one block ($D{=}9$). All: one shared block per stage. dp0: untied ConvNeXt-T with stochastic depth off}{table.4}{}}
+\newlabel{tab:app-training@cref}{{[table][4][2147483647]4}{[1][12][]13}}
+\newlabel{tab:app-cnx}{{5}{13}{ConvNeXt-T, plain, top-1 (\%)}{table.5}{}}
+\newlabel{tab:app-cnx@cref}{{[table][5][2147483647]5}{[1][12][]13}}
+\newlabel{tab:app-swin}{{6}{13}{Swin-T, plain, top-1 (\%)}{table.6}{}}
+\newlabel{tab:app-swin@cref}{{[table][6][2147483647]6}{[1][12][]13}}
+\citation{queiruga2020continuousindepthneuralnetworks,chang2018multilevel}
 \citation{entezari2022permutation,ainsworth2023gitrebasin}
-\newlabel{tab:app-solver-endpoints}{{9}{13}{Pairwise stage-3 endpoint agreement (mean over $N{=}32$; ignore top-1 channel). Horizon $T{=}9$ in every row}{table.9}{}}
-\newlabel{tab:app-solver-endpoints@cref}{{[table][9][2147483647]9}{[1][11][]13}}
-\newlabel{app:block-ops}{{E}{13}{}{appendix.E}{}}
-\newlabel{app:block-ops@cref}{{[appendix][5][2147483647]E}{[1][12][]13}}
-\newlabel{app:bilinear}{{F}{13}{}{appendix.F}{}}
-\newlabel{app:bilinear@cref}{{[appendix][6][2147483647]F}{[1][12][]13}}
-\newlabel{eq:bilinear-theta}{{11}{13}{}{equation.F.11}{}}
-\newlabel{eq:bilinear-theta@cref}{{[equation][11][2147483647]11}{[1][13][]13}}
-\newlabel{tab:app-random-init}{{10}{13}{Angle between $x_T$ and the RK4 $R{=}100$ reference ($T{=}n$, mean over $N{=}32$). $g$: Xavier gain of the stage-3 blocks; $\rho $: mean relative step \eqref {eq:step-ratio}; $^\star $: gain matched to the trained $\rho $. Rows sorted by $\rho $}{table.10}{}}
-\newlabel{tab:app-random-init@cref}{{[table][10][2147483647]10}{[1][12][]13}}
-\newlabel{tab:app-bilinear}{{11}{13}{Bilinear weight interpolation, Euler, top-1 (\%)}{table.11}{}}
-\newlabel{tab:app-bilinear@cref}{{[table][11][2147483647]11}{[1][13][]13}}
-\newlabel{fig:bilinear-norm}{{8}{14}{ConvNeXt-T residual norm along stage~3 at $R{=}100$: plain vs.\ bilinear weight interpolation (mean and P5--P95 over 500 images)}{figure.8}{}}
-\newlabel{fig:bilinear-norm@cref}{{[figure][8][2147483647]8}{[1][13][]14}}
-\gdef \@abspage@last{14}
+\newlabel{tab:app-r50}{{7}{14}{ResNet-50, plain, top-1 (\%)}{table.7}{}}
+\newlabel{tab:app-r50@cref}{{[table][7][2147483647]7}{[1][12][]14}}
+\newlabel{tab:app-r101}{{8}{14}{ResNet-101, plain, top-1 (\%)}{table.8}{}}
+\newlabel{tab:app-r101@cref}{{[table][8][2147483647]8}{[1][12][]14}}
+\newlabel{app:block-ops}{{E}{14}{}{appendix.E}{}}
+\newlabel{app:block-ops@cref}{{[appendix][5][2147483647]E}{[1][14][]14}}
+\newlabel{app:bilinear}{{F}{14}{}{appendix.F}{}}
+\newlabel{app:bilinear@cref}{{[appendix][6][2147483647]F}{[1][14][]14}}
+\newlabel{eq:bilinear-theta}{{11}{14}{}{equation.F.11}{}}
+\newlabel{eq:bilinear-theta@cref}{{[equation][11][2147483647]11}{[1][14][]14}}
+\newlabel{tab:app-shared-t9}{{9}{14}{Shared ConvNeXt-T, fixed $T{=}9$ ($\Delta t{=}1/R$; $9R$ shared steps), top-1 (\%)}{table.9}{}}
+\newlabel{tab:app-shared-t9@cref}{{[table][9][2147483647]9}{[1][12][]14}}
+\newlabel{tab:app-solver-endpoints}{{10}{14}{Pairwise stage-3 endpoint agreement (mean over $N{=}32$; ignore top-1 channel). Horizon $T{=}9$ in every row}{table.10}{}}
+\newlabel{tab:app-solver-endpoints@cref}{{[table][10][2147483647]10}{[1][12][]14}}
+\newlabel{tab:app-random-init}{{11}{15}{Angle between $x_T$ and the RK4 $R{=}100$ reference ($T{=}n$, mean over $N{=}32$). $g$: Xavier gain of the stage-3 blocks; $\rho $: mean relative step \eqref {eq:step-ratio}; $^\star $: gain matched to the trained $\rho $. Rows sorted by $\rho $}{table.11}{}}
+\newlabel{tab:app-random-init@cref}{{[table][11][2147483647]11}{[1][13][]15}}
+\newlabel{tab:app-bilinear}{{12}{15}{Bilinear weight interpolation, Euler, top-1 (\%)}{table.12}{}}
+\newlabel{tab:app-bilinear@cref}{{[table][12][2147483647]12}{[1][14][]15}}
+\newlabel{fig:bilinear-norm}{{9}{15}{ConvNeXt-T residual norm along stage~3 at $R{=}100$: plain vs.\ bilinear weight interpolation (mean and P5--P95 over 500 images)}{figure.9}{}}
+\newlabel{fig:bilinear-norm@cref}{{[figure][9][2147483647]9}{[1][14][]15}}
+\gdef \@abspage@last{15}

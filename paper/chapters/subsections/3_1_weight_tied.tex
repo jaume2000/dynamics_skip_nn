@@ -24,8 +24,8 @@ Sharing all four stages (8.68M params, 70\% fewer) reaches 79.01\%
 
 A network that implements (approximately) the same residual function at every depth
 can therefore sit close to the untied baseline.
-That motivates the next subsection: if stage~3 is approximately the Euler
-discretisation of one vector field, refining that discretisation at inference---looping
-with step $\Delta t{=}1/R$ while keeping $T{=}9$---should remain meaningful, without
-fine-tuning.
-We test this on both the weight-tied network and standard residual models.
+That motivates the next subsection---not as a recipe for a deeper or larger network,
+but as an inference-time probe: if stage~3 is (approximately) an Euler discretisation,
+refining it with step $\Delta t{=}1/R$ at fixed $T{=}9$ should keep a decoder-usable
+state and, equally important, yield high-resolution trajectories for analysis.
+We apply that probe to the weight-tied model and to standard residual architectures.

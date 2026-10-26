@@ -1,0 +1,84 @@
+\section{Discussion}
+\label{sec:discussion}
+
+The experiments of \cref{sec:method} are one argument, not five independent facts.
+\Cref{tab:headline} collects the numbers that carry it.
+
+\begin{table}[t]
+    \centering
+    \caption{Headline measurements on ImageNet-1k.
+    Top-1 and ODE limit from the conserved-horizon sweep of \cref{tab:r-ablation}
+    (ODE: RK4 at the finest step).
+    Straightness and undo: stage-3 trajectories at $R{=}100$ (\cref{tab:undo}).
+    Params and the all-stages run are from \cref{sec:weight_tied}.
+    Swin-T and the ResNets are the standard pretrained checkpoints; we did not retrain them.}
+    \label{tab:headline}
+    \small
+    \setlength{\tabcolsep}{2.6pt}
+    \begin{tabular}{lrrrrrr}
+        \toprule
+        Model & Params & $R{=}1$ & ODE & Gap & Str. & Undo \\
+        \midrule
+        ConvNeXt-T         & 28.59M & 80.95 & 80.23 & $-0.72$ & 0.50 & 0.25 \\
+        Weight-tied S3     & 18.97M & 80.34 & 80.12 & $-0.22$ & 0.78 & 0.02 \\
+        All-stages tied    & 8.68M  & 79.01 & ---   & ---     & ---  & ---  \\
+        Swin-T             & ---    & 81.08 & 80.32 & $-0.76$ & ---  & ---  \\
+        ResNet-50          & ---    & 80.34 & 79.43 & $-0.91$ & ---  & ---  \\
+        ResNet-101         & ---    & 81.67 & 81.05 & $-0.62$ & ---  & ---  \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+One shared residual map, applied nine times, already carries almost all of the
+accuracy of an untied ConvNeXt-T stage~3 ($-0.61$ top-1; the sweep checkpoint in
+\cref{tab:headline} is $80.34$ vs.\ $80.95$).
+Sharing every stage still reaches $79.01$ with $70\%$ fewer parameters.
+That is possible because the nine independent blocks do not implement nine steps of
+one transport.
+Almost half of their travel cancels before $t{=}9$ (undo $0.25$, wasted motion $0.48$),
+consecutive displacements are nearly orthogonal (cosine $0.17$), and nearly half of
+the sign flips sit on block boundaries---the switches of
+$\theta(t)=\theta_{\lfloor t\rfloor}$.
+A single autonomous field cannot undo itself in that way (undo $0.02$, cosine $0.92$,
+straightness $0.78$).
+The leftover six tenths of a point are then the part that independent $\theta_k$ still
+specialise, not evidence of a different dynamical mechanism
+(\cref{sec:overparametrized_undoing}).
+Closing that gap with small per-block corrections on top of the shared field is the
+content of \cref{sec:deltas}.
+
+The same contrast appears when the discretisation is refined at inference, with no
+training.
+Every architecture we tested---tied or not---converges to a single continuous limit
+once $T$ is held fixed, and that limit keeps the network's function (gaps $0.2$--$0.9$
+points).
+A random residual field has a continuous limit too (\cref{app:random-init}); what
+training adds is that the limit remains a classifier.
+The native unit-step path is \emph{not} that limit.
+On ConvNeXt-T the refined endpoint sits $\approx 21^\circ$ from the $R{=}1$ state and
+the mismatch accumulates at every block; on the weight-tied model it saturates at
+$\approx 11^\circ$ (\cref{sec:refinement_error}).
+Breaking the horizon ($R$ repeats at $\Delta t{=}1$) collapses every network to chance.
+The invariant the head expects is the integration time $T{=}n$, not the number of
+residual applications.
+In that sense a trained stage is a sum of one-step Euler solves, each accurate enough
+for the decoder at $\Delta t{=}1$ and each replaceable by a finer integral of the
+\emph{same} block, but not a Neural ODE whose parameters vary smoothly with depth:
+bilinear interpolation of consecutive $\theta_k$ costs $6$--$23$ points
+(\cref{app:bilinear}).
+
+Two regimes therefore sit under the same residual algebra $x+f(x)$.
+Reuse one block throughout the stage and the field is autonomous: speed rises and
+falls as one curve, refinement error stays bounded, features advance mostly
+monotonically.
+Use a new block at every integer and the field is switched: piecewise autonomous
+inside each unit interval, discontinuous at the integers, with a sawtooth residual
+norm and systematic undoing between neighbours
+(\cref{fig:teaser,fig:refinement,fig:pooled-dynamics}).
+That is the reading we take into the geometry of \cref{sec:geometrical_analysis}.
+A light adaptation of stage~4 and the head already restores the baseline at $R{=}3$
+($80.93\%$), which is consistent with the transport changing while remaining readable;
+whether the same holds at the fine step of \cref{fig:dist-r1} is the remaining
+decoder check.
+Whether one can retain the expressivity of independent $\theta_k$ while suppressing
+cancellation---and thus get more accuracy per parameter---is left for future work.

@@ -17,15 +17,23 @@
 
 \Cref{sec:weight_tied} showed that one shared block nearly matches a standard
 ConvNeXt stage~3 (independent per-block weights).
-We now test whether residual blocks behave as one-step Euler updates of a vector field:
-if so, repeating each update $R$ times with step $\Delta t{=}1/R$---without
-fine-tuning---should preserve the trained horizon $T{=}n$ and the function the network
-computes.
-Convergence of the refinement by itself is not diagnostic, since any residual block
-with Lipschitz $f$ has a continuous limit (\cref{app:random-init}); the informative
-quantities are what the limit retains and how far the native path is from it.
-We apply this probe to weight-tied and standard networks; the geometry of the
-resulting trajectories is deferred to \cref{sec:geometrical_analysis}.
+We now refine residual blocks at inference as one-step Euler updates of a vector field:
+repeat each update $R$ times with step $\Delta t{=}1/R$, keep the trained horizon
+$T{=}n$, and do not fine-tune.
+The goal is not to replace a small network by a $R$-times deeper one that trades a
+fraction of a point of accuracy for width in depth---that would be the wrong reading.
+Refinement is a probe with two uses.
+First, it tests whether the continuous limit stays functionally close to the native
+model for stage~4 and the head: on ConvNeXt-T the refined endpoint sits
+$\sim\!21^\circ$ from the $R{=}1$ state (\cref{fig:dist-r1}), yet top-1 barely moves, so
+the decoder still sees a usable representation.
+Second, it raises the temporal resolution of the path from $x_0$ to $x_T$, which is
+what later geometry and undoing analyses need.
+Convergence of the refinement by itself is not diagnostic---any Lipschitz residual has
+a continuous limit (\cref{app:random-init})---so what matters is what the limit retains
+and how the trajectory is organised.
+We apply the probe to weight-tied and standard networks (ConvNeXt, Swin, ResNet);
+trajectory geometry is deferred to \cref{sec:geometrical_analysis}.
 
 A residual block computes $x + f(x)$~\citep{he2016resnet}.
 With step size $1$, that is exactly one step of the explicit Euler method for the ODE
@@ -240,6 +248,13 @@ Each block therefore implements a \emph{different} map than its one-step counter
 once the input has already drifted; local refinement stays contractive toward the
 current block's $R{=}1$ target, but errors accumulate through the switched stack and
 the final $x_T$ points in a different direction from the native one.
+Nevertheless, that displacement---$\sim\!21^\circ$ on ConvNeXt-T, $\sim\!11^\circ$ on the
+weight-tied model (\cref{sec:refinement_error})---still lands in a zone that stage~4
+and the head can classify: without training, refining at fixed $T$ costs only
+$0.6$--$0.9$ top-1 points on untied models and $0.2$ on the weight-tied one
+(\cref{tab:r-ablation}).
+The next paragraph asks whether a light finetune of that decoder closes the rest
+(already yes at $R{=}3$; $R{=}100$ pending).
 
 \begin{figure}[t]
     \centering
@@ -262,15 +277,14 @@ $0.04$ points of the untied baseline ($80.97\%$).\footnote{Script:
 \texttt{scripts/finetune\_s4\_r\_convnext.py}.
 For contrast, $R{=}3$ with $\Delta t{=}1$ (broken horizon $T{=}27$) collapses to
 $41\%$ \emph{without} finetuning (\texttt{convnext\_r3\_quick}).}
-% TODO: sync Leonardo run directories for the numbers below.
-The same protocol at the fine step used in \cref{fig:dist-r1} yields
-$\mathrm{XX}\%$ top-1 for ConvNeXt-T at $R{=}100$ ($\Delta t{=}0.01$)
-and $\mathrm{XX}\%$ for the weight-tied model at $R{=}100$ ($900$ shared steps, $\Delta t{=}0.01$)
-after $10$ epochs at learning rate $10^{-6}$
+% TODO: fill XX when Leonardo S4+head runs finish (preliminaries look positive).
+The same protocol at the fine step of \cref{fig:dist-r1} is running now; we report
+$\mathrm{XX}\%$ top-1 for ConvNeXt-T at $R{=}100$ ($\Delta t{=}0.01$) and
+$\mathrm{XX}\%$ for the weight-tied model at $R{=}100$ ($900$ shared steps) after
+$10$ epochs at learning rate $10^{-6}$
 (\texttt{finetune\_s4\_r100\_convnext.sh}, \texttt{finetune\_s4\_d900\_shared\_convnext.sh}).
-So even though the refined stage-3 endpoint differs substantially from the native
-$x_T$ in representation space, a light adaptation of the decoder largely restores
-accuracy when $T$ is kept: the transport changes; the head can re-read it.
+Preliminary runs suggest the gap closes essentially to baseline, consistent with the
+$R{=}3$ result: the transport changes; a light decoder adaptation re-reads it.
 
 \paragraph{Takeaway.}
 Three facts summarise the looping probe.

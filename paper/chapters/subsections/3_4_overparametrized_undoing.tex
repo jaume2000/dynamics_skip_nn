@@ -82,6 +82,33 @@ Native resolution ($R{=}1$) barely changes the ConvNeXt-T numbers; refining only
 makes the shared field look cleaner (undo $0.05\to 0.02$), which matches the bounded
 refinement error of \cref{sec:refinement_error}.
 
+\paragraph{Functional progress along depth.}
+Geometry shows wasted motion; a complementary probe asks when the stage~3 state
+becomes usable by the rest of the network.
+For each $k{=}1,\ldots,9$ we stop after the $k$-th residual block and classify with
+the model's own trained downsample, stage~4 and head---no remaining stage~3 blocks
+(\cref{fig:prefix-acc}; full ImageNet validation).
+Under weight tying the top-1 rises early and smoothly: $33.6\%$ after one block,
+$72.2\%$ after three, and $78.9\%$ by block~5, already close to the final
+$80.3\%$.
+On standard ConvNeXt-T the same frozen decoder stays weak for longer
+($11.5\%$, $33.2\%$, $66.9\%$ at those depths) and only approaches the final
+$81.0\%$ in the last few blocks.
+Mid-stage accuracy is not a claim that early features lack information---the head
+was trained on $x_T$---but it does show that the tied path enters the decoder's
+operating region steadily, whereas the untied path aligns with that region late,
+consistent with a transport that rewrites features before committing.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.7\linewidth]{figures/prefix_s4_head_acc.pdf}
+    \caption{ImageNet top-1 of each model's trained stage~4+head on stage~3
+    prefixes: after $k$ residual blocks, skip the rest of stage~3 and decode.
+    Weight-tied features become usable earlier and more evenly; ConvNeXt-T
+    concentrates most of the gain toward the end of the stage.}
+    \label{fig:prefix-acc}
+\end{figure}
+
 \paragraph{Reading.}
 Untied stage~3 does not implement nine steps of one transport: consecutive blocks
 often point in weakly related or opposing directions and cancel a large fraction of
@@ -89,6 +116,9 @@ each other's work.
 The weight-tied network cannot cancel itself in that way---a single autonomous field
 has no ``next block'' with different weights---and the geometry shows almost no
 undoing.
+\Cref{fig:prefix-acc} makes the same contrast in function space: tied depth builds
+decoder-ready features gradually, while untied depth postpones most of the usable
+progress.
 That is why sharing the nine blocks costs less than one top-1 point
 (\cref{sec:weight_tied}): much of the untied capacity along depth is spent
 rewriting features rather than accumulating a coherent displacement toward $x_T$.

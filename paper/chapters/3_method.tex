@@ -2,44 +2,55 @@
 \label{sec:method}
 
 We study residual vision networks as a three-part map.
-Stages~1--2 encode the image onto an input manifold; the longest stage
-transports a point $x_0$ on that manifold to a point $x_T$ on an output manifold;
-stage~4 and the prediction head decode $x_T$ into class logits.
-We focus on that middle transport---stage~3 in ConvNeXt, Swin and ResNet---where
-most of the residual depth sits.
-In ConvNeXt-T, stage~3 has $n{=}9$ blocks; we take the trained horizon to be
-$T{=}n{=}9$ and refine discretisations with repetitions $R$ and step
-$\Delta t{=}1/R$ (\cref{sec:indefinite_looping}).
+The first part---stem, stage~1 and stage~2---encodes the image into a latent state
+$x_0$; the second part---the deepest residual stage---transports $x_0$ to a state
+$x_T$ ready for decoding; the third part---stage~4 and the prediction head---maps
+$x_T$ to class logits.
+We focus on that middle transport (stage~3 in ConvNeXt, Swin and ResNet). It holds
+most of the residual depth, keeps a fixed representation and spatial resolution, and
+is the stage with enough blocks to study dynamics: in ConvNeXt-T, for example,
+stages~1,~2 and~4 have three blocks each, while stage~3 has nine. ConvNeXt inherits
+this depth layout from Swin, itself patterned on ResNet, so the same middle stage is
+the natural object of study in all three.
 
-The question is whether this transport requires $n$ independent residual maps, or
-whether it is (approximately) the integration of one vector field.
-A natural test is to refine the discretisation and check that it converges, but that
-test is weaker than it looks.
-Residual blocks are Lipschitz maps, so refining them at fixed $T$ always converges to
-a unique continuous limit, whatever the weights: we observe the same first-order
-convergence for randomly initialised ConvNeXt, ResNet and Swin blocks, and the distance
-from the native one-step path to that limit is mainly set by how far each block moves
-the state, with training shifting it in an architecture-dependent direction
-(\cref{app:random-init}).
-Evidence for the ODE reading must therefore come from properties a random network
-cannot have: that one shared field can replace the nine blocks, that the continuous
-limit keeps the network's function, and how the trajectory towards $x_T$ is organised.
+In ConvNeXt-T we take that stage's $n{=}9$ blocks as the trained horizon $T{=}n{=}9$,
+and refine the discretisation with repetitions $R$ and step $\Delta t{=}1/R$
+(\cref{sec:indefinite_looping}). Effective per-block step sizes may differ, but they
+are absorbed into the learned weights, so integrating each block over one unit of time
+is equivalent to the steps the model has already internalised.
+
+The central question is functional: can a weight-tied stage~3---one shared residual
+field reused over the horizon $T{=}n$---match the representational power of the
+non-tied stage, which uses $n$ independent blocks and many more parameters?
+Simply looping the blocks at finer step size does not answer this. Residual maps are
+Lipschitz, so refining the discretisation at fixed $T$ always converges to a continuous
+limit, trained or randomly initialised (\cref{app:random-init}); convergence alone is
+therefore a weak claim.
+What the shared construction does give us is a clean autonomous ODE for stage~3.
+We then read the standard network the same way, block by block: each residual update
+is a one-step Euler step of a local field, so the untied stage is a switched composition
+of smooth ODE pieces rather than a single autonomous flow---hence the jumps in
+$\|f\|$ at block boundaries in \cref{fig:teaser}.
+Continuising both---tied and
+untied---at inference yields high-resolution trajectories from $x_0$ to $x_T$, and those
+trajectories are where the two models diverge: the standard path repeatedly redirects
+and partially undoes itself, while the tied path stays closer to a monotone transport.
 We organise the section accordingly:
 \begin{enumerate}
     \item \cref{sec:weight_tied} shows that a weight-tied stage~3 nearly matches an
     untied ConvNeXt-T ($80.36\%$ vs.\ $80.97\%$ top-1), so one shared field already
-    carries most of the accuracy;
-    \item \cref{sec:indefinite_looping} loops the residual blocks at inference without
-    fine-tuning, on both weight-tied and standard networks: at fixed $T$ every solver
-    reaches the same limit, which retains almost all the accuracy, whereas breaking $T$
+    carries most of the function;
+    \item \cref{sec:indefinite_looping} continuises residual stages at inference without
+    fine-tuning---ConvNeXt-T and its weight-tied variant, and also Swin-T and
+    ResNet-50/101---showing the same pattern across architectures: at fixed $T$ every
+    solver reaches one limit and retains almost all accuracy, whereas breaking $T$
     collapses the networks;
-    \item \cref{sec:geometrical_analysis} compares the geometry of the resulting
-    trajectories, contrasting one block reused throughout the stage (autonomous field)
-    with nine blocks used once each (switched field);
-    \item \cref{sec:overparametrized_undoing} examines how untied blocks redirect
-    and partially undo each other along depth;
-    \item \cref{sec:deltas} asks whether small per-block corrections on top of a
-    shared field can close the remaining gap.
+    \item \cref{sec:geometrical_analysis} compares the refined trajectories, autonomous
+    (tied) versus switched (untied);
+    \item \cref{sec:overparametrized_undoing} measures that pull-and-push along depth,
+    and probes when stage~3 prefixes become usable by a frozen stage~4+head;
+    \item \cref{sec:deltas} tests a hypothesis: small per-block corrections on a shared
+    field as a way to recover what over-parameterisation wastes.
 \end{enumerate}
 
 \input{chapters/subsections/3_1_weight_tied}

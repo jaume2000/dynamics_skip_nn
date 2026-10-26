@@ -1,10 +1,11 @@
 #!/bin/bash
 #SBATCH --job-name=ft_s4_d900
-#SBATCH --time=24:00:00
+#SBATCH --time=16:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=32
-#SBATCH --gres=gpu:4
+#SBATCH --cpus-per-task=16
+#SBATCH --gres=gpu:2
+#SBATCH --mem=250000
 #SBATCH --partition=boost_usr_prod
 #SBATCH --qos=boost_qos_lprod
 #SBATCH --output=logs/finetune_s4_d900_shared_%j.out
@@ -83,7 +84,7 @@ export LR="${LR:-5e-6}"
 export MIN_LR="${MIN_LR:-5e-6}"
 export METHOD="${METHOD:-RK1}"
 export RETAKE="${RETAKE:-0}"
-export NPROC_PER_NODE="${NPROC_PER_NODE:-4}"
+export NPROC_PER_NODE="${NPROC_PER_NODE:-2}"
 export BASELINE_WEIGHTS="${BASELINE_WEIGHTS:-${PROJECT_ROOT}/outputs/shared_convnextv1_imagenet/weights/last.pth}"
 export EXPERIMENT_NAME="${EXPERIMENT_NAME:-convnext_shared_D900_ES0p01_finetune_s4}"
 EXPERIMENT="${PROJECT_ROOT}/outputs/${EXPERIMENT_NAME}"

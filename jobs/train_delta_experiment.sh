@@ -2,13 +2,14 @@
 #SBATCH --job-name=delta_train
 # Short segments schedule sooner than the 4-day cap; chain with RETAKE=1.
 # 24h is allowed on boost_qos_lprod (same as D27).
-#SBATCH --time=24:00:00
+#SBATCH --time=16:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-# Full booster node (32 cores / 4 GPUs). Finetunes use global batch 512
-# (grad accum if needed); from-scratch uses global batch 1024.
-#SBATCH --cpus-per-task=32
-#SBATCH --gres=gpu:4
+# Half booster node (16 cores / 2 GPUs) schedules faster than exclusive 4-GPU.
+# Global batch kept via grad accum (see scripts/train_delta_experiment.py).
+#SBATCH --cpus-per-task=16
+#SBATCH --gres=gpu:2
+#SBATCH --mem=250000
 #SBATCH --partition=boost_usr_prod
 #SBATCH --qos=boost_qos_lprod
 #SBATCH --output=logs/delta_train_%j.out
@@ -116,7 +117,7 @@ case "${VARIANT}" in
 esac
 EXPERIMENT="${PROJECT_ROOT}/outputs/${EXPERIMENT_NAME}"
 PRETRAINED="${PROJECT_ROOT}/outputs/shared_convnextv1_imagenet/weights/last.pth"
-NPROC_PER_NODE="${NPROC_PER_NODE:-4}"
+NPROC_PER_NODE="${NPROC_PER_NODE:-2}"
 
 if [[ "${RETAKE}" == "1" ]]; then
   if [[ ! -f "${EXPERIMENT}/weights/last.pth" ]]; then
