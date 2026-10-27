@@ -107,8 +107,66 @@ def plot_progress() -> None:
     _save(fig, "transport_progress")
 
 
+def plot_summary() -> None:
+    """Body figure: cosine heatmaps and p(t) on top, survival and alignment below."""
+    df = pd.read_csv(SRC / "per_block.csv")
+    fig = plt.figure(figsize=(7.0, 3.7))
+    W, H = 7.0, 3.7
+    side, y0 = 1.25, 2.05
+    for i, (run, title, _, _) in enumerate(RUNS):
+        ax = fig.add_axes([(0.45 + i * 1.42) / W, y0 / H, side / W, side / H])
+        c = np.load(SRC / f"cos_{run}.npy")
+        im = ax.imshow(c, vmin=-1, vmax=1, cmap="RdBu_r")
+        ax.set_title(title, fontsize=7.5, pad=3)
+        ax.set_xticks(range(0, 9, 2))
+        ax.set_yticks(range(0, 9, 2))
+        ax.tick_params(labelsize=6, length=2)
+        ax.set_xlabel("block $j$", fontsize=7, labelpad=1)
+        if i == 0:
+            ax.set_ylabel("block $k$", fontsize=7, labelpad=1)
+    cax = fig.add_axes([(0.45 + 2 * 1.42 + side + 0.07) / W, y0 / H, 0.08 / W, side / H])
+    cb = fig.colorbar(im, cax=cax)
+    cb.ax.tick_params(labelsize=6, length=2)
+    cb.set_label(r"$\cos(\Delta x_k,\Delta x_j)$", fontsize=7)
+
+    ax = fig.add_axes([5.62 / W, y0 / H, 1.33 / W, side / H])
+    ax.plot([0, 9], [0, 1], color="0.7", lw=0.8, ls="--", zorder=0)
+    for run, label, _, color in RUNS:
+        z = np.load(SRC / f"progress_{run}.npz")
+        p, t = z["p"], z["t"]
+        ax.plot(t, p.mean(0), color=color, lw=1.3, label=label)
+        ax.fill_between(t, np.percentile(p, 10, 0), np.percentile(p, 90, 0), color=color, alpha=0.18, lw=0)
+    ax.axhline(0.5, color="0.6", lw=0.6, ls=":")
+    ax.set_xlim(0, 9)
+    ax.set_xticks(range(0, 10, 3))
+    ax.set_xlabel("depth $t$ ($R{=}100$)", fontsize=7, labelpad=1)
+    ax.set_ylabel(r"progress $p(t)$", fontsize=7, labelpad=1)
+    _style(ax)
+    ax.tick_params(labelsize=6, length=2)
+
+    for j, (col, lab, n) in enumerate([("s_k", r"survival $s_k$", 8),
+                                       ("align", r"$\cos(\Delta x_k,\,x_T-x_0)$", 9)]):
+        ax = fig.add_axes([(0.45 + j * 3.35) / W, 0.35 / H, 3.05 / W, 1.25 / H])
+        for run, label, key, color in RUNS:
+            d = df[df["config"] == key].sort_values("k").dropna(subset=[col])
+            ax.plot(d["k"], d[col], "o-", color=color, ms=3, lw=1.2, label=label)
+            ax.fill_between(d["k"], d[f"{col}_p10"], d[f"{col}_p90"], color=color, alpha=0.18, lw=0)
+        if col == "s_k":
+            ax.axhline(0, color="k", lw=0.7)
+            ax.legend(frameon=False, fontsize=6.5)
+        else:
+            ax.set_ylim(0, 1)
+        ax.set_xticks(range(n))
+        ax.set_xlabel("block $k$", fontsize=7, labelpad=1)
+        ax.set_ylabel(lab, fontsize=7, labelpad=1)
+        _style(ax)
+        ax.tick_params(labelsize=6, length=2)
+    _save(fig, "transport_summary")
+
+
 if __name__ == "__main__":
     FIG.mkdir(parents=True, exist_ok=True)
     plot_cosine()
     plot_survival()
     plot_progress()
+    plot_summary()
