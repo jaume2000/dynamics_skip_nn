@@ -1,149 +1,140 @@
-\subsection{Are over-parametrized networks undoing what the previous layers have done?}
-\label{sec:overparametrized_undoing}
+\subsection{Do independent blocks push in a common direction?}
+\label{sec:coherence}
 
-\Cref{sec:weight_tied} showed that one shared stage-3 block nearly matches nine
-independent ones ($-0.61$ top-1 points, $33\%$ fewer parameters).
-A natural explanation is that the untied stack is over-parametrised along depth:
-consecutive blocks need not push the state in a coherent direction, and part of
-what block $k{+}1$ does can cancel what block $k$ just did.
-Residual stages have been read as iterative refinement of a single
-representation~\citep{greff2017highway,jastrzebski2018iterative}; we ask how much of
-that refinement is net progress.
-We test that claim directly on feature trajectories, using the same 500 ImageNet
-validation images (one per class) as in \cref{sec:geometrical_analysis}, stage~3
-only, with the massive channel removed (\cref{sec:massive_activations}).
+The untied heading turns by $80^\circ$ at every boundary.
+That alone does not say whether the nine blocks cooperate, ignore each other or work
+against each other, and per-coordinate statistics cannot settle it, because the
+feature basis is not privileged: rotating the channels changes them while leaving the
+network's function intact (\cref{app:per-coordinate}).
+We therefore use only quantities that depend on the Gram matrix of the block
+increments, $G_{jk}=\langle\Delta x_j,\Delta x_k\rangle$ with
+$\Delta x_k=x(k{+}1)-x(k)$, which is invariant to any orthogonal change of basis.
+We compare three stages on the same $500$ validation images (one image from each of
+$500$ classes drawn at random, seed $0$; massive channel removed): the weight-tied
+and untied ConvNeXt-T, and a \emph{random} untied stage with Xavier weights whose gain
+$g^\ast{=}1.35$ matches the per-block field strength $\|\Delta x_k\|/\|x_k\|$ of the
+trained untied model.
+\Cref{tab:coherence} collects the statistics and \cref{fig:transport} shows them per
+block.
 
-\begin{table*}[t]
+\begin{figure*}[t]
     \centering
-    \caption{Pooled stage-3 trajectory statistics over 500 ImageNet images
-    (massive channel ignored; coordinates with $|\Delta_i|$ above the per-image median).
-    Weight-tied vs.\ standard ConvNeXt-T at native ($R{=}1$) and refined ($R{=}100$)
-    resolution. Mean $\pm$ std across images.}
-    \label{tab:undo}
+    \includegraphics[width=\textwidth]{figures/transport_summary.pdf}
+    \caption{Basis-independent transport statistics of stage~3 ($R{=}100$, $N{=}500$,
+    massive channel removed).
+    \textbf{Top left:} mean cosine between block increments $\Delta x_j$ and
+    $\Delta x_k$ for a random untied stage of matched strength, the untied ConvNeXt-T
+    and the weight-tied model.
+    \textbf{Top right:} progress $p(t)$ along the chord $x_T-x_0$ (dashed: diagonal).
+    \textbf{Bottom left:} survival $s_k$, the net projection of all later increments on
+    $\Delta x_k$ in units of $\|\Delta x_k\|^2$ ($s_k<0$: later blocks oppose block $k$).
+    \textbf{Bottom right:} alignment of each increment with the total displacement.
+    Bands: P10--P90 over images.}
+    \label{fig:transport}
+\end{figure*}
+
+\begin{table}[t]
+    \centering
+    \caption{Basis-independent transport statistics of stage~3, mean over $500$ images
+    (std across images $\le 0.021$ for straightness and $\le 0.035$ for cosines).
+    Str.: $\|x_T-x_0\|$ over path length (arc at $R{=}100$, chords at $R{=}1$);
+    chords: $\|x_T-x_0\|/\sum_k\|\Delta x_k\|$;
+    $\overline{\cos}$: mean off-diagonal cosine;
+    $E$: opposed fraction; align: mean $\cos(\Delta x_k,x_T-x_0)$;
+    $t_{50}$: first $t$ with $p(t)\ge 0.5$.}
+    \label{tab:coherence}
     \scriptsize
-    \setlength{\tabcolsep}{3.5pt}
-    \resizebox{\textwidth}{!}{%
-    \input{figures/pooled_dynamics_table}
+    \setlength{\tabcolsep}{2.2pt}
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{lrrrrrrrrr}
+        \toprule
+        & Str. & chords & $\cos_{k,k+1}$ & $\cos_{k,k+2}$ & $\overline{\cos}$ & $\min s_k$ & $E$ & align & $t_{50}$ \\
+        \midrule
+        Random $R{=}1$   & 0.330 & 0.330 & 0.001 & 0.002 & $-0.002$ & $-0.18$ & 0.022 & 0.330 & -- \\
+        Random $R{=}100$ & 0.324 & 0.329 & $-0.001$ & $-0.001$ & $-0.004$ & $-0.19$ & 0.026 & 0.328 & 4.72 \\
+        Untied $R{=}1$   & 0.501 & 0.501 & 0.165 & 0.136 & 0.093 & 0.11 & 0 & 0.393 & -- \\
+        Untied $R{=}100$ & 0.502 & 0.510 & 0.171 & 0.143 & 0.099 & 0.13 & 0 & 0.394 & 7.45 \\
+        Tied $R{=}1$     & 0.718 & 0.718 & 0.768 & 0.579 & 0.408 & 0.57 & 0 & 0.685 & -- \\
+        Tied $R{=}100$   & 0.779 & 0.785 & 0.922 & 0.746 & 0.527 & 0.84 & 0 & 0.757 & 4.19 \\
+        \bottomrule
+    \end{tabular}%
     }
-\end{table*}
+\end{table}
 
-\begin{figure*}[t]
-    \centering
-    \includegraphics[width=\textwidth]{figures/pooled_dynamics.png}
-    \caption{Stage-3 coordinates pooled over 500 images ($R{=}100$; massive channel
-    removed; $|\Delta_i|$ above the per-image median).
-    \textbf{Top:} weight-tied ConvNeXt; \textbf{bottom:} ConvNeXt-T.
-    \textbf{Left:} progress $p_i(t)=(x_i(t)-x_i(0))/\Delta_i$ (median and P5--P95;
-    thin lines: random coordinates).
-    \textbf{Middle:} velocity toward the final value, coordinates sorted by peak time
-    (red: toward the end state; blue: away).
-    \textbf{Right:} phase density $(p_i,\,h_i/\Delta_i)$.
-    The shared field advances mostly monotonically; the switched stack reverses and
-    rewrites features between blocks.}
-    \label{fig:pooled-dynamics}
-\end{figure*}
+\paragraph{Untied blocks write nearly orthogonal directions.}
+Random residual blocks of matched strength write mutually orthogonal increments:
+every off-diagonal cosine is $0.00$ (\cref{fig:transport}, top left).
+The trained untied blocks are not random: consecutive increments have cosine
+$0.17$ and increments two blocks apart $0.14$, all positive.
+They are still far from the tied field, where consecutive increments have cosine
+$0.92$ and remain correlated across the whole stage.
+Each untied block therefore writes mostly in a new direction, slightly biased toward
+the directions of its neighbours.
 
-\begin{figure*}[t]
+\paragraph{No block is erased.}
+The survival $s_k=\sum_{j>k}G_{kj}/G_{kk}$ measures what later blocks do along the
+direction of block $k$: $s_k>0$ means they continue it, $s_k<0$ that they move against
+it and $s_k\le-1$ that they remove it entirely.
+In the untied model $s_k$ is positive for every image and every block (minimum $0.13$),
+so the opposed fraction $E$, the mass-weighted share of increments that later blocks
+reverse, is exactly zero.
+Random blocks, by contrast, have $s_k<0$ in $61\%$ of the image and block pairs.
+The untied stage is thus a staircase: each block adds a new, mostly orthogonal step
+that no later block takes back.
+
+\paragraph{A straightness ladder.}
+Straightness, the ratio of net displacement to path length, orders the three stages:
+$0.33$ for random blocks, $0.50$ for untied blocks and $0.72$ to $0.78$ for the tied
+field.
+Nine orthogonal steps of equal length would give $1/\sqrt 9=0.33$, which is where the
+random stage sits.
+Refinement separates where the path bends.
+The ratio of the sum of block chords to the arc length is $0.985$ for the untied
+stage, so the arc is only $1.5\%$ longer than the chords, an equivalent turn of about
+$35^\circ$ inside each block ($31^\circ$ to $39^\circ$ across blocks); random blocks
+turn by a similar amount ($0.987$) and the tied field by less ($0.993$).
+The detour of the untied stage is made between blocks, not within them.
+
+\paragraph{Alignment with the destination.}
+Projecting the path on the chord $x_T-x_0$ shows when progress is made
+(\cref{fig:transport}, top right).
+The untied stage crosses half of its net displacement at $t_{50}{=}7.45$, the tied one
+at $4.19$ and the random one at $4.72$, close to the linear $4.5$.
+Per block, the alignment $\cos(\Delta x_k,x_T-x_0)$ of the untied increments rises
+from $0.15$ in the first block to $0.69$ in the last, while the random stage stays at
+$0.33$ and the tied field peaks at $0.92$ mid-stage (\cref{fig:transport}, bottom
+right).
+Early untied blocks write directions that are almost orthogonal to where the stage
+ends; the last blocks write most of the final displacement.
+
+\paragraph{Prefix decoding.}
+The same contrast appears in function space.
+After a prefix of stage~3 we skip the rest of the stage and classify with the model's
+own trained downsample, stage~4 and head (\cref{fig:prefix-acc}; full validation).
+No probe is trained~\citep{alain2016probes,belrose2023tuned}, so the score measures how
+close each prefix is to the state the decoder expects.
+On the tied path refined at $R{=}20$, top-1 at $t{=}1,3,5$ is $39.5$, $74.7$ and
+$79.5\%$ against a final $80.12\%$ (native prefixes $33.6$, $72.2$ and $78.9\%$).
+On the untied stage the frozen decoder stays weak for longer: $10.7$, $30.6$ and
+$65.5\%$ refined, $11.5$, $33.2$ and $66.9\%$ native.
+The decoder was trained on $x_T$, so a low score does not mean that early features
+lack information; it means that the tied state enters the decoder's operating region
+earlier, as the alignment above suggests.
+
+\begin{figure}[t]
     \centering
-    \includegraphics[width=\textwidth]{figures/prefix_s4_head_acc.pdf}
-    \caption{ImageNet top-1 (left) and cross-entropy (right) of each model's
-    trained stage~4+head on stage~3 prefixes (full validation).
-    After each prefix we skip the rest of stage~3 and decode.
-    \textbf{Solid:} refined path ($R{=}20$, $\Delta t{=}0.05$).
-    \textbf{Open markers:} native discrete prefixes ($R{=}1$) at block ends.
-    Weight-tied features become usable early and smoothly; ConvNeXt-T
-    postpones most of the gain until late in the stage.}
+    \includegraphics[width=\linewidth]{figures/prefix_s4_head_acc.pdf}
+    \caption{Top-1 (left) and cross-entropy (right) of each model's frozen stage~4 and
+    head on stage-3 prefixes (full validation).
+    Solid: refined path ($R{=}20$, $\Delta t{=}0.05$); open markers: native prefixes
+    at block ends.}
     \label{fig:prefix-acc}
-\end{figure*}
+\end{figure}
 
-\paragraph{Setup.}
-For each image we integrate the stage from $t{=}0$ to $t{=}9$ at native resolution
-($R{=}1$) and under Euler refinement ($R{=}100$, $\Delta t{=}0.01$), and reduce every
-spatial feature coordinate whose net displacement $|\Delta_i|=|x_i(9)-x_i(0)|$ is above
-the per-image median.
-We partition the trajectory into the nine unit intervals $[k,k{+}1]$ (native blocks
-in ConvNeXt-T; the same time bins in the weight-tied model) and write
-$\mathrm{d}x_k$ for the displacement of a coordinate over interval $k$.
-The scalars we report are means $\pm$ std over the 500 images
-(\cref{tab:undo}):
-\begin{itemize}
-    \item \emph{straightness}: $\|\sum_k\mathrm{d}x_k\|\,/\,\sum_k\|\mathrm{d}x_k\|$
-    in feature space (path length vs.\ net displacement);
-    \item \emph{wasted motion}: $1-\sum_i|\mathrm{net}_i|/\sum_{k,i}|\mathrm{d}x_{k,i}|$,
-    the fraction of per-coordinate travel that cancels before $t{=}9$;
-    \item $\cos(\mathrm{d}x_k,\mathrm{d}x_{k+1})$: mean cosine between consecutive
-    block displacements;
-    \item \emph{undo fraction}: when $\mathrm{sign}(\mathrm{d}x_k)$ flips at the next
-    block, the cancelled mass
-    $\min(|\mathrm{d}x_k|,|\mathrm{d}x_{k+1}|)$ normalised by $\sum|\mathrm{d}x_k|$;
-    \item \emph{zig-zag share}: mass-weighted share of coordinates that reverse at
-    least twice across the nine blocks;
-    \item \emph{sign flips at $t\in\mathbb{N}$}: fraction of consecutive steps whose
-    sign changes exactly at integer depths (block boundaries).
-\end{itemize}
-
-\paragraph{Results.}
-\Cref{tab:undo} and \cref{fig:pooled-dynamics} give a consistent picture.
-Under refinement ($R{=}100$), the weight-tied model is nearly monotone along depth:
-straightness $0.78$, wasted motion $0.19$, consecutive-block cosine $0.92$, undo
-fraction $0.02$, and zig-zag share $0.14$.
-Sign changes at integer times are essentially absent ($0.00$).
-ConvNeXt-T, with nine independent blocks, sits at the opposite extreme: straightness
-$0.50$, wasted motion $0.48$ (almost half of the travel cancels), cosine $0.17$,
-undo fraction $0.25$ ($\approx 12\times$ the shared value), and zig-zag share $0.90$.
-Nearly half of the sign flips ($0.45$) fall exactly on block boundaries---the
-discontinuities of the switched field in \cref{sec:teaser-b}, not an artefact of a
-coarse step.
-Native resolution ($R{=}1$) barely changes the ConvNeXt-T numbers; refining only
-makes the shared field look cleaner (undo $0.05\to 0.02$), which matches the bounded
-refinement error of \cref{sec:refinement_error}.
-
-\paragraph{Functional progress along depth.}
-Geometry shows wasted motion; a complementary probe asks when the stage~3 state
-becomes usable by the rest of the network.
-After a prefix of stage~3 we skip the remainder of the stage and classify with
-the model's own trained downsample, stage~4 and head
-(\cref{fig:prefix-acc}; full ImageNet validation, $50{,}000$ images).
-This is a frozen-decoder variant of intermediate-layer probes~\citep{alain2016probes}
-and of the logit and tuned lens in language models~\citep{belrose2023tuned}: no probe
-is trained, so the score measures how close each prefix is to the state the decoder expects.
-Solid curves integrate the prefix at $R{=}20$ ($\Delta t{=}0.05$) and decode after
-every micro-step; connected markers are the native discrete prefixes
-($R{=}1$, one evaluation at each block end).
-Under weight tying the top-1 rises early and smoothly: at $t{=}1,3,5$ the
-refined path already scores $39.5\%$, $74.7\%$ and $79.5\%$, against a final
-$80.1\%$ (native prefixes: $33.6\%$, $72.2\%$, $78.9\%$, final $80.3\%$).
-The cross-entropy falls the same way ($3.29\to 1.18\to 0.94$ refined,
-$3.63\to 1.31\to 0.97$ native; floor $0.90$).
-On untied ConvNeXt-T the same frozen decoder stays weak for longer
-($10.7\%$, $30.6\%$, $65.5\%$ refined; $11.5\%$, $33.2\%$, $66.9\%$ native;
-losses $5.26$, $3.83$, $1.64$ refined and $5.18$, $3.65$, $1.54$ native)
-and only approaches the final $80.3\%$--$81.0\%$ in the last few blocks.
-The tied curve is a single sigmoid; the untied curve is piecewise, with most of
-the gain between integers---the same block-wise rewrites as in
-\cref{fig:kinematics-compare}.
-Native and refined tracks stay close, so the contrast is not an artefact of the
-solver: if anything, refining the shared field \emph{helps} early prefixes
-($+6$~pp at $t{=}1$), whereas refining the untied stack sits slightly
-\emph{below} the native block ends the head was trained on.
-Mid-stage accuracy is not a claim that early features lack information---the head
-was trained on $x_T$---but it does show that the tied path enters the decoder's
-operating region steadily, whereas the untied path aligns with that region late,
-consistent with a transport that rewrites features before committing.
-
-\paragraph{Reading.}
-Untied stage~3 does not implement nine steps of one transport: consecutive blocks
-often point in weakly related or opposing directions and cancel a large fraction of
-each other's work.
-The weight-tied network cannot cancel itself in that way---a single autonomous field
-has no ``next block'' with different weights---and the geometry shows almost no
-undoing.
-\Cref{fig:prefix-acc} makes the same contrast in function space: tied depth builds
-decoder-ready features gradually, while untied depth postpones most of the usable
-progress.
-That is why sharing the nine blocks costs less than one top-1 point
-(\cref{sec:weight_tied}): much of the untied capacity along depth is spent
-rewriting features rather than accumulating a coherent displacement toward $x_T$.
-The residual accuracy gap to the baseline is then more plausibly attributed to the
-small, non-cancellable specialization that independent $\theta_k$ still provide, not to
-a fundamentally different dynamical mechanism.
+\paragraph{Other architectures.}
+The staircase is not universal (\cref{app:arch-transport}).
+Swin-T stage~3 is coherent, with straightness $0.80$ ($0.67$ without the corner
+tokens) against $0.42$ for random blocks and positive survival everywhere.
+ResNet-50 and ResNet-101, whose stage-3 residual includes the ReLU after the sum, go the
+other way: straightness $0.37$ and $0.16$, below their random baselines of $0.43$ and
+$0.22$ to $0.23$, with $s_k<0$ for $100\%$ and $89\%$ of the image and block pairs.

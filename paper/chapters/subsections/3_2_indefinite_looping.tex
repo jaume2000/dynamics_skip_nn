@@ -1,337 +1,133 @@
-\subsection{Indefinite looping without fine-tune}
+\subsection{Refinement at fixed horizon}
 \label{sec:indefinite_looping}
 
 % figure* floats to the top of the next page; defined here so it lands next to the ablations.
 \begin{figure*}[t]
     \centering
     \includegraphics[width=\textwidth]{figures/teaser.png}
-    \caption{\textbf{Left:} top-1 vs.\ repetitions $R$ (solid: Euler / RK1; dashed: RK4),
-    with $\Delta t{=}1/R$ so $T{=}n$ is conserved
+    \caption{\textbf{Left:} top-1 against repetitions $R$ (solid: Euler; dashed: RK4),
+    with $\Delta t{=}1/R$ so that $T{=}n$ is kept
     (weight-tied: $nR$ applications of the shared block).
-    \textbf{Right:} residual-field norm $\|f(x)\|$ along stage~3
-    (mean and P5--P95 over 500 images). ConvNeXt is piecewise constant in depth;
-    the weight-tied model is a single smooth autonomous field.
-    See \cref{sec:teaser-b}.}
+    \textbf{Right:} residual norm $\|f(x)\|$ along stage~3
+    (mean and P5--P95 over 500 images). The untied field is piecewise constant in
+    depth; the weight-tied model is a single smooth autonomous field.}
     \label{fig:refinement}
 \end{figure*}
 
-\Cref{sec:weight_tied} showed that one shared block nearly matches a standard
-ConvNeXt stage~3 (independent per-block weights).
-We now refine residual blocks at inference as one-step Euler updates of a vector field:
-repeat each update $R$ times with step $\Delta t{=}1/R$, keep the trained horizon
-$T{=}n$, and do not fine-tune.
-The goal is not to replace a small network by a $R$-times deeper one that trades a
-fraction of a point of accuracy for width in depth---that would be the wrong reading.
-Refinement is a probe with two uses.
-First, it tests whether the continuous limit stays functionally close to the native
-model for stage~4 and the head: on ConvNeXt-T the refined endpoint sits
-$\sim\!21^\circ$ from the $R{=}1$ state (\cref{fig:dist-r1}), yet top-1 barely moves, so
-the decoder still sees a usable representation.
-Second, it raises the temporal resolution of the path from $x_0$ to $x_T$, which is
-what later geometry and undoing analyses need.
-Convergence of the refinement by itself is not diagnostic---any Lipschitz residual has
-a continuous limit (\cref{app:random-init})---so what matters is what the limit retains
-and how the trajectory is organised.
-We apply the probe to weight-tied and standard networks (ConvNeXt, Swin, ResNet);
-trajectory geometry is deferred to \cref{sec:geometrical_analysis}.
-
-A residual block computes $x + f(x)$~\citep{he2016resnet}.
-With step size $1$, that is exactly one step of the explicit Euler method for the ODE
-$\dot x = f(x,t)$~\citep{e2017proposal,haber2017stable,lu2018beyond}, whose
-continuous-depth limit is a Neural ODE~\citep{chen2019neuralordinarydifferentialequations}.
-Write the residual of block $i$ as
-\begin{equation}
-    f_i(x) \;=\; \mathrm{block}_i(x) - x.
-    \label{eq:residual}
-\end{equation}
-Then the native network is one Euler step of size $1$ per block. Over a stage of $n$ blocks
-(e.g.\ $n{=}9$ in ConvNeXt-T stage~3), starting from the output $x_0$ of the previous stage,
+Write the residual of block $i$ as $f_i(x)=\mathrm{block}_i(x)-x$.
+Over a stage of $n$ blocks starting from the output $x_0$ of the previous stage, the
+native network takes one Euler step of size $1$ per block,
 \begin{equation}
     x_{i+1} \;=\; x_i + f_i(x_i),
     \qquad
     x_n \;=\; x_0 + \sum_{i=0}^{n-1} f_i(x_i).
     \label{eq:euler-stage}
 \end{equation}
-
-These works interpret the residual update as a forward-Euler
-step~\citep{e2017proposal,haber2017stable,lu2018beyond},
-but algebraic form alone is not sufficient evidence that a trained network behaves as
-an Euler solver:
-\citet{queiruga2020continuousindepthneuralnetworks} argue that ResNets fail to be meaningful
-dynamical integrators beyond that syntactic similarity, and
-\citet{sander2022residualneuralnetworksdiscretize} show that the gap between a ResNet and
-its associated Neural ODE need not vanish with depth unless the residual maps vary
-smoothly in depth
-(otherwise the discrete stack need not be a consistent discretization of a single continuous flow);
-\citet{marion2024implicit} prove that, under gradient flow and in the large-depth limit,
-a ResNet initialised as such a discretization keeps that property through training.
-
-We suggest reading the stage as a \emph{sum of several ODEs}, one per block, where the network
-is trained to solve each unit interval with a single Euler step.
-The continuous object behind~\eqref{eq:euler-stage} is therefore
+We read each block as a field integrated over its own unit of depth, so that the
+continuous object behind~\eqref{eq:euler-stage} is
 \begin{equation}
-    x_n \;=\; x_0 + \sum_{i=0}^{n-1} \int_{i}^{i+1} f_i\bigl(x(t)\bigr)\,dt,
+    x_{i+1} \;=\; x_i + \int_{i}^{i+1} f_i\bigl(x(t)\bigr)\,dt,
+    \qquad T \;=\; n,
     \label{eq:sum-of-integrals}
 \end{equation}
-or, block by block,
+a switched system in the control sense~\citep{liberzon2003switching}, with the
+piecewise-constant schedule $\theta_t=\theta_{\lfloor t\rfloor}$.
+In a weight-tied stage $f_i\equiv f$ and~\eqref{eq:sum-of-integrals} collapses to a
+single autonomous ODE,
 \begin{equation}
-    x_{i+1} \;=\; x_i + \int_{i}^{i+1} f_i\bigl(x(t)\bigr)\,dt.
-    \label{eq:block-integral}
-\end{equation}
-Here the sum is the stack of residual blocks, and each integral is the continuous counterpart of
-the one-step update in~\eqref{eq:euler-stage}: instead of taking one Euler step of size $1$,
-we integrate $f_i$ over the unit interval $[i,i+1]$, keeping the horizon of each block equal to $1$.
-For a stage with $n$ blocks trained at unit step, the stage horizon is therefore
-\begin{equation}
-    T \;=\; n
-    \qquad\text{(ConvNeXt-T stage~3: $n{=}9$, so $T{=}9$).}
-    \label{eq:horizon-T}
+    x_T \;=\; x_0 + \int_{0}^{T} f\bigl(x(t)\bigr)\,dt,
+    \qquad T \;=\; n.
+    \label{eq:weight-tied-ode}
 \end{equation}
 
 \paragraph{Repetitions $R$.}
-Throughout the paper we use a single refinement parameter $R$ (\emph{repetitions}).
-For a non-tied stage, $R{=}2$ means each of the $n$ blocks is applied twice, for $nR$ residual
-updates in total.
-For a weight-tied stage, $R{=}2$ means the \emph{same} shared block is applied $nR{=}18$ times.
-In both cases we set the Euler step from the trained horizon,
+We refine with one parameter $R$: each block is applied $R$ times with step
+$\Delta t{=}1/R$, so that $T{=}nR\,\Delta t{=}n$ is kept and only the resolution
+changes,
 \begin{equation}
-    \Delta t \;=\; \frac{1}{R}
-    \qquad\Rightarrow\qquad
-    T \;=\; nR\cdot\Delta t \;=\; n,
-    \label{eq:delta-from-R}
-\end{equation}
-so refining never changes the integration time---only the resolution.
-
-\textbf{Plain} interpolation keeps the field piecewise constant on each block and discretizes
-the integral with $R$ Euler sub-steps of size $\Delta t = 1/R$:
-\begin{equation}
-    \int_{i}^{i+1} f_i\bigl(x(t)\bigr)\,dt
-    \;\approx\;
-    \sum_{r=0}^{R-1} \Delta t\, f_i\bigl(x_{i + r\Delta t}\bigr).
-    \label{eq:plain-euler}
-\end{equation}
-Equivalently, over the whole stage the refined trajectory is
-\begin{equation}
-    x_T \;=\; x_0 + \sum_{i=0}^{T-1} \sum_{r=0}^{R-1} \Delta t\, f_i\bigl(x_{i + r\Delta t}\bigr),
-    \qquad \Delta t = \tfrac{1}{R}.
+    x_T \;=\; x_0 + \sum_{i=0}^{n-1} \sum_{r=0}^{R-1} \Delta t\, f_i\bigl(x_{i + r\Delta t}\bigr).
     \label{eq:refined-stage}
 \end{equation}
-When $R{=}1$,~\eqref{eq:refined-stage} recovers the original network~\eqref{eq:euler-stage}.
-As $R$ grows with $T{=}n$ fixed, the scheme approaches the continuous
-limit~\eqref{eq:sum-of-integrals}; we also compare against Midpoint (RK2) and RK4 on the same horizon.
-
-In a weight-tied stage the residual field is the same at every depth,
-$f_i \equiv f$ for all $i$. Then~\eqref{eq:sum-of-integrals} collapses to a single
-autonomous integral over $[0,T]$ with $T{=}n$:
-\begin{equation}
-    x_T \;=\; x_0 + \int_{0}^{T} f\bigl(x(t)\bigr)\,dt.
-    \label{eq:weight-tied-ode}
-\end{equation}
-Inference uses $nR$ applications of $f$ with $\Delta t{=}1/R$; training uses $R{=}1$
-($n$ steps of size $1$), hence $T{=}9$ for our shared ConvNeXt-T.
-
-
-\subsubsection{Ablations}
-\label{sec:looping-ablations}
-
-We apply the refinement~\eqref{eq:refined-stage} (plain interpolation, $T$ conserved via
-$\Delta t{=}1/R$) to our ConvNeXt-T, our weight-tied ConvNeXt-T, Swin-T, ResNet-50 and
-ResNet-101 (ImageNet-1k validation, top-1).
-\Cref{fig:refinement} (left) summarises the sweep over $R$; numbers are in
-\cref{tab:r-ablation}.
-
-Accuracy decreases monotonically as $R$ grows and plateaus at a continuous limit that
-matches RK4.
-Euler (RK1), Midpoint (RK2) and RK4 all converge to the \emph{same} accuracy once the
-step is fine enough; full Mid/RK4 tables are in \cref{app:solvers}.
-(Matched top-1 alone does not prove a shared state $x_T$; we check endpoint agreement
-of the solvers later in \cref{app:solver-endpoints}.)
-The trained network itself (Euler, $R{=}1$) is \emph{not} at that limit; it is the best
-point of every sweep.
-Keeping the nine steps of size $\Delta t{=}1$ but swapping Euler for RK4 already lands on
-the limit, both in accuracy and in the stage-3 state (\cref{app:solver-endpoints}), and
-costs $0.6$--$0.9$ points on the untied models ($0.2$ on the weight-tied one):
-the decoder is tuned to the state produced by a single Euler step of size~$1$, not to
-the flow it approximates.
+For a weight-tied stage $R$ means $nR$ applications of the shared block.
+$R{=}1$ recovers the native network; as $R$ grows the scheme approaches
+\eqref{eq:sum-of-integrals}, and we also compare Midpoint (RK2) and RK4 on the same
+horizon.
+Nothing is retrained.
 
 \begin{table}[t]
     \centering
-    \caption{Plain Euler refinement with $\Delta t{=}1/R$ ($T$ conserved). Top-1 (\%).
-    For weight-tied, $R$ means $9R$ applications of the shared block
-    (exact $9R$ when available; else nearest measured depth$^\ast$).
-    ODE limit: RK4 at the finest step in each sweep.}
+    \caption{Euler refinement with $\Delta t{=}1/R$ ($T$ kept), ImageNet top-1 (\%).
+    For the weight-tied model $R$ means $9R$ applications of the shared block.
+    ODE limit: RK4 at $R{=}128$ (tied: $1024$ steps).}
     \label{tab:r-ablation}
     \small
     \setlength{\tabcolsep}{2.8pt}
+    \resizebox{\linewidth}{!}{%
     \begin{tabular}{lrrrrr}
         \toprule
         $R$ ($\Delta t$) & CNX-T & Swin-T & R-50 & R-101 & Tied \\
         \midrule
-        $1$ ($1$)       & 80.95 & 81.08 & 80.34 & 81.67 & 80.34 \\
-        $2$ ($0.5$)     & 80.79 & 80.90 & 80.06 & 81.58 & 80.27 \\
-        $4$ ($0.25$)    & 80.53 & 80.65 & 79.84 & 81.38 & 80.22$^\ast$ \\
-        $10$ ($0.1$)    & 80.36 & 80.47 & 79.61 & 81.22 & 80.14$^\ast$ \\
-        $32$ ($0.03$)   & 80.30 & 80.38 & 79.50 & 81.12 & 80.14$^\ast$ \\
-        $128$ ($0.008$) & 80.23 & 80.34 & 79.45 & 81.06 & 80.12$^\ast$ \\
+        $1$ ($1$)       & 80.96 & 81.08 & 80.34 & 81.67 & 80.34 \\
+        $2$ ($0.5$)     & 80.78 & 80.90 & 80.06 & 81.58 & 80.27 \\
+        $4$ ($0.25$)    & 80.52 & 80.65 & 79.84 & 81.38 & 80.21 \\
+        $10$ ($0.1$)    & 80.36 & 80.47 & 79.61 & 81.22 & 80.13 \\
+        $32$ ($0.03$)   & 80.29 & 80.38 & 79.50 & 81.12 & 80.11 \\
+        $128$ ($0.008$) & 80.24 & 80.34 & 79.45 & 81.06 & TIEDR128 \\
         \midrule
         ODE limit       & 80.23 & 80.32 & 79.43 & 81.05 & 80.12 \\
-        Gap ($R{=}1\!\to$ODE) & $-0.72$ & $-0.76$ & $-0.91$ & $-0.62$ & $-0.22$ \\
+        Gap ($R{=}1\!\to$ODE) & $-0.73$ & $-0.76$ & $-0.91$ & $-0.62$ & $-0.22$ \\
         \bottomrule
-    \end{tabular}
-    \vspace{2pt}
-    {\footnotesize $^\ast$Nearest measured shared depth at $T{=}9$:
-    32, 96, 128, 1024 steps respectively (exact $9R$ would be 36, 90, 288, 1152).}
+    \end{tabular}%
+    }
 \end{table}
 
-\paragraph{Wrong step size.}
-Repeating blocks without shrinking the step (e.g.\ $R{=}10$ with $\Delta t{=}1$, so
-$T$ grows tenfold) collapses every pretrained model to chance
-($\approx 0.1\%$--$1\%$ top-1).
-The same holds for the weight-tied network when $T$ leaves the trained horizon
-(\cref{fig:horizon,fig:shared-fractional}).
-The Euler step must be $\Delta t{=}1/R$, equivalently $T{=}n$ for an $n$-block stage
-($T{=}9$ when $n{=}9$).
-Recurrent networks iterated past their training depth show the same degradation,
-termed overthinking~\citep{bansal2022endtoend}; recurrent models that unroll to
-arbitrary depth at test time are trained with a randomly sampled number of
-iterations~\citep{bansal2022endtoend,geiping2025recurrent}, whereas our blocks were
-trained for one horizon.
-The trajectory dynamics behind this collapse are analysed in \cref{sec:beyond_horizon}.
+\paragraph{The continuous limit stays usable.}
+We refine our ConvNeXt-T and weight-tied ConvNeXt-T, and the torchvision Swin-T
+(\texttt{IMAGENET1K\_V1}), ResNet-50 and ResNet-101 (\texttt{IMAGENET1K\_V2})
+(\cref{fig:refinement}, left; \cref{tab:r-ablation}).
+All models are evaluated on the full validation set with one transform (resize to $256$,
+bilinear, centre crop $224$), so the torchvision models score slightly differently from
+their reported $81.47$, $80.86$ and $81.89\%$, which use their own resize.
+Accuracy decreases monotonically with $R$ and plateaus at a limit that Euler,
+Midpoint and RK4 share once the step is fine enough (\cref{app:solvers}); the
+endpoints themselves agree to within $0.25^\circ$ (\cref{app:solver-endpoints}).
+The limit costs $0.62$ to $0.91$ points on the untied models and $0.22$ on the
+weight-tied one.
+The native network is the best point of every sweep and is \emph{not} at the limit:
+RK4 with the nine native unit steps already lands on it.
+The decoder is tuned to the state produced by one Euler step of size $1$, not to the
+flow that step approximates.
 
-\paragraph{Weight-tied fractional $R<1$.}
-\Cref{fig:shared-fractional} reports the shared network at fixed $T{=}9$ with fewer
-than nine steps ($R<1$, i.e.\ $9R$ applications with $\Delta t{=}1/R>1$); the numbers,
-including Midpoint, are in \cref{tab:app-shared-t9}.
-Large steps need a higher-order solver: at $R{=}4/9$ (4 steps), RK4 reaches $78.9\%$ while
-Euler falls to $67.8\%$; Euler with $R{=}2/9$ ($\Delta t{=}4.5$) is unstable ($5.9\%$).
-For $R\geq 7/9$, all three solvers sit within $0.3$ points of the trained baseline.
+\paragraph{The horizon matters, the resolution does not.}
+Repeating blocks without shrinking the step ($R{=}10$ or $100$ with $\Delta t{=}1$)
+collapses every model to $0.10$--$1.03\%$ top-1, and the weight-tied network collapses
+in the same way when $T$ leaves the trained horizon (\cref{app:solvers}), as recurrent
+networks iterated past their training depth do~\citep{bansal2022endtoend}.
+Even $R{=}3$ with $\Delta t{=}1$ ($T{=}27$) drops ConvNeXt-T to $41.0\%$.
+With large steps at $T{=}9$ the tied model needs a higher-order solver: with $4$
+steps, RK4 reaches $78.9\%$ and Euler $67.8\%$.
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{figures/shared_fractional.png}
-    \caption{Shared ConvNeXt-T at fixed $T{=}9$ for fractional $R\leq 1$
-    (RK1 solid, RK4 dashed).}
-    \label{fig:shared-fractional}
-\end{figure}
+\paragraph{The limit is not the native state.}
+Near-baseline accuracy does not mean that $R$ steps of size $1/R$ reproduce the unit
+step.
+On ConvNeXt-T the refined endpoint ($R{=}100$) sits $21^\circ$ from the native one,
+with a relative distance of $0.36$ while the norms differ by $3\%$; on the weight-tied
+model the gap is $11^\circ$ and $0.20$ (\cref{app:solver-endpoints}).
+The untied gap accumulates block after block, whereas the tied one stops growing after
+two or three steps.
+Stage~4 and the head nevertheless classify the refined state at a small cost.
 
-\paragraph{Horizon, not resolution.}
-Varying the number of unit steps at $\Delta t{=}1$ (so $T$ grows) or varying $\Delta t$ at
-fixed $R{=}1$ (9 steps; $T{=}9\cdot\Delta t$) both peak at $T{=}9$
-(\cref{fig:horizon}): the classification head expects the state reached after that
-integration time.
-Integrating too short or too long degrades smoothly near $T{=}9$ and collapses far from it.
-We conclude that the best Euler step is the one that preserves the trained horizon:
-$\Delta t{=}1/R$ for every model (non-tied and weight-tied).
+\paragraph{Adapting the decoder.}
+Since the gap sits in the decoder's input, we finetune only stage~4 and the head on
+the refined transport, with stem and stages~1--3 frozen.
+On the weight-tied model at $128$ steps ($\Delta t{=}9/128$), $50$ epochs with a cosine
+schedule from $10^{-6}$ to $10^{-8}$ raise top-1 from $80.14\%$ to $80.33\%$, the
+native level (\cref{app:training}).
+\todo{Run the stage-4 finetune protocol (constant lr $5{\times}10^{-6}$, 10 epochs,
+frozen stages in eval mode) on untied and tied ConvNeXt-T at $R{=}1$ and $R{=}100$;
+$R{=}1$ is the control for the effect of extra training.}
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{figures/horizon_ablation.png}
-    \caption{Shared ConvNeXt-T: top-1 vs.\ horizon $T$.
-    Red: fixed $\Delta t{=}1$, more steps ($T$ grows).
-    Purple: fixed $R{=}1$ (9 steps), varying $\Delta t$ ($T{=}9\cdot\Delta t$).
-    Both peak at the trained horizon $T{=}9$.}
-    \label{fig:horizon}
-\end{figure}
-
-\paragraph{Do refined blocks land on the same $x$?}
-Near-baseline accuracy does \emph{not} mean that $R$ Euler steps of size $1/R$
-reproduce the unit-step state.
-\Cref{fig:dist-r1} compares the refined ConvNeXt-T trajectory ($R{=}100$,
-$\Delta t{=}0.01$) with the native $R{=}1$ trajectory on the same images, in $\ell_2$
-distance (top, next to both state norms) and cosine similarity (bottom)
-(massive channel removed from the metrics, see \cref{sec:massive_activations};
-$N{=}500$ images).
-Three facts stand out.
-\begin{itemize}
-    \item \textbf{Within each block} the refined trajectory moves \emph{toward} the
-    parallel $R{=}1$ checkpoint: the distance decays and the cosine rises until the
-    block ends, so the refinement is not drifting away from the one-step endpoint of
-    that block.
-    \item \textbf{Across blocks} the gap grows: the block-end distance rises from
-    $\approx 5.6$ to $\approx 76$ at $t{=}9$, against $\|x\|\approx 203$ at the stage exit,
-    i.e.\ a relative gap $\|x^{(R)}-x_{R{=}1}\|/\|x\|\approx 0.36$.
-    \item \textbf{The gap is a rotation.} The block-end cosine drops from $0.99$ to $0.93$
-    ($\sim\!21^\circ$), while $\|x\|$ differs by only $\approx 3\%$ ($203$ vs.\ $210$);
-    a pure rescaling of that size would account for a distance of $\approx 7$, not $76$.
-\end{itemize}
-Each block therefore implements a \emph{different} map than its one-step counterpart
-once the input has already drifted; local refinement stays contractive toward the
-current block's $R{=}1$ target, but errors accumulate through the switched stack and
-the final $x_T$ points in a different direction from the native one.
-Nevertheless, that displacement---$\sim\!21^\circ$ on ConvNeXt-T, $\sim\!11^\circ$ on the
-weight-tied model (\cref{sec:refinement_error})---still lands in a zone that stage~4
-and the head can classify: without training, refining at fixed $T$ costs only
-$0.6$--$0.9$ top-1 points on untied models and $0.2$ on the weight-tied one
-(\cref{tab:r-ablation}).
-The next paragraph asks whether a light finetune of that decoder closes the rest
-(already yes at $R{=}3$; $R{=}100$ pending).
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{figures/dist_cos_r1.pdf}
-    \caption{ConvNeXt-T, $R{=}100$, $\Delta t{=}0.01$, against the native $R{=}1$ path.
-    \textbf{Top:} $\|x^{(R)}(t)-x_{R{=}1}\|$ (solid), with the state norms of both paths
-    for scale (dashed: $R{=}100$; squares: $R{=}1$).
-    \textbf{Bottom:} $\cos(x^{(R)},x_{R{=}1})$.
-    Mean and P5--P95 over 500 images; massive channel ignored; dots mark block ends.
-    The norms nearly coincide while the block-end gap grows with depth: the mismatch is
-    mostly in angle.}
-    \label{fig:dist-r1}
-\end{figure}
-
-\paragraph{Finetuning stage~4 and the head after unrolling.}
-As a complementary check, we freeze stem and stages~1--3 and finetune only stage~4
-and the classification head on the unrolled transport (horizon $T{=}9$ conserved).
-On ConvNeXt-T with $R{=}3$ ($\Delta t{=}1/3$) this recovers $80.93\%$ top-1---within
-$0.04$ points of the untied baseline ($80.97\%$).
-For contrast, the same $R{=}3$ with $\Delta t{=}1$ (broken horizon $T{=}27$) collapses
-to $41\%$ \emph{without} finetuning.
-That recovery indicates that the residual gap is mostly a decoder mismatch---stage~4
-and the head were trained on the native $R{=}1$ landing zone, not on the refined
-$x_T$---rather than a collapse of class information in the transport itself.
-% TODO: fill XX when Leonardo S4+head runs finish.
-The same protocol at the fine step of \cref{fig:dist-r1} yields
-$\mathrm{XX}\%$ / $\mathrm{XX}\%$ for ConvNeXt-T / weight-tied at $R{=}100$
-($10$ epochs, learning rate $10^{-6}$).
-
-\paragraph{Takeaway.}
-Refinement at fixed $T$ yields a real continuous limit---solver-independent
-(\cref{app:solver-endpoints}), present even for random weights
-(\cref{app:random-init})---that is \emph{not} the native $R{=}1$ state, yet remains
-decoder-usable and nearly recoverable by adapting stage~4 and the head.
-What training selects is therefore not convergence itself, but \emph{how} the path is
-built: one shared block throughout the stage versus a switched stack of one-shot
-blocks.
-\Cref{sec:geometrical_analysis} contrasts those two regimes.
-
-Continuous-in-depth models express the weights as a function of depth in a
-basis~\citep{queiruga2020continuousindepthneuralnetworks}; the piecewise-constant basis
-recovers the ResNet, and smoother bases are a natural alternative.
-We tried the simplest one, replacing the piecewise-constant schedule
-$\theta_t=\theta_{\lfloor t\rfloor}$ by a bilinear blend of consecutive block weights.
-It performs relatively badly on every architecture (e.g.\ $-6.6$ points on ConvNeXt-T at
-$R{=}128$ vs.\ plain); full numbers and the residual-norm trajectories are in
-\cref{app:bilinear}.
-
-\subsubsection{Piecewise vs.\ smooth residual fields}
-\label{sec:teaser-b}
-
-\Cref{fig:teaser} showed the two regimes on individual trajectories;
-\cref{fig:refinement}~(right) makes the same contrast on the residual-field norm
-over 500 images.
-In the non-tied ConvNeXt, $\|f_k(x)\|$ is approximately constant inside each block and
-jumps at integer depths: a \emph{smooth function by parts}, i.e.\ an autonomous field on
-each unit interval $[i,i+1]$ with discontinuous switches of $\theta$ between blocks
-(\cref{eq:sum-of-integrals}), a switched system in the control-theory
-sense~\citep{liberzon2003switching}.
-In the weight-tied model the same shared $f$ is applied for the whole stage, so the
-residual norm evolves as one continuous curve that rises and then decays
-(\cref{eq:weight-tied-ode}).
-Markers at $R{=}1$ sit on those curves; refining to $R{=}100$ fills in the
-intra-block path without changing its global shape.
-This is the geometric counterpart of the accuracy tables: refining a switched stack
-converges to a slightly worse continuous limit, while refining a shared field stays near
-the trained accuracy as long as $T$ is held fixed.
-\Cref{sec:geometrical_analysis,sec:overparametrized_undoing} analyse these trajectories
-in more detail---in particular, how untied blocks redirect the state between integer
-depths even though each intra-block piece remains integrable.
+\paragraph{Smooth schedules.}
+Replacing the piecewise-constant schedule by a bilinear blend of consecutive block
+weights costs $6.6$ to $23.3$ points on every architecture (\cref{app:bilinear}): each
+trained block is meant for its own unit of depth.

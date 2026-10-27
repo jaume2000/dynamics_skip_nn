@@ -4,10 +4,11 @@
 \begin{figure*}[t]
     \centering
     \includegraphics[width=\textwidth]{figures/hero_trajectories.png}
-    \caption{Stage-3 feature trajectories of a weight-tied ConvNeXt (left) and a
-    standard ConvNeXt-T (right), integrated with Euler up to $T{=}9$
-    ($\Delta t{=}0.09$ and $\Delta t{=}0.01$; massive channel removed;
-    $200$ ImageNet validation images).
+    \caption{Stage-3 feature trajectories of a weight-tied ConvNeXt (left; $D{=}100$
+    applications of the shared block, $\Delta t{=}0.09$) and a standard ConvNeXt-T
+    (right; $R{=}100$, $\Delta t{=}0.01$), both integrated with Euler up to $T{=}9$
+    (massive channel removed; $200$ ImageNet validation images, $20$ from each of $10$
+    classes).
     \textbf{Top:} states are flattened and mapped to $2048$ dimensions with a
     fixed Gaussian random projection
     \citep{johnson1984extensions,dasgupta2003elementary}, and PCA is fitted on all
@@ -16,74 +17,68 @@
     \textbf{Bottom:} residual speed $\|f(x(t))\|$ (mean over images; shade:
     P10--P90).
     One shared block is a single autonomous field $\dot x = f(x)$; nine independent
-    blocks switch the field at every integer, $\dot x = f_{\lfloor t\rfloor}(x)$.
-    We analyse this contrast throughout the paper.}
+    blocks switch the field at every integer, $\dot x = f_{\lfloor t\rfloor}(x)$.}
     \label{fig:teaser}
 \end{figure*}
 
-Plain deep stacks such as VGG~\citep{simonyan2015deepconvolutionalnetworkslargescale}
-are hard to train as depth grows, partly because gradients vanish or explode through
-many layers~\citep{vanishingGradient,glorot2010understanding}.
 Residual connections~\citep{he2016resnet} made very deep networks trainable by
-letting each block add a correction to its input, $x\mapsto x+f(x)$, which also
-yields markedly smoother loss landscapes~\citep{li2018visualizinglosslandscapeneural}.
-Because every block writes into the same representation, the stack can be read as a
-single state that moves through feature space, and the update has the algebraic form
-of one explicit Euler step of an
-ODE~\citep{e2017proposal,haber2017stable,lu2018beyond}.
+letting each block add a correction to its input, $x\mapsto x+f(x)$.
+Because every block writes into the same representation, a stage can be read as one
+state moving through feature space, and the update has the form of one explicit
+Euler step of an ODE~\citep{e2017proposal,haber2017stable,lu2018beyond}.
 That reading inspired Neural ODEs~\citep{chen2019neuralordinarydifferentialequations},
-but whether a \emph{trained} residual network behaves as an integrator is
-contested: the analogy can be purely syntactic~\citep{queiruga2020continuousindepthneuralnetworks},
-and a stack is guaranteed to approach an ODE only if its blocks vary smoothly in
+but a stack approaches an ODE only if its blocks vary smoothly in
 depth~\citep{sander2022residualneuralnetworksdiscretize}.
+Trained vision networks do not: the residual norm of an untied stage jumps at every
+block boundary (\cref{fig:teaser}, bottom right), and interpolating the weights of
+consecutive blocks costs $6.6$ to $23.3$ top-1 points (\cref{app:bilinear}).
+Each block is a smooth field on its own unit of depth, and the stage is a
+\emph{switched} flow that changes field at every integer.
 
-Two questions follow, and current tools answer neither well.
-The first is geometric: a stage of nine blocks yields nine states, too few to tell
-a smooth flow from a sequence of unrelated jumps.
-The second is about parameters: if each block were one step of a common flow,
-independent weights per block would be largely redundant.
-Indeed, a ConvNeXt-T whose nine stage-3 blocks share a single set of weights reaches
-$80.36\%$ ImageNet top-1, $0.61$ points below the untied model with $33\%$ fewer
-parameters (\cref{sec:weight_tied}).
+Two questions follow.
+The first is geometric: nine blocks give nine states, too few to tell a smooth
+transport from a sequence of unrelated jumps.
+The second is about parameters: a ConvNeXt-T whose nine stage-3 blocks share one set
+of weights reaches $80.34\%$ ImageNet top-1, $0.62$ points below the untied model with
+$33\%$ fewer parameters (\cref{sec:weight_tied}).
+What do nine independent blocks do that one shared field does not?
 
 We address both with one inference-time probe.
-We read each block as a local field integrated over one unit of depth and refine it:
-apply it $R$ times with step $\Delta t{=}1/R$, so that the stage horizon $T$ is
-conserved, without any fine-tuning.
-On ConvNeXt, Swin and ResNet the refined stages converge to a continuous limit that
-costs less than one top-1 point, whereas changing $T$ collapses every network
-(\cref{sec:indefinite_looping}).
-We do not propose refinement as a way to build deeper models; we use it because it
-turns each stage into a trajectory with hundreds of states per block, on which
-velocity, angular velocity, acceleration and curvature can be measured.
+We read each block as a field integrated over one unit of depth and refine it: apply it
+$R$ times with step $\Delta t{=}1/R$, so that the stage horizon $T$ is kept, without
+any fine-tuning.
+Convergence is guaranteed for any Lipschitz field, trained or random
+(\cref{app:random-init}), so it is not the result; it is what turns each stage into a
+trajectory with hundreds of states per block.
+On ConvNeXt, Swin and ResNet the limit costs less than one top-1 point, whereas
+changing $T$ collapses every network (\cref{sec:indefinite_looping}).
 
-These trajectories separate two regimes behind the same algebra (\cref{fig:teaser}).
-The weight-tied stage is an autonomous flow $\dot x=f(x)$: it first searches for a
-heading, then expands along it and finally refines at low speed
-(\cref{sec:geometrical_analysis}).
+The trajectories separate two regimes behind the same algebra (\cref{fig:teaser}).
+The weight-tied stage is an autonomous flow $\dot x=f(x)$ that first searches for a
+heading, then expands along it and finally refines at low speed.
 The untied stage is a switched flow $\dot x=f_{\lfloor t\rfloor}(x)$: nine shallow
-arcs joined by turns of about $80^\circ$ at every block boundary.
-Measured along the path, almost half of the untied motion is cancelled by later blocks,
-and nearly half of all sign reversals fall exactly on block boundaries, against
-almost none for the shared field; a frozen decoder can also read the shared state
-much earlier in the stage (\cref{sec:overparametrized_undoing}).
-Much of the untied capacity in depth is thus spent undoing earlier blocks, which is
-why a single shared block recovers almost all of its accuracy.
+arcs joined by turns of about $80^\circ$ at every block boundary, where $45\%$ of the
+coordinates of the velocity change sign against $0.2\%$ per step inside a block
+(\cref{sec:geometrical_analysis}).
+Basis-independent statistics of the block increments show what the switches do
+(\cref{sec:coherence}): each untied block writes in a direction nearly orthogonal to the previous one, but
+positively correlated with it (cosine $0.17$, against $0.00$ for random blocks of
+matched strength), and no later block erases it.
+The stage advances as a staircase whose straightness, $0.50$, sits between that of
+random blocks ($0.33$) and of the shared flow ($0.78$); the detour is made at the
+switches, since the arc length exceeds the sum of block chords by only $1.5\%$.
+A frozen decoder also reads the shared state earlier in the stage; why the coherent
+field nearly matches the staircase remains open (\cref{sec:discussion}).
 
 Our contributions are:
 \begin{itemize}
-    \item \textbf{Refinement at fixed horizon} as a training-free probe of residual
-    stages, with a solver-independent continuous limit that stays usable by the
-    downstream network on ConvNeXt, Swin and ResNet
-    (\cref{sec:indefinite_looping}).
-    \item \textbf{Autonomous versus switched transport}: a weight-tied stage as a
-    controlled autonomous counterpart of the standard stack, close in accuracy and
-    clearly different in dynamics (\cref{sec:weight_tied,sec:geometrical_analysis}).
-    \item \textbf{A kinematic analysis} of feature trajectories (speed, angular
-    velocity, tangential and normal acceleration, curvature), after excluding massive
-    activations that otherwise dominate the statistics
-    (\cref{sec:geometrical_analysis}).
-    \item \textbf{A measurement of depth redundancy}: cancelled motion, sign reversals
-    at block boundaries, and prefix decoding with the frozen downstream network
-    (\cref{sec:overparametrized_undoing}).
+    \item \textbf{Refinement at fixed horizon} as a training-free probe whose limit
+    stays usable on ConvNeXt, Swin and ResNet (\cref{sec:indefinite_looping}).
+    \item \textbf{Autonomous versus switched transport}: a weight-tied stage as an
+    autonomous control for the standard stack, close in accuracy and different in
+    kinematics (\cref{sec:weight_tied,sec:geometrical_analysis}).
+    \item \textbf{A basis-independent measure of transport coherence}: straightness
+    split into a between-block and a within-block part, alignment between blocks and
+    with the destination, survival of each block's increment, a random baseline of matched strength and prefix decoding with the frozen downstream network
+    (\cref{sec:coherence}).
 \end{itemize}

@@ -1,0 +1,62 @@
+\section{Transport coherence in other architectures}
+\label{app:arch-transport}
+
+We compute the Gram statistics of \cref{sec:coherence} at native
+resolution ($R{=}1$) on the same $500$ images for stage~3 of the torchvision Swin-T, ResNet-50 and
+ResNet-101 and for random stages with Xavier weights at gain $1$ and at the
+gain $g^\ast$ that matches the trained field strength (\cref{app:random-init}).
+Swin is reported with all tokens and without the four corner tokens
+(\cref{app:massive-activations}).
+ResNet stages exclude the first block, which has a projection shortcut, and the field
+$f_i$ includes the ReLU applied after the sum, so $n{=}5$ and $n{=}22$.
+Nine, six or twenty-two orthogonal increments of equal length would give a
+straightness of $1/\sqrt n$ (last column).
+
+\begin{table}[t]
+    \centering
+    \caption{Stage-3 Gram statistics at $R{=}1$ (mean over $500$ images).
+    $s_k{<}0$: share of image and block pairs with negative survival;
+    $E$: opposed fraction.}
+    \label{tab:app-arch-transport}
+    \scriptsize
+    \setlength{\tabcolsep}{2.2pt}
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{llrrrrrrr}
+        \toprule
+        Model & init & Str. & $\cos_{k,k+1}$ & $\overline{\cos}$ & $\min s_k$ & $s_k{<}0$ & $E$ & $1/\sqrt n$ \\
+        \midrule
+        Swin-T            & trained      & 0.800 & 0.427 & 0.276 & 0.40 & 0\% & 0 & 0.408 \\
+        Swin-T, no corners& trained      & 0.668 & 0.319 & 0.209 & 0.12 & 0\% & 0 & 0.408 \\
+        Swin-T            & $g{=}1$      & 0.417 & 0.020 & 0.008 & $-0.14$ & 33\% & 0.012 & 0.408 \\
+        Swin-T            & $g^\ast{=}1.8$ & 0.418 & 0.016 & 0.009 & $-0.14$ & 37\% & 0.012 & 0.408 \\
+        \midrule
+        ResNet-50         & trained      & 0.371 & $-0.110$ & $-0.080$ & $-0.38$ & 100\% & 0.187 & 0.447 \\
+        ResNet-50         & $g{=}1$      & 0.428 & $-0.036$ & $-0.020$ & $-0.18$ & 75\% & 0.077 & 0.447 \\
+        ResNet-50         & $g^\ast{=}1.15$ & 0.430 & $-0.038$ & $-0.021$ & $-0.21$ & 75\% & 0.088 & 0.447 \\
+        \midrule
+        ResNet-101        & trained      & 0.158 & 0.009 & $-0.022$ & $-0.96$ & 89\% & 0.244 & 0.213 \\
+        ResNet-101        & $g{=}1$      & 0.229 & $-0.032$ & 0.004 & $-0.30$ & 50\% & 0.070 & 0.213 \\
+        ResNet-101        & $g^\ast{=}0.95$ & 0.221 & $-0.029$ & 0.002 & $-0.32$ & 60\% & 0.069 & 0.213 \\
+        \bottomrule
+    \end{tabular}%
+    }
+\end{table}
+
+Swin-T stage~3 is a coherent transport: straightness $0.80$, consecutive cosine $0.43$
+and positive survival for every image and block.
+Without the corner tokens it is still well above its random baseline ($0.67$ against
+$0.42$), so the coherence is not only the growth of the corner tokens along their own
+direction.
+Its random baseline sits at $1/\sqrt 6$, as for ConvNeXt.
+
+Both ResNets go the other way.
+Trained ResNet-50 is \emph{less} straight than its random baseline ($0.37$ against
+$0.43$), with negative consecutive cosine ($-0.11$) and negative survival for every
+image and block, so later blocks partly move against earlier ones; ResNet-101 behaves
+similarly ($0.16$ against $0.22$ to $0.23$, $E{=}0.24$).
+Random ResNet stages already show negative survival, unlike random ConvNeXt stages.
+One candidate is the ReLU after the sum, which makes $f_i$ include a rectification of
+$x+F_i(x)$ that can remove part of $x$; we have not tested it, and we report the ResNet
+statistics as a fact about these checkpoints rather than as a mechanism.
+Script: \texttt{scripts/transport\_coherence\_arch.py}; outputs in
+\texttt{outputs/transport\_coherence\_arch}.
