@@ -1,4 +1,4 @@
-\begin{thebibliography}{60}
+\begin{thebibliography}{64}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -256,6 +256,14 @@ Huang, G., Sun, Y., Liu, Z., Sedra, D., and Weinberger, K.~Q.
 \newblock Deep networks with stochastic depth.
 \newblock In \emph{European Conference on Computer Vision (ECCV)}, 2016.
 
+\bibitem[Huang et~al.(2018)Huang, Chen, Li, Wu, van~der Maaten, and
+  Weinberger]{huang2018multiscaledense}
+Huang, G., Chen, D., Li, T., Wu, F., van~der Maaten, L., and Weinberger, K.~Q.
+\newblock Multi-scale dense networks for resource efficient image
+  classification.
+\newblock In \emph{International Conference on Learning Representations}, 2018.
+\newblock URL \url{https://openreview.net/forum?id=HkfUCi1C-}.
+
 \bibitem[Ioffe \& Szegedy(2015)Ioffe and Szegedy]{ioffe2015batchnorm}
 Ioffe, S. and Szegedy, C.
 \newblock Batch normalization: Accelerating deep network training by reducing
@@ -275,6 +283,24 @@ Jastrz{\k{e}}bski, S., Arpit, D., Ballas, N., Verma, V., Che, T., and Bengio,
 Johnson, W.~B. and Lindenstrauss, J.
 \newblock Extensions of {L}ipschitz mappings into a {H}ilbert space.
 \newblock \emph{Contemporary Mathematics}, 26:\penalty0 189--206, 1984.
+
+\bibitem[Kaya et~al.(2019)Kaya, Hong, and Dumitras]{kaya2019shallowdeep}
+Kaya, Y., Hong, S., and Dumitras, T.
+\newblock Shallow-deep networks: Understanding and mitigating network
+  overthinking.
+\newblock In \emph{Proceedings of the 36th International Conference on Machine
+  Learning}, volume~97 of \emph{Proceedings of Machine Learning Research}, pp.\
+   3301--3310. PMLR, 2019.
+\newblock URL \url{https://proceedings.mlr.press/v97/kaya19a.html}.
+
+\bibitem[Kornblith et~al.(2019)Kornblith, Norouzi, Lee, and
+  Hinton]{kornblith2019similarity}
+Kornblith, S., Norouzi, M., Lee, H., and Hinton, G.
+\newblock Similarity of neural network representations revisited.
+\newblock In \emph{Proceedings of the 36th International Conference on Machine
+  Learning}, volume~97 of \emph{Proceedings of Machine Learning Research}, pp.\
+   3519--3529. PMLR, 2019.
+\newblock URL \url{https://proceedings.mlr.press/v97/kornblith19a.html}.
 
 \bibitem[Lad et~al.(2025)Lad, Lee, Gurnee, and Tegmark]{lad2025robustness}
 Lad, V., Lee, J.~H., Gurnee, W., and Tegmark, M.
@@ -396,6 +422,15 @@ Takase, S. and Kiyono, S.
 \newblock In \emph{Proceedings of the Fourth Workshop on Simple and Efficient
   Natural Language Processing (SustaiNLP)}, pp.\  78--90, 2023.
 \newblock \doi{10.18653/v1/2023.sustainlp-1.5}.
+
+\bibitem[Teerapittayanon et~al.(2016)Teerapittayanon, McDanel, and
+  Kung]{teerapittayanon2016branchynet}
+Teerapittayanon, S., McDanel, B., and Kung, H.~T.
+\newblock {BranchyNet}: Fast inference via early exiting from deep neural
+  networks.
+\newblock In \emph{Proceedings of the 23rd International Conference on Pattern
+  Recognition (ICPR)}, pp.\  2464--2469. IEEE, 2016.
+\newblock \doi{10.1109/ICPR.2016.7900006}.
 
 \bibitem[Valeriani et~al.(2023)Valeriani, Doimo, Cuturello, Laio, Ansuini, and
   Cazzaniga]{valeriani2023geometry}
