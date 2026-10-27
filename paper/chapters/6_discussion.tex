@@ -1,0 +1,84 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\Cref{tab:headline} collects the measurements that carry our reading.
+The same residual algebra $x+f(x)$ supports two different transports, and refinement
+at fixed horizon makes the difference visible without retraining either model.
+
+\begin{table}[t]
+    \centering
+    \caption{Headline measurements on ImageNet-1k.
+    Top-1 and ODE limit from \cref{tab:r-ablation}; straightness (Str.) and consecutive
+    block cosine at $R{=}1$ for the untied families and at $R{=}100$ for the tied stage
+    (\cref{tab:coherence,app:arch-transport}); parameters from \cref{sec:weight_tied}.
+    Tied $R{=}27$: same parameters as Tied, trained at $T{=}27$.
+    Single runs with unmatched recipes.
+    Swin-T and the ResNets are torchvision checkpoints that we did not retrain.}
+    \label{tab:headline}
+    \small
+    \setlength{\tabcolsep}{2.4pt}
+    \begin{tabular}{lrrrrrr}
+        \toprule
+        Model & Params & $R{=}1$ & ODE & Gap & Str. & $\cos_{k,k+1}$ \\
+        \midrule
+        ConvNeXt-T         & \paramsUntied M & \accUntied & \odeUntied & $-\gapUntiedODE$ & \strUntied & 0.16 \\
+        Weight-tied S3     & \paramsTied M & \accTied & \odeTied & $-\gapTiedODE$ & \strTied & \cosTied \\
+        Tied, $27$ apps.   & \paramsTied M & \accTiedDTwentySeven & -- & -- & -- & -- \\
+        All-stages tied    & \paramsAllTied M  & \accAllTied & --    & --      & --   & --   \\
+        Swin-T             & --     & \accSwin & \odeSwin & $-\gapSwinODE$ & 0.80 & 0.43 \\
+        ResNet-50          & --     & \accRFifty & \odeRFifty & $-\gapRFiftyODE$ & 0.37 & $-0.11$ \\
+        ResNet-101         & --     & \accROneOhOne & \odeROneOhOne & $-\gapROneOhOneODE$ & 0.16 & 0.01 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\paragraph{Why does one field nearly match nine?}
+We now have a partial answer.
+The shared field reaches the decoder's operating region earlier
+(\cref{sec:buys-costs}), and extra depth with the same field recovers none of the
+$\accGapTied$-point gap (\cref{sec:weight_tied}).
+A hypothesis, not a tested claim: what the untied stage buys is the freedom for the
+field to depend on depth, not more applications of one map.
+A shared block conditioned on $t$ would test that reading.
+We do not claim that the untied directions are unnecessary, nor that the blocks compute
+functions simpler than their parameter counts allow; that remains an untested
+hypothesis for future work.
+
+\paragraph{Refinement as a probe beyond ConvNeXt.}
+Every architecture converges to a continuous limit at fixed $T$ that keeps the function
+within $\gapTiedODE$ to $\gapRFiftyODE$ points, although it sits
+$\angleTiedRefine^\circ$ to $\angleUntiedRefine^\circ$ from the native state
+(\cref{app:solver-endpoints}); breaking the horizon instead collapses every network.
+A trained stage is a sequence of one-step solves, each replaceable by a finer integral
+of the same block, but not a Neural ODE with weights smooth in depth
+(\cref{app:bilinear}).
+The probe needs no retraining, the Gram statistics only need block increments and
+prefix decoding only needs the trained downstream network, so all three apply to any
+residual stream, including looped transformers~\citep{dehghani2019universal,giannou2023looped}
+and the residual streams of large language models.
+
+\paragraph{Toward mostly autonomous fields.}
+The two regimes suggest a design space between them: a shared field with small
+per-block corrections, or cycles of a few shared blocks, would interpolate between an
+autonomous and a switched flow.
+Related schemes exist for convolutional networks~\citep{savarese2019learning} and
+transformers, through cyclic layer sharing~\citep{takase2021lessons} and shared layers
+with low-rank updates~\citep{bae2024relaxed}.
+Designing fields that are mostly autonomous with controlled non-autonomy is future
+work; the coherence statistics place such models on the ladder from random to
+autonomous and can test whether coherence and accuracy move together.
+
+\paragraph{Limitations.}
+All results are on ImageNet-1k classification.
+The tied and untied stages are one pair of ConvNeXt-T runs, without seeds and with
+different learning-rate schedules; the $27$-application tied run is likewise a single
+run.
+We describe how the two transports differ and give a partial account of the cost; we
+do not claim a causal explanation of why the gap is only $\accGapTied$ points.
+The channel basis is not privileged, so per-coordinate readings of the trajectories
+are partly determined by the Gram matrix and partly by the basis
+(\cref{app:per-coordinate}); we base our claims on Gram statistics only.
+The metrics exclude the massive ConvNeXt channel and the Swin corner tokens, and we
+have not tested whether the ReLU after the ResNet sum explains its negatively
+correlated increments (\cref{app:arch-transport}).
+The frozen decoder measures readiness for the trained head, not information content.

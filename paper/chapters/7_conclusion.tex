@@ -1,0 +1,22 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+Refining residual stages at a fixed horizon is a training-free probe: on ConvNeXt,
+Swin and ResNet the continuous limit costs less than \refineLossBound{} top-1 point,
+whereas changing the horizon collapses every network, and the refined path stays
+faithful to the native Gram geometry.
+A trained stage is a switched composition of one ODE per block, not one ODE with
+weights smooth in depth.
+In ConvNeXt-T the nine blocks write nearly orthogonal, positively correlated
+directions that no later block reverses, with straightness $\strUntied$ and turns of
+about $\turnMean^\circ$ at every boundary.
+Weight tying turns the same stage into one autonomous, anytime flow that a frozen
+decoder reads much earlier, at a cost of $\accGapTied$ points that extra depth does
+not buy.
+The open design question is how to keep most of that autonomy while allowing a
+controlled dependence on depth.
+
+\section*{Impact Statement}
+This paper presents work whose goal is to advance the field of Machine Learning.
+There are many potential societal consequences of our work, none which we feel must
+be specifically highlighted here.

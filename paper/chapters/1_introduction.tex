@@ -4,11 +4,12 @@
 \begin{figure*}[t]
     \centering
     \includegraphics[width=\textwidth]{figures/hero_trajectories.png}
-    \caption{Stage-3 feature trajectories of a weight-tied ConvNeXt (left; $D{=}100$
-    applications of the shared block, $\Delta t{=}0.09$) and a standard ConvNeXt-T
-    (right; $R{=}100$, $\Delta t{=}0.01$), both integrated with Euler up to $T{=}9$
-    (massive channel removed; $200$ ImageNet validation images, $20$ from each of $10$
-    classes).
+    \caption{Stage-3 feature trajectories of a weight-tied ConvNeXt (left; $9R$
+    applications of the shared block with $R{=}100$, $\Delta t{=}0.09$) and a
+    standard ConvNeXt-T (right; each of nine blocks applied $R{=}100$ times with
+    $\Delta t{=}0.01$), both integrated with Euler up to horizon $T{=}9$
+    (massive channel removed; $200$ ImageNet validation images, $20$ from each of
+    $10$ classes).
     \textbf{Top:} states are flattened and mapped to $2048$ dimensions with a
     fixed Gaussian random projection
     \citep{johnson1984extensions,dasgupta2003elementary}, and PCA is fitted on all
@@ -23,62 +24,79 @@
 
 Residual connections~\citep{he2016resnet} made very deep networks trainable by
 letting each block add a correction to its input, $x\mapsto x+f(x)$.
-Because every block writes into the same representation, a stage can be read as one
-state moving through feature space, and the update has the form of one explicit
-Euler step of an ODE~\citep{e2017proposal,haber2017stable,lu2018beyond}.
-That reading inspired Neural ODEs~\citep{chen2019neuralordinarydifferentialequations},
-but a stack approaches an ODE only if its blocks vary smoothly in
-depth~\citep{sander2022residualneuralnetworksdiscretize}.
-Trained vision networks do not: the residual norm of an untied stage jumps at every
-block boundary (\cref{fig:teaser}, bottom right), and interpolating the weights of
-consecutive blocks costs $6.6$ to $23.3$ top-1 points (\cref{app:bilinear}).
-Each block is a smooth field on its own unit of depth, and the stage is a
-\emph{switched} flow that changes field at every integer.
+That update has the form of one explicit Euler step of an
+ODE~\citep{e2017proposal,haber2017stable,lu2018beyond}, a reading that inspired
+Neural ODEs~\citep{chen2019neuralordinarydifferentialequations}.
+Whether a \emph{trained} stack behaves as an integrator is debated:
+\citet{queiruga2020continuousindepthneuralnetworks} already treat residual stages as
+piecewise-constant in depth and argue that standard ResNets are not meaningful
+integrators beyond the syntactic analogy;
+\citet{sander2022residualneuralnetworksdiscretize} show that the gap to a Neural ODE
+need not vanish unless the residual maps vary smoothly in depth;
+\citet{cohen2021scaling} find that the deep limit can be an ODE, an SDE or neither;
+and \citet{marion2024implicit} prove that a ResNet initialised as a Neural ODE
+discretisation remains one under gradient flow in the large-depth limit.
 
-Two questions follow.
-The first is geometric: nine blocks give nine states, too few to tell a smooth
-transport from a sequence of unrelated jumps.
-The second is about parameters: a ConvNeXt-T whose nine stage-3 blocks share one set
-of weights reaches $80.34\%$ ImageNet top-1, $0.62$ points below the untied model with
-$33\%$ fewer parameters (\cref{sec:weight_tied}).
-What do nine independent blocks do that one shared field does not?
+We refine trained residual stages at inference and use the refined path as a probe.
+Write $R$ for the number of applications of each block with step $\Delta t{=}1/R$, so
+that the integration horizon $T{=}n$ of an $n$-block stage is kept and nothing is
+retrained.
+Convergence itself is not the claim: any Lipschitz residual field has a continuous
+limit (\cref{app:random-init}).
+What matters is that the limit stays usable and that the path is faithful to the
+trained network.
+Refined $128$-fold, ConvNeXt, Swin and ResNet lose less than \refineLossBound{}
+ImageNet top-1 point, whereas changing $T$ collapses every network
+(\cref{sec:usable-limit}): the horizon matters, the resolution does not.
+On the untied ConvNeXt-T stage, Gram statistics of the block increments agree between
+$R{=}1$ and $R{=}100$ to within $\gramFidelityTol$; on the tied stage the order is
+kept while the path straightens ($\strTiedNative\!\to\!\strTied$).
+The stage is a composition of one ODE per block, not one ODE with weights smooth in
+depth: bilinear blending of consecutive block weights costs $\bilinearDropLow$ to
+$\bilinearDropHigh$ points (\cref{app:bilinear}).
+The piecewise-constant reading already appears in Queiruga et al.; our novelty is
+empirical: modern networks already trained, without retraining, and what that flow
+looks like.
 
-We address both with one inference-time probe.
-We read each block as a field integrated over one unit of depth and refine it: apply it
-$R$ times with step $\Delta t{=}1/R$, so that the stage horizon $T$ is kept, without
-any fine-tuning.
-Convergence is guaranteed for any Lipschitz field, trained or random
-(\cref{app:random-init}), so it is not the result; it is what turns each stage into a
-trajectory with hundreds of states per block.
-On ConvNeXt, Swin and ResNet the limit costs less than one top-1 point, whereas
-changing $T$ collapses every network (\cref{sec:indefinite_looping}).
+The same probe separates two transports behind the algebra $x+f(x)$
+(\cref{fig:teaser}).
+In ConvNeXt-T the field switches at every block boundary, where the heading turns by
+about $\turnMean^\circ$ ($\turnLow^\circ$ to $\turnHigh^\circ$), and the nine blocks write
+nearly orthogonal, positively correlated directions (consecutive cosine $\cosUntied$,
+against $\cosRandom$ for random blocks of matched strength and $\cosTied$ for the
+tied stage) that no later block reverses: survival $s_k>0$ for every image and block,
+so the opposed fraction $E{=}\EUntied$ (\cref{sec:nine-directions}).
+Straightness sits at $\strUntied$, between random ($\strRandom$) and tied
+($\strTied$); writing $d=\|x_T-x_0\|$, $C$ for the sum of block chords and $L$ for
+arc length, straightness $= (d/C)\,(C/L)$ with $C/L{=}\intraChordArcUntied$, so the
+detour is made between blocks.
+Alignment of each increment with the destination rises from $\alignFirstUntied$ to
+$\alignLastUntied$, and the half-progress time is $t_{50}{=}\tFiftyUntied$ against
+$\tFiftyTied$ (tied) and $\tFiftyRandom$ (random).
+This staircase is specific to ConvNeXt: Swin is coherent and the ResNets reverse
+(\cref{app:arch-transport}).
 
-The trajectories separate two regimes behind the same algebra (\cref{fig:teaser}).
-The weight-tied stage is an autonomous flow $\dot x=f(x)$ that first searches for a
-heading, then expands along it and finally refines at low speed.
-The untied stage is a switched flow $\dot x=f_{\lfloor t\rfloor}(x)$: nine shallow
-arcs joined by turns of about $80^\circ$ at every block boundary, where $45\%$ of the
-coordinates of the velocity change sign against $0.2\%$ per step inside a block
-(\cref{sec:geometrical_analysis}).
-Basis-independent statistics of the block increments show what the switches do
-(\cref{sec:coherence}): each untied block writes in a direction nearly orthogonal to the previous one, but
-positively correlated with it (cosine $0.17$, against $0.00$ for random blocks of
-matched strength), and no later block erases it.
-The stage advances as a staircase whose straightness, $0.50$, sits between that of
-random blocks ($0.33$) and of the shared flow ($0.78$); the detour is made at the
-switches, since the arc length exceeds the sum of block chords by only $1.5\%$.
-A frozen decoder also reads the shared state earlier in the stage; why the coherent
-field nearly matches the staircase remains open (\cref{sec:discussion}).
+Weight tying turns the stage into one autonomous flow with search, expansion and
+refinement phases.
+A frozen decoder reads that state much earlier: native prefixes give
+$\prefixTiedThree\%$ top-1 at $t{=}3$ against $\prefixUntiedThree\%$, and
+$\prefixTiedFive\%$ against $\prefixUntiedFive\%$ at $t{=}5$
+(\cref{sec:buys-costs}).
+The frozen decoder is the right measure of early exit without training extra heads;
+a low score still does not imply that early features lack information.
+Sharing costs $\accGapTied$ points with $\paramsTiedFracFewer\%$ fewer parameters
+(single runs, unmatched recipes), and tripling the applications of the shared block
+($27$ applications, same parameters) reaches only $\accTiedDTwentySeven\%$, recovering
+none of the gap: the price looks like autonomy, not depth
+(\cref{sec:weight_tied,sec:buys-costs}).
 
 Our contributions are:
 \begin{itemize}
-    \item \textbf{Refinement at fixed horizon} as a training-free probe whose limit
-    stays usable on ConvNeXt, Swin and ResNet (\cref{sec:indefinite_looping}).
-    \item \textbf{Autonomous versus switched transport}: a weight-tied stage as an
-    autonomous control for the standard stack, close in accuracy and different in
-    kinematics (\cref{sec:weight_tied,sec:geometrical_analysis}).
-    \item \textbf{A basis-independent measure of transport coherence}: straightness
-    split into a between-block and a within-block part, alignment between blocks and
-    with the destination, survival of each block's increment, a random baseline of matched strength and prefix decoding with the frozen downstream network
-    (\cref{sec:coherence}).
+    \item \textbf{Refinement as a faithful probe} and the switched-flow picture of a
+    trained residual stage (\cref{sec:method}).
+    \item \textbf{Basis-independent transport statistics}, with a random baseline of
+    matched strength and a straightness decomposition into between-block and
+    within-block parts (\cref{sec:nine-directions}).
+    \item \textbf{Weight tying as an autonomous, anytime flow}, whose accuracy cost
+    is autonomy rather than depth (\cref{sec:weight_tied,sec:buys-costs}).
 \end{itemize}

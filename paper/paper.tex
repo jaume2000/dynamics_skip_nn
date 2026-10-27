@@ -1,26 +1,41 @@
 \documentclass{article}
 
+% Dual build: anonymous ICML submission vs arXiv.
+% Compile with:  pdflatex '\newcommand{\AnonMode}{}\input{paper}'
+% or leave \AnonMode undefined for the arXiv (named) version.
+\newif\ifanonymised
+\ifdefined\AnonMode
+  \anonymisedtrue
+\else
+  \anonymisedfalse
+\fi
+\newcommand{\anon}[2]{\ifanonymised#1\else#2\fi}
+
 \usepackage[T1]{fontenc}
 \usepackage{microtype}
 \usepackage{graphicx}
 \usepackage{subfigure}
 \usepackage{booktabs}
-\usepackage{flafter}  % floats never appear before their point of definition
-\usepackage{placeins}  % \FloatBarrier to keep appendix floats in-section
+\usepackage{flafter}
+\usepackage{placeins}
 \usepackage{hyperref}
 
 \newcommand{\theHalgorithm}{\arabic{algorithm}}
 
-% ICML style for layout only. This is an arXiv preprint---not an accepted ICML paper.
-% [accepted] is required so author names are printed; we override the proceedings footer below.
-\usepackage[accepted]{icml2025}
-\makeatletter
-\renewcommand{\Notice@String}{\textit{arXiv preprint}.}
-\makeatother
-\hypersetup{
-  pdfsubject={arXiv preprint},
-  pdfauthor={Jaume Ivars Grimalt},
-}
+% ICML 2027 style not yet published; use the official ICML 2026 template.
+% For the anonymous submission drop [accepted]; for arXiv keep it so names print.
+\ifanonymised
+  \usepackage{icml2026}
+\else
+  \usepackage[accepted]{icml2026}
+  \makeatletter
+  \renewcommand{\Notice@String}{\textit{arXiv preprint}.}
+  \makeatother
+  \hypersetup{
+    pdfsubject={arXiv preprint},
+    pdfauthor={Jaume Ivars Grimalt},
+  }
+\fi
 
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -50,59 +65,73 @@
 \setcounter{topnumber}{3}
 \setcounter{dbltopnumber}{3}
 
+\input{numbers}
+
 \icmltitlerunning{Nine Blocks, Nine Directions}
 
 \begin{document}
 
 \twocolumn[
-\icmltitle{Nine Blocks, Nine Directions: What Refining Residual Stages Reveals About Their Transport}
+\icmltitle{Nine Blocks, Nine Directions: Weight Tying Turns a Residual Stage into One Smooth Flow}
 
+\ifanonymised
+\begin{icmlauthorlist}
+\icmlauthor{Anonymous Authors}{}
+\end{icmlauthorlist}
+\else
 \begin{icmlauthorlist}
 \icmlauthor{Jaume Ivars Grimalt}{comp}
 \end{icmlauthorlist}
-
 \icmlaffiliation{comp}{Mycrospace AI Research, Valencia, Spain}
-
 \icmlcorrespondingauthor{Jaume Ivars Grimalt}{jaumeig95@gmail.com}
+\fi
 
-\icmlkeywords{Machine Learning, Residual Networks, Neural ODEs, Representation Dynamics}
+\icmlkeywords{Machine Learning, Residual Networks, Neural ODEs, Representation Dynamics, Weight Tying}
 
 \vskip 0.3in
 ]
 
+\ifanonymised
 \printAffiliationsAndNotice{}
+\else
+\printAffiliationsAndNotice{}
+\fi
 
 \begin{abstract}
-Residual blocks compute $x+f(x)$, the form of one explicit Euler step.
-We refine trained residual stages at inference, applying each block $R$ times with
-step $1/R$ so that the integration horizon is kept, and use the refined path as a
-probe that needs no retraining.
-Convergence is not the finding, since any Lipschitz residual field has a continuous
-limit; what matters is what the limit keeps and how the path is organised.
-On ConvNeXt, Swin and ResNet the limit costs less than one ImageNet top-1 point,
-whereas changing the horizon collapses every network.
-Comparing ConvNeXt-T with a variant whose nine stage-3 blocks share one set of weights
-separates an autonomous flow, the shared block, from a switched flow, the independent
-blocks, whose heading turns by about $80^\circ$ at every block boundary.
-Basis-independent statistics of the block increments show that the independent blocks
-write in nearly orthogonal directions that later blocks do not erase: consecutive
-increments have cosine $0.17$, against $0.00$ for random blocks of matched strength,
-and the stage advances as a staircase with straightness $0.50$, against $0.78$ for the
-shared flow and $0.33$ for random blocks.
-The shared stage reaches $80.34\%$ top-1 against $80.96\%$ with $33\%$ fewer
-parameters, and a frozen decoder can read its features earlier in the stage.
-Why one coherent field nearly matches nine independent ones remains open.
-Code is available at \url{https://github.com/jaume2000/dynamics_skip_nn}.
+Residual blocks compute $x + f(x)$, the form of one explicit Euler step.
+We refine trained residual stages at inference by applying each block $R$ times with
+step $1/R$, which keeps the integration horizon and needs no retraining.
+Refined $128$-fold, the stages of ConvNeXt, Swin and ResNet lose less than
+\refineLossBound{} ImageNet top-1 point, whereas changing the horizon collapses every
+network.
+The refined path shows that a trained stage is not one ODE but a composition of one
+ODE per block.
+In ConvNeXt-T the field switches at every block boundary, where the heading turns by
+about $\turnMean^\circ$, and each of the nine blocks writes a direction nearly
+orthogonal to the previous ones (consecutive cosine $\cosUntied$, against
+$\cosRandom$ for random blocks of matched strength) that no later block reverses.
+Sharing one set of weights across the nine blocks turns the stage into a single
+autonomous flow: it is straighter ($\strTied$ against $\strUntied$), has no switches
+and is read by its own frozen decoder much earlier, with $\prefixTiedThree\%$ top-1
+after three of nine steps against $\prefixUntiedThree\%$ for the standard stage.
+Sharing costs $\accGapTied$ points with $\paramsTiedFracFewer\%$ fewer parameters, and
+tripling the number of shared steps reaches only $\accTiedDTwentySeven\%$, recovering
+none of the gap, which suggests that the gap is the price of a single field rather
+than of depth.
+\anon{Code is provided in the supplementary material.}{Code:
+\url{https://github.com/jaume2000/dynamics_skip_nn}.}
 \end{abstract}
 
 \input{chapters/1_introduction}
 \input{chapters/2_related_work}
 \input{chapters/3_method}
-\input{chapters/4_discussion}
-\input{chapters/5_conclusion}
+\input{chapters/4_one_flow}
+\input{chapters/5_buys_costs}
+\input{chapters/6_discussion}
+\input{chapters/7_conclusion}
 
 \bibliography{paper}
-\bibliographystyle{icml2025}
+\bibliographystyle{icml2026}
 
 \newpage
 \input{chapters/appendix}

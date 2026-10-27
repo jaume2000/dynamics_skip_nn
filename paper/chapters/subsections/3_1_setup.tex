@@ -1,0 +1,48 @@
+\subsection{Setup}
+\label{sec:setup}
+
+Write the residual of block $i$ as $f_i(x)=\mathrm{block}_i(x)-x$.
+Over a stage of $n$ blocks starting from the output $x_0$ of the previous stage, the
+native network takes one Euler step of size $1$ per block,
+\begin{equation}
+    x_{i+1} \;=\; x_i + f_i(x_i),
+    \qquad
+    x_n \;=\; x_0 + \sum_{i=0}^{n-1} f_i(x_i).
+    \label{eq:euler-stage}
+\end{equation}
+We take the $n$ blocks as the trained horizon $T{=}n$ and read each block as a field
+integrated over its own unit of depth, so that the continuous object
+behind~\eqref{eq:euler-stage} is
+\begin{equation}
+    x_{i+1} \;=\; x_i + \int_{i}^{i+1} f_i\bigl(x(t)\bigr)\,dt,
+    \qquad T \;=\; n,
+    \label{eq:sum-of-integrals}
+\end{equation}
+a switched system in the control sense~\citep{liberzon2003switching}, with the
+piecewise-constant schedule $\theta_t=\theta_{\lfloor t\rfloor}$.
+Per-block step sizes are absorbed into the learned weights, so integrating each block
+over one unit of depth matches the step the model has internalised.
+In a weight-tied stage $f_i\equiv f$ and~\eqref{eq:sum-of-integrals} collapses to a
+single autonomous ODE,
+\begin{equation}
+    x_T \;=\; x_0 + \int_{0}^{T} f\bigl(x(t)\bigr)\,dt,
+    \qquad T \;=\; n.
+    \label{eq:weight-tied-ode}
+\end{equation}
+
+\paragraph{Repetitions $R$.}
+We refine with one parameter $R$: each block is applied $R$ times with step
+$\Delta t{=}1/R$, so that $T{=}nR\,\Delta t{=}n$ is kept and only the resolution
+changes,
+\begin{equation}
+    x_T \;=\; x_0 + \sum_{i=0}^{n-1} \sum_{r=0}^{R-1} \Delta t\, f_i\bigl(x_{i + r\Delta t}\bigr).
+    \label{eq:refined-stage}
+\end{equation}
+For a weight-tied stage $R$ means $nR$ applications of the shared block.
+$R{=}1$ recovers the native network; as $R$ grows the scheme approaches
+\eqref{eq:sum-of-integrals}, and we also compare Midpoint (RK2) and RK4 on the same
+horizon.
+Nothing is retrained.
+Refinement converges for any Lipschitz residual field, trained or random
+(\cref{app:random-init}), so the question is what the limit keeps and how the path
+is organised.

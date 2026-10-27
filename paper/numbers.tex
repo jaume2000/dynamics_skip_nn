@@ -1,0 +1,97 @@
+% Centralised numerical macros. Every repeated figure in abstract / intro / tables
+% must come from here. Sources are recorded in comments (paths relative to repo root).
+% Convention for trained top-1: last.pth validation accuracy (fraction * 100, two decimals).
+
+% --- Accuracies (ImageNet-1k top-1, %) ---
+% outputs/convnextv1_imagenet/results/val_top1acc_history.csv last
+\newcommand{\accUntied}{80.96}
+% outputs/shared_convnextv1_imagenet/results/val_top1acc_history.csv last
+\newcommand{\accTied}{80.34}
+% outputs/shared_convnextv1_allstages_imagenet/results/val_top1acc_history.csv last
+\newcommand{\accAllTied}{78.99}
+% outputs/shared_convnextv1_D27_imagenet/results/val_top1acc_history.csv last
+\newcommand{\accTiedDTwentySeven}{80.26}
+% gap = \accUntied - \accTied
+\newcommand{\accGapTied}{0.62}
+% recovery of the gap by D=27: \accTiedDTwentySeven - \accTied (negative: none recovered)
+\newcommand{\accRecoveryDTwentySeven}{-0.08}
+% parameters (M), from model count / paper Sec.~weight_tied
+\newcommand{\paramsUntied}{28.59}
+\newcommand{\paramsTied}{18.97}
+\newcommand{\paramsAllTied}{8.68}
+\newcommand{\paramsTiedFracFewer}{33}
+\newcommand{\paramsAllFracFewer}{70}
+
+% --- Refinement gaps (Tab.~r-ablation / App.~B) ---
+\newcommand{\odeUntied}{80.23}
+\newcommand{\odeTied}{80.12}
+\newcommand{\odeSwin}{80.32}
+\newcommand{\odeRFifty}{79.43}
+\newcommand{\odeROneOhOne}{81.05}
+\newcommand{\gapUntiedODE}{0.73}
+\newcommand{\gapTiedODE}{0.22}
+\newcommand{\gapSwinODE}{0.76}
+\newcommand{\gapRFiftyODE}{0.91}
+\newcommand{\gapROneOhOneODE}{0.62}
+\newcommand{\accSwin}{81.08}
+\newcommand{\accRFifty}{80.34}
+\newcommand{\accROneOhOne}{81.67}
+% Less than one point at R=128 (all untied families)
+\newcommand{\refineLossBound}{one}
+
+% --- Endpoint geometry (App.~C) ---
+\newcommand{\angleUntiedRefine}{21}
+\newcommand{\angleTiedRefine}{11}
+\newcommand{\relDistUntied}{0.36}
+\newcommand{\relDistTied}{0.20}
+
+% --- Bilinear weight blend cost (App.~F, Delta at R=128) ---
+\newcommand{\bilinearDropLow}{6.6}
+\newcommand{\bilinearDropHigh}{23.3}
+
+% --- Transport coherence (outputs/transport_coherence/summary.csv, R=100 unless noted) ---
+\newcommand{\strUntied}{0.50}
+\newcommand{\strTied}{0.78}
+\newcommand{\strTiedNative}{0.72}
+\newcommand{\strRandom}{0.33}
+\newcommand{\cosUntied}{0.17}
+\newcommand{\cosTied}{0.92}
+\newcommand{\cosRandom}{0.00}
+\newcommand{\intraChordArcUntied}{0.985}
+\newcommand{\arcOverChordsPct}{1.5}
+\newcommand{\tFiftyUntied}{7.45}
+\newcommand{\tFiftyTied}{4.19}
+\newcommand{\tFiftyRandom}{4.72}
+\newcommand{\alignFirstUntied}{0.15}
+\newcommand{\alignLastUntied}{0.69}
+\newcommand{\EUntied}{0}
+\newcommand{\sMinUntied}{0.13}
+% Gram fidelity: |metric(R=1)-metric(R=100)| for untied straightness/cosine
+\newcommand{\gramFidelityTol}{0.01}
+
+% --- Kinematics (outputs/kinematics_summary; Tab.~kinematics) ---
+\newcommand{\turnLow}{75}
+\newcommand{\turnHigh}{86}
+\newcommand{\turnMean}{80}
+\newcommand{\signFlipBoundary}{44.6}
+\newcommand{\signFlipInsideUntied}{0.19}
+\newcommand{\signFlipInsideTied}{0.12}
+\newcommand{\omegaDtTurnLow}{1.3}
+\newcommand{\omegaDtTurnHigh}{1.5}
+
+% --- Prefix decoding, native R=1 (outputs/prefix_s4_head_acc/results.csv) ---
+\newcommand{\prefixTiedThree}{72.2}
+\newcommand{\prefixUntiedThree}{33.2}
+\newcommand{\prefixTiedFive}{78.9}
+\newcommand{\prefixUntiedFive}{66.9}
+% Refined R=20 prefixes (outputs/prefix_s4_head_acc_*/results.csv)
+\newcommand{\prefixTiedThreeR}{74.7}
+\newcommand{\prefixUntiedThreeR}{30.6}
+
+% --- Coarse Euler / block ops (App.~B Tab.~10, App.~E) ---
+\newcommand{\eulerTiedThree}{37.5}
+\newcommand{\untiedBlocksZeroFourEight}{60.6}
+
+% --- Massive channel zeroing (App.~G) ---
+\newcommand{\massiveZeroCost}{12.5}
+\newcommand{\randomChannelCost}{0.3}

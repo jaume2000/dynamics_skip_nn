@@ -7,22 +7,19 @@ ODE~\citep{e2017proposal,haber2017stable,lu2018beyond}, a reading that led to
 Neural ODEs~\citep{chen2019neuralordinarydifferentialequations}, multi-level
 training~\citep{chang2018multilevel} and continuous-in-depth
 architectures~\citep{queiruga2020continuousindepthneuralnetworks}.
-Whether a trained ResNet behaves as such a discretisation is debated:
-\citet{queiruga2020continuousindepthneuralnetworks} find that standard ResNets are not
-meaningful integrators beyond the syntactic analogy;
-\citet{sander2022residualneuralnetworksdiscretize} show that the gap to the Neural ODE
-need not vanish with depth unless the residual maps vary smoothly in depth;
-\citet{cohen2021scaling} find that the deep limit can be an ODE, a stochastic
-differential equation or neither; and \citet{marion2024implicit} prove that a ResNet
-initialised as a Neural ODE discretisation remains one under gradient flow in the
-large-depth limit.
-These works train continuous models or study growing depth; we refine \emph{already
-trained} standard networks at a fixed horizon and use the refined path as a probe.
+Whether a trained ResNet behaves as such a discretisation is debated
+\citep{queiruga2020continuousindepthneuralnetworks,sander2022residualneuralnetworksdiscretize,
+cohen2021scaling,marion2024implicit}.
+Those works train continuous models or study growing depth; we refine already
+trained standard networks at a fixed horizon and use the refined path as a probe.
+The piecewise-constant-in-depth schedule is already the modelling choice of
+\citet{queiruga2020continuousindepthneuralnetworks}; we take it as given and ask what
+the flow of modern trained stages looks like.
 
 \paragraph{Weight sharing and looping in depth.}
 Sharing one residual block across depth links ResNets to recurrent
-networks~\citep{liao2016bridging}; sharing convolutions or soft parameters across blocks
-yields compact CNNs~\citep{sharesnet,savarese2019learning}.
+networks~\citep{liao2016bridging}; sharing convolutions or soft parameters across
+blocks yields compact CNNs~\citep{sharesnet,savarese2019learning}.
 Universal and looped transformers reuse one layer or a block of
 layers~\citep{dehghani2019universal,giannou2023looped}, ALBERT shares all
 layers~\citep{lan2020albert} and partial sharing trades parameters against
@@ -33,18 +30,27 @@ iterations~\citep{bansal2022endtoend,geiping2025recurrent}; deep equilibrium mod
 solve for a fixed point instead~\citep{bai2019deep}.
 For us weight tying is a control that turns a switched stack into one autonomous field.
 
-\paragraph{Robustness and refinement across depth.}
+\paragraph{Early exit and anytime inference.}
+BranchyNet~\citep{teerapittayanon2016branchynet}, multi-scale dense
+nets~\citep{huang2018multiscaledense} and shallow-deep
+networks~\citep{kaya2019shallowdeep} attach trained intermediate classifiers so that
+easy examples can leave early.
+We instead decode prefixes of a weight-tied stage with that stage's own frozen
+downsample, stage~4 and head: the tied stage is anytime without extra heads.
+A low early score still does not mean that early features lack information; it means
+that they are not yet in the region the decoder was trained on.
+
+\paragraph{Iterative refinement and robustness across depth.}
 Residual networks tolerate dropping or reordering blocks, behave like ensembles of
 shallow paths~\citep{veit2016residualnetworksbehavelike,huang2016stochastic} and have
 been read as iterative estimators of one
 representation~\citep{greff2017highway,jastrzebski2018iterative}.
+The tied stage behaves consistently with that reading; the untied ConvNeXt-T stage
+does not, which we present as consistent with those works rather than as a proof of
+them.
 Middle layers of language models can be skipped or swapped with graceful degradation,
 although repeating one middle layer is harmful~\citep{sun2025painters,lad2025robustness},
 and deep layers can be pruned with light fine-tuning~\citep{gromov2024unreasonable}.
-Intermediate states are usually decoded with trained
-probes~\citep{alain2016probes,belrose2023tuned}.
-We instead measure how coherently consecutive blocks move the state, against a random
-baseline of matched strength, and decode prefixes with the frozen downstream network.
 
 \paragraph{Geometry of representations along depth.}
 Deep networks gradually untangle and flatten the data
@@ -58,7 +64,10 @@ analysed through its velocity, acceleration and turning
 angles~\citep{fernando2025transformerdynamics,pandey2026trajectorygeometrytransformerrepresentations}.
 Those analyses sample one point per layer; refinement gives hundreds per block and
 separates the motion within blocks from the jumps between them.
+Centered kernel alignment and related Gram comparisons measure similarity of neural
+representations~\citep{kornblith2019similarity}; we use the Gram matrix of block
+\emph{increments} as a basis-independent summary of transport.
 Outlier features, massive activations in language
 models~\citep{sun2024massiveactivationslargelanguage,pmlr-v306-sun26d} and high-norm
-tokens in vision transformers~\citep{darcet2024vision}, dominate such statistics; we find
-their analogues in ConvNeXt and Swin and exclude them.
+tokens in vision transformers~\citep{darcet2024vision}, dominate geometric statistics;
+we find their analogues in ConvNeXt and Swin and exclude them.

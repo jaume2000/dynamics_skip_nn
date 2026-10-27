@@ -9,23 +9,7 @@ Swin~\citep{liu2021swin} and ResNet~\citep{he2016resnet}.
 It holds most of the residual depth (nine of the eighteen blocks of ConvNeXt-T),
 keeps one representation and spatial resolution and has enough blocks to study
 dynamics.
-We take its $n$ blocks as the trained horizon $T{=}n$ and refine the discretisation
-with $R$ repetitions of step $\Delta t{=}1/R$ (\cref{sec:indefinite_looping}).
-Per-block step sizes are absorbed into the learned weights, so integrating each block
-over one unit of depth matches the step the model has internalised.
 
-Refinement converges for any Lipschitz residual field, trained or random
-(\cref{app:random-init}), so the question is what the limit keeps and how the path
-is organised.
-A weight-tied stage~3, one shared field reused over $T{=}n$, gives a clean autonomous
-ODE (\cref{sec:weight_tied}); the standard stage is a switched composition of $n$
-smooth pieces, hence the jumps in $\|f\|$ at block boundaries in \cref{fig:teaser}.
-Refining both at inference yields high-resolution trajectories from $x_0$ to $x_T$,
-which we compare kinematically (\cref{sec:geometrical_analysis}) and with
-basis-independent statistics of the block increments (\cref{sec:coherence}).
-
-\input{chapters/subsections/3_1_weight_tied}
-\input{chapters/subsections/3_2_indefinite_looping}
-\input{chapters/subsections/3_3_geometrical_analysis}
-\input{chapters/subsections/3_4_overparametrized_undoing}
-%\input{chapters/subsections/3_5_deltas}
+\input{chapters/subsections/3_1_setup}
+\input{chapters/subsections/3_2_usable_limit}
+\input{chapters/subsections/3_3_fidelity}

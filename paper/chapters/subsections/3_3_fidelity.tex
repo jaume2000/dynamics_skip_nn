@@ -1,0 +1,31 @@
+\subsection{Fidelity and the switched picture}
+\label{sec:fidelity}
+
+Near-baseline accuracy does not mean that $R$ steps of size $1/R$ reproduce the unit
+step.
+On ConvNeXt-T the refined endpoint ($R{=}100$) sits $\angleUntiedRefine^\circ$ from the
+native one, with a relative distance of $\relDistUntied$ while the norms differ by
+$3\%$; on the weight-tied model the gap is $\angleTiedRefine^\circ$ and $\relDistTied$
+(\cref{app:solver-endpoints}; \cref{fig:refinement}, right).
+The untied gap accumulates block after block, whereas the tied one stops growing after
+two or three steps.
+Stage~4 and the head nevertheless classify the refined state at a small cost.
+
+The refined path is faithful to the native network in the statistics that matter for
+transport.
+On the untied stage, straightness and consecutive cosine at $R{=}1$ and $R{=}100$ agree
+to within $\gramFidelityTol$ (\cref{tab:coherence}).
+On the tied stage the order of the three regimes is preserved while the path
+straightens ($\strTiedNative\!\to\!\strTied$), as a single autonomous field should under
+refinement.
+Together with the usable limit, this is the sense in which the probe is faithful: the
+horizon is kept, the decoder still reads the state, and the Gram geometry of the
+trained stage is recovered.
+
+The same measurements give the switched picture.
+The residual norm of an untied stage jumps at every block boundary
+(\cref{fig:refinement}, right), and replacing the piecewise-constant schedule by a
+bilinear blend of consecutive block weights costs $\bilinearDropLow$ to
+$\bilinearDropHigh$ points on every architecture (\cref{app:bilinear}).
+Each trained block is meant for its own unit of depth: a stage is a composition of one
+ODE per block, not one ODE with weights smooth in depth.
