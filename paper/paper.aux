@@ -6,13 +6,9 @@
 \citation{halko2011finding}
 \citation{johnson1984extensions,dasgupta2003elementary}
 \citation{halko2011finding}
-\citation{simonyan2015deepconvolutionalnetworkslargescale}
-\citation{vanishingGradient,glorot2010understanding}
 \citation{he2016resnet}
-\citation{li2018visualizinglosslandscapeneural}
 \citation{e2017proposal,haber2017stable,lu2018beyond}
 \citation{chen2019neuralordinarydifferentialequations}
-\citation{queiruga2020continuousindepthneuralnetworks}
 \citation{sander2022residualneuralnetworksdiscretize}
 \newlabel{sec:intro}{{1}{1}{}{section.1}{}}
 \newlabel{sec:intro@cref}{{[section][1][]1}{[1][1][]1}}
@@ -26,277 +22,234 @@
 \citation{cohen2021scaling}
 \citation{marion2024implicit}
 \citation{liao2016bridging}
-\citation{sharesnet}
-\citation{savarese2019learning}
+\citation{sharesnet,savarese2019learning}
 \citation{dehghani2019universal,giannou2023looped}
 \citation{lan2020albert}
 \citation{takase2021lessons,bae2024relaxed}
-\citation{bansal2022endtoend}
-\citation{geiping2025recurrent}
+\citation{bansal2022endtoend,geiping2025recurrent}
 \citation{bai2019deep}
-\newlabel{fig:teaser}{{1}{2}{Stage-3 feature trajectories of a weight-tied ConvNeXt (left) and a standard ConvNeXt-T (right), integrated with Euler up to $T{=}9$ ($\Delta t{=}0.09$ and $\Delta t{=}0.01$; massive channel removed; $200$ ImageNet validation images). \textbf {Top:} states are flattened and mapped to $2048$ dimensions with a fixed Gaussian random projection \citep {johnson1984extensions,dasgupta2003elementary}, and PCA is fitted on all projected states of each model \citep {halko2011finding}; paths coloured by depth $t$, white dots mark integer $t$. \textbf {Bottom:} residual speed $\|f(x(t))\|$ (mean over images; shade: P10--P90). One shared block is a single autonomous field $\dot x = f(x)$; nine independent blocks switch the field at every integer, $\dot x = f_{\lfloor t\rfloor }(x)$. We analyse this contrast throughout the paper}{figure.1}{}}
+\newlabel{fig:teaser}{{1}{2}{Stage-3 feature trajectories of a weight-tied ConvNeXt (left; $D{=}100$ applications of the shared block, $\Delta t{=}0.09$) and a standard ConvNeXt-T (right; $R{=}100$, $\Delta t{=}0.01$), both integrated with Euler up to $T{=}9$ (massive channel removed; $200$ ImageNet validation images, $20$ from each of $10$ classes). \textbf {Top:} states are flattened and mapped to $2048$ dimensions with a fixed Gaussian random projection \citep {johnson1984extensions,dasgupta2003elementary}, and PCA is fitted on all projected states of each model \citep {halko2011finding}; paths coloured by depth $t$, white dots mark integer $t$. \textbf {Bottom:} residual speed $\|f(x(t))\|$ (mean over images; shade: P10--P90). One shared block is a single autonomous field $\dot x = f(x)$; nine independent blocks switch the field at every integer, $\dot x = f_{\lfloor t\rfloor }(x)$}{figure.1}{}}
 \newlabel{fig:teaser@cref}{{[figure][1][]1}{[1][1][]2}}
 \newlabel{sec:rel_work}{{2}{2}{}{section.2}{}}
 \newlabel{sec:rel_work@cref}{{[section][2][]2}{[1][2][]2}}
-\citation{veit2016residualnetworksbehavelike}
-\citation{huang2016stochastic}
+\citation{veit2016residualnetworksbehavelike,huang2016stochastic}
 \citation{greff2017highway,jastrzebski2018iterative}
 \citation{sun2025painters,lad2025robustness}
 \citation{gromov2024unreasonable}
-\citation{alain2016probes}
-\citation{belrose2023tuned}
+\citation{alain2016probes,belrose2023tuned}
 \citation{bengio2013representation,dicarlo2007untangling,brahma2016why,hauser2017principles,naitzat2020topology,cohen2020separability}
 \citation{ansuini2019intrinsic,valeriani2023geometry}
 \citation{henaff2019perceptual}
 \citation{hosseini2023straighten}
-\citation{fernando2025transformerdynamics}
-\citation{pandey2026trajectorygeometrytransformerrepresentations}
+\citation{fernando2025transformerdynamics,pandey2026trajectorygeometrytransformerrepresentations}
 \citation{sun2024massiveactivationslargelanguage,pmlr-v306-sun26d}
 \citation{darcet2024vision}
 \citation{liu2022convnext}
 \citation{liu2021swin}
 \citation{he2016resnet}
+\citation{liu2022convnext}
 \newlabel{sec:method}{{3}{3}{}{section.3}{}}
 \newlabel{sec:method@cref}{{[section][3][]3}{[1][3][]3}}
-\citation{liao2016bridging}
-\citation{sharesnet,savarese2019learning}
-\citation{dehghani2019universal,giannou2023looped}
-\citation{sun2025painters}
-\citation{lad2025robustness}
-\citation{gromov2024unreasonable}
-\citation{liu2022convnext}
-\citation{he2016resnet}
-\citation{e2017proposal,haber2017stable,lu2018beyond}
-\citation{chen2019neuralordinarydifferentialequations}
-\newlabel{sec:weight_tied}{{3.1}{4}{}{subsection.3.1}{}}
-\newlabel{sec:weight_tied@cref}{{[subsection][1][3]3.1}{[1][4][]4}}
-\newlabel{sec:indefinite_looping}{{3.2}{4}{}{subsection.3.2}{}}
-\newlabel{sec:indefinite_looping@cref}{{[subsection][2][3]3.2}{[1][4][]4}}
-\newlabel{eq:residual}{{1}{4}{}{equation.3.1}{}}
-\newlabel{eq:residual@cref}{{[equation][1][]1}{[1][4][]4}}
-\citation{e2017proposal,haber2017stable,lu2018beyond}
-\citation{queiruga2020continuousindepthneuralnetworks}
-\citation{sander2022residualneuralnetworksdiscretize}
-\citation{marion2024implicit}
-\newlabel{fig:refinement}{{2}{5}{\textbf {Left:} top-1 vs.\ repetitions $R$ (solid: Euler / RK1; dashed: RK4), with $\Delta t{=}1/R$ so $T{=}n$ is conserved (weight-tied: $nR$ applications of the shared block). \textbf {Right:} residual-field norm $\|f(x)\|$ along stage~3 (mean and P5--P95 over 500 images). ConvNeXt is piecewise constant in depth; the weight-tied model is a single smooth autonomous field. See \cref {sec:teaser-b}}{figure.2}{}}
-\newlabel{fig:refinement@cref}{{[figure][2][]2}{[1][4][]5}}
-\newlabel{eq:euler-stage}{{2}{5}{}{equation.3.2}{}}
-\newlabel{eq:euler-stage@cref}{{[equation][2][]2}{[1][5][]5}}
-\newlabel{eq:sum-of-integrals}{{3}{5}{}{equation.3.3}{}}
-\newlabel{eq:sum-of-integrals@cref}{{[equation][3][]3}{[1][5][]5}}
-\newlabel{eq:block-integral}{{4}{5}{}{equation.3.4}{}}
-\newlabel{eq:block-integral@cref}{{[equation][4][]4}{[1][5][]5}}
-\newlabel{eq:horizon-T}{{5}{5}{}{equation.3.5}{}}
-\newlabel{eq:horizon-T@cref}{{[equation][5][]5}{[1][5][]5}}
-\newlabel{eq:delta-from-R}{{6}{5}{}{equation.3.6}{}}
-\newlabel{eq:delta-from-R@cref}{{[equation][6][]6}{[1][5][]5}}
-\newlabel{eq:plain-euler}{{7}{5}{}{equation.3.7}{}}
-\newlabel{eq:plain-euler@cref}{{[equation][7][]7}{[1][5][]5}}
-\newlabel{eq:refined-stage}{{8}{5}{}{equation.3.8}{}}
-\newlabel{eq:refined-stage@cref}{{[equation][8][]8}{[1][5][]5}}
-\citation{bansal2022endtoend}
-\citation{bansal2022endtoend,geiping2025recurrent}
-\newlabel{eq:weight-tied-ode}{{9}{6}{}{equation.3.9}{}}
-\newlabel{eq:weight-tied-ode@cref}{{[equation][9][]9}{[1][6][]6}}
-\newlabel{sec:looping-ablations}{{3.2.1}{6}{}{subsubsection.3.2.1}{}}
-\newlabel{sec:looping-ablations@cref}{{[subsubsection][1][3,2]3.2.1}{[1][6][]6}}
-\newlabel{tab:r-ablation}{{1}{6}{Plain Euler refinement with $\Delta t{=}1/R$ ($T$ conserved). Top-1 (\%). For weight-tied, $R$ means $9R$ applications of the shared block (exact $9R$ when available; else nearest measured depth$^\ast $). ODE limit: RK4 at the finest step in each sweep}{table.1}{}}
-\newlabel{tab:r-ablation@cref}{{[table][1][]1}{[1][6][]6}}
-\citation{queiruga2020continuousindepthneuralnetworks}
-\newlabel{fig:shared-fractional}{{3}{7}{Shared ConvNeXt-T at fixed $T{=}9$ for fractional $R\leq 1$ (RK1 solid, RK4 dashed)}{figure.3}{}}
-\newlabel{fig:shared-fractional@cref}{{[figure][3][]3}{[1][6][]7}}
-\newlabel{fig:horizon}{{4}{7}{Shared ConvNeXt-T: top-1 vs.\ horizon $T$. Red: fixed $\Delta t{=}1$, more steps ($T$ grows). Purple: fixed $R{=}1$ (9 steps), varying $\Delta t$ ($T{=}9\cdot \Delta t$). Both peak at the trained horizon $T{=}9$}{figure.4}{}}
-\newlabel{fig:horizon@cref}{{[figure][4][]4}{[1][6][]7}}
-\newlabel{fig:dist-r1}{{5}{7}{ConvNeXt-T, $R{=}100$, $\Delta t{=}0.01$, against the native $R{=}1$ path. \textbf {Top:} $\|x^{(R)}(t)-x_{R{=}1}\|$ (solid), with the state norms of both paths for scale (dashed: $R{=}100$; squares: $R{=}1$). \textbf {Bottom:} $\cos (x^{(R)},x_{R{=}1})$. Mean and P5--P95 over 500 images; massive channel ignored; dots mark block ends. The norms nearly coincide while the block-end gap grows with depth: the mismatch is mostly in angle}{figure.5}{}}
-\newlabel{fig:dist-r1@cref}{{[figure][5][]5}{[1][7][]7}}
+\newlabel{sec:weight_tied}{{3.1}{3}{}{subsection.3.1}{}}
+\newlabel{sec:weight_tied@cref}{{[subsection][1][3]3.1}{[1][3][]3}}
+\newlabel{sec:indefinite_looping}{{3.2}{3}{}{subsection.3.2}{}}
+\newlabel{sec:indefinite_looping@cref}{{[subsection][2][3]3.2}{[1][3][]3}}
 \citation{liberzon2003switching}
-\citation{sun2024massiveactivationslargelanguage}
-\citation{gan2025ditf}
-\citation{darcet2024vision}
-\citation{pmlr-v306-sun26d}
-\citation{ioffe2015batchnorm}
-\citation{pmlr-v306-sun26d}
-\citation{pmlr-v306-sun26d}
-\citation{sun2024massiveactivationslargelanguage,pmlr-v306-sun26d}
-\citation{strogatz2015nonlinear}
-\citation{dupont2019augmented}
-\citation{pandey2026trajectorygeometrytransformerrepresentations}
-\citation{henaff2019perceptual}
-\citation{hosseini2023straighten}
-\newlabel{sec:teaser-b}{{3.2.2}{8}{}{subsubsection.3.2.2}{}}
-\newlabel{sec:teaser-b@cref}{{[subsubsection][2][3,2]3.2.2}{[1][8][]8}}
-\newlabel{sec:geometrical_analysis}{{3.3}{8}{}{subsection.3.3}{}}
-\newlabel{sec:geometrical_analysis@cref}{{[subsection][3][3]3.3}{[1][8][]8}}
-\newlabel{sec:massive_activations}{{3.3.1}{8}{}{subsubsection.3.3.1}{}}
-\newlabel{sec:massive_activations@cref}{{[subsubsection][1][3,3]3.3.1}{[1][8][]8}}
-\newlabel{sec:tied-trajectory-shape}{{3.3.2}{8}{}{subsubsection.3.3.2}{}}
-\newlabel{sec:tied-trajectory-shape@cref}{{[subsubsection][2][3,3]3.3.2}{[1][8][]8}}
-\citation{veit2016residualnetworksbehavelike}
-\newlabel{sec:untied-trajectory-shape}{{3.3.3}{9}{}{subsubsection.3.3.3}{}}
-\newlabel{sec:untied-trajectory-shape@cref}{{[subsubsection][3][3,3]3.3.3}{[1][9][]9}}
-\newlabel{sec:refinement_error}{{3.3.4}{9}{}{subsubsection.3.3.4}{}}
-\newlabel{sec:refinement_error@cref}{{[subsubsection][4][3,3]3.3.4}{[1][9][]9}}
 \citation{bansal2022endtoend}
-\citation{bai2019deep}
-\citation{greff2017highway,jastrzebski2018iterative}
-\newlabel{fig:kinematics-compare}{{6}{10}{Stage-3 kinematics over $T{=}9$ ($R{=}100$, Euler $\Delta t{=}0.01$; massive channel ignored; mean and P5--P95 over $N{=}500$). \textbf {Top:} weight-tied ConvNeXt. \textbf {Bottom:} untied ConvNeXt-T. Columns: velocity $\|v\|$, angular velocity $\omega $, acceleration decomposition $(\|a\|,a_t,a_n)$, curvature $\kappa {=}a_n/\|v\|^2$. The shared field traces a smooth three-phase arc; the untied stack is piecewise within each block. On the untied row, pairs that straddle a block boundary are omitted from $\omega $, $a$ and $\kappa $: there $v$ is discontinuous, so finite differences diverge as $\Delta t\!\to \!0$ and are not representative of the within-block dynamics}{figure.6}{}}
-\newlabel{fig:kinematics-compare@cref}{{[figure][6][]6}{[1][9][]10}}
-\newlabel{sec:beyond_horizon}{{3.3.5}{10}{}{subsubsection.3.3.5}{}}
-\newlabel{sec:beyond_horizon@cref}{{[subsubsection][5][3,3]3.3.5}{[1][10][]10}}
-\newlabel{sec:overparametrized_undoing}{{3.4}{10}{}{subsection.3.4}{}}
-\newlabel{sec:overparametrized_undoing@cref}{{[subsection][4][3]3.4}{[1][10][]10}}
-\newlabel{fig:dist-r1-compare}{{7}{11}{Refined vs.\ native ($R{=}1$) stage-3 path for the standard (left) and weight-tied (right) ConvNeXt-T. \textbf {Top:} $\|x^{(R)}-x_{R{=}1}\|$ (solid) with both state norms for scale (dashed: refined; squares: native). \textbf {Bottom:} $\cos (x^{(R)},x_{R{=}1})$. Mean and P5--P95 over the same 500 images; massive channel ignored; dots mark the end of each native step. The switched stack accumulates angle at every block; the shared field saturates}{figure.7}{}}
-\newlabel{fig:dist-r1-compare@cref}{{[figure][7][]7}{[1][9][]11}}
-\newlabel{tab:undo}{{2}{11}{Pooled stage-3 trajectory statistics over 500 ImageNet images (massive channel ignored; coordinates with $|\Delta _i|$ above the per-image median). Weight-tied vs.\ standard ConvNeXt-T at native ($R{=}1$) and refined ($R{=}100$) resolution. Mean $\pm $ std across images}{table.2}{}}
-\newlabel{tab:undo@cref}{{[table][2][]2}{[1][10][]11}}
-\citation{alain2016probes}
-\citation{belrose2023tuned}
-\newlabel{fig:pooled-dynamics}{{8}{12}{Stage-3 coordinates pooled over 500 images ($R{=}100$; massive channel removed; $|\Delta _i|$ above the per-image median). \textbf {Top:} weight-tied ConvNeXt; \textbf {bottom:} ConvNeXt-T. \textbf {Left:} progress $p_i(t)=(x_i(t)-x_i(0))/\Delta _i$ (median and P5--P95; thin lines: random coordinates). \textbf {Middle:} velocity toward the final value, coordinates sorted by peak time (red: toward the end state; blue: away). \textbf {Right:} phase density $(p_i,\,h_i/\Delta _i)$. The shared field advances mostly monotonically; the switched stack reverses and rewrites features between blocks}{figure.8}{}}
-\newlabel{fig:pooled-dynamics@cref}{{[figure][8][]8}{[1][10][]12}}
-\newlabel{fig:prefix-acc}{{9}{12}{ImageNet top-1 (left) and cross-entropy (right) of each model's trained stage~4+head on stage~3 prefixes (full validation). After each prefix we skip the rest of stage~3 and decode. \textbf {Solid:} refined path ($R{=}20$, $\Delta t{=}0.05$). \textbf {Open markers:} native discrete prefixes ($R{=}1$) at block ends. Weight-tied features become usable early and smoothly; ConvNeXt-T postpones most of the gain until late in the stage}{figure.9}{}}
-\newlabel{fig:prefix-acc@cref}{{[figure][9][]9}{[1][10][]12}}
-\citation{greff2017highway,jastrzebski2018iterative}
-\citation{liao2016bridging}
-\citation{bengio2013representation}
-\citation{dicarlo2007untangling}
-\citation{brahma2016why,hauser2017principles,naitzat2020topology,cohen2020separability}
-\newlabel{sec:discussion}{{4}{13}{}{section.4}{}}
-\newlabel{sec:discussion@cref}{{[section][4][]4}{[1][13][]13}}
-\citation{belrose2023tuned}
-\citation{pandey2026trajectorygeometrytransformerrepresentations}
+\newlabel{fig:refinement}{{2}{4}{\textbf {Left:} top-1 against repetitions $R$ (solid: Euler; dashed: RK4), with $\Delta t{=}1/R$ so that $T{=}n$ is kept (weight-tied: $nR$ applications of the shared block). \textbf {Right:} residual norm $\|f(x)\|$ along stage~3 (mean and P5--P95 over 500 images). The untied field is piecewise constant in depth; the weight-tied model is a single smooth autonomous field}{figure.2}{}}
+\newlabel{fig:refinement@cref}{{[figure][2][]2}{[1][3][]4}}
+\newlabel{eq:euler-stage}{{1}{4}{}{equation.3.1}{}}
+\newlabel{eq:euler-stage@cref}{{[equation][1][]1}{[1][4][]4}}
+\newlabel{eq:sum-of-integrals}{{2}{4}{}{equation.3.2}{}}
+\newlabel{eq:sum-of-integrals@cref}{{[equation][2][]2}{[1][4][]4}}
+\newlabel{eq:weight-tied-ode}{{3}{4}{}{equation.3.3}{}}
+\newlabel{eq:weight-tied-ode@cref}{{[equation][3][]3}{[1][4][]4}}
+\newlabel{eq:refined-stage}{{4}{4}{}{equation.3.4}{}}
+\newlabel{eq:refined-stage@cref}{{[equation][4][]4}{[1][4][]4}}
+\newlabel{tab:r-ablation}{{1}{4}{Euler refinement with $\Delta t{=}1/R$ ($T$ kept), ImageNet top-1 (\%). For the weight-tied model $R$ means $9R$ applications of the shared block. ODE limit: RK4 at $R{=}128$ (tied: $1024$ steps)}{table.1}{}}
+\newlabel{tab:r-ablation@cref}{{[table][1][]1}{[1][4][]4}}
+\citation{sun2024massiveactivationslargelanguage,darcet2024vision}
+\citation{henaff2019perceptual,hosseini2023straighten,pandey2026trajectorygeometrytransformerrepresentations}
+\pgfsyspdfmark {pgfid1}{14788746}{32089092}
+\pgfsyspdfmark {pgfid2}{779760}{31995898}
+\pgfsyspdfmark {pgfid3}{2893295}{31867909}
+\newlabel{sec:geometrical_analysis}{{3.3}{5}{}{subsection.3.3}{}}
+\newlabel{sec:geometrical_analysis@cref}{{[subsection][3][3]3.3}{[1][5][]5}}
+\newlabel{sec:massive_activations}{{3.3}{5}{}{subsection.3.3}{}}
+\newlabel{sec:massive_activations@cref}{{[subsection][3][3]3.3}{[1][5][]5}}
+\newlabel{tab:kinematics}{{2}{5}{Stage-3 kinematics ($R{=}100$, $N{=}500$, massive channel removed). Untied values inside blocks; sign flips: share of coordinates of $v$ that change sign across one micro-step}{table.2}{}}
+\newlabel{tab:kinematics@cref}{{[table][2][]2}{[1][5][]5}}
+\newlabel{sec:coherence}{{3.4}{5}{}{subsection.3.4}{}}
+\newlabel{sec:coherence@cref}{{[subsection][4][3]3.4}{[1][5][]5}}
+\newlabel{fig:kinematics-compare}{{3}{6}{Stage-3 kinematics over $T{=}9$ ($R{=}100$, Euler $\Delta t{=}0.01$; massive channel removed; mean and P5--P95 over $N{=}500$). \textbf {Top:} weight-tied ConvNeXt. \textbf {Bottom:} untied ConvNeXt-T. Columns: speed $\|v\|$, angular velocity $\omega $, acceleration $(\|a\|,a_t,a_n)$, curvature $\kappa {=}a_n/\|v\|^2$. On the untied row, pairs of micro-steps that straddle a block boundary are omitted from $\omega $, $a$ and $\kappa $: there $v$ is discontinuous and finite differences diverge as $\Delta t\!\to \!0$}{figure.3}{}}
+\newlabel{fig:kinematics-compare@cref}{{[figure][3][]3}{[1][5][]6}}
+\newlabel{tab:coherence}{{3}{6}{Basis-independent transport statistics of stage~3, mean over $500$ images (std across images $\le 0.021$ for straightness and $\le 0.035$ for cosines). Str.: $\|x_T-x_0\|$ over path length (arc at $R{=}100$, chords at $R{=}1$); chords: $\|x_T-x_0\|/\sum _k\|\Delta x_k\|$; $\overline {\cos }$: mean off-diagonal cosine; $E$: opposed fraction; align: mean $\cos (\Delta x_k,x_T-x_0)$; $t_{50}$: first $t$ with $p(t)\ge 0.5$}{table.3}{}}
+\newlabel{tab:coherence@cref}{{[table][3][]3}{[1][6][]6}}
+\citation{alain2016probes,belrose2023tuned}
+\newlabel{fig:transport}{{4}{7}{Basis-independent transport statistics of stage~3 ($R{=}100$, $N{=}500$, massive channel removed). \textbf {Top left:} mean cosine between block increments $\Delta x_j$ and $\Delta x_k$ for a random untied stage of matched strength, the untied ConvNeXt-T and the weight-tied model. \textbf {Top right:} progress $p(t)$ along the chord $x_T-x_0$ (dashed: diagonal). \textbf {Bottom left:} survival $s_k$, the net projection of all later increments on $\Delta x_k$ in units of $\|\Delta x_k\|^2$ ($s_k<0$: later blocks oppose block $k$). \textbf {Bottom right:} alignment of each increment with the total displacement. Bands: P10--P90 over images}{figure.4}{}}
+\newlabel{fig:transport@cref}{{[figure][4][]4}{[1][6][]7}}
+\newlabel{fig:prefix-acc}{{5}{7}{Top-1 (left) and cross-entropy (right) of each model's frozen stage~4 and head on stage-3 prefixes (full validation). Solid: refined path ($R{=}20$, $\Delta t{=}0.05$); open markers: native prefixes at block ends}{figure.5}{}}
+\newlabel{fig:prefix-acc@cref}{{[figure][5][]5}{[1][7][]7}}
 \citation{dehghani2019universal,giannou2023looped}
 \citation{savarese2019learning}
 \citation{takase2021lessons}
 \citation{bae2024relaxed}
-\newlabel{tab:headline}{{3}{14}{Headline measurements on ImageNet-1k. Top-1 and ODE limit from the conserved-horizon sweep of \cref {tab:r-ablation} (ODE: RK4 at the finest step). Straightness and undo: stage-3 trajectories at $R{=}100$ (\cref {tab:undo}). Params and the all-stages run are from \cref {sec:weight_tied}. Swin-T and the ResNets are the standard pretrained checkpoints; we did not retrain them}{table.3}{}}
-\newlabel{tab:headline@cref}{{[table][3][]3}{[1][13][]14}}
-\newlabel{sec:conclusion}{{5}{14}{}{section.5}{}}
-\newlabel{sec:conclusion@cref}{{[section][5][]5}{[1][14][]14}}
 \bibdata{paper}
 \bibcite{ainsworth2023gitrebasin}{{1}{2023}{{Ainsworth et~al.}}{{Ainsworth, Hayase, and Srinivasa}}}
+\newlabel{sec:discussion}{{4}{8}{}{section.4}{}}
+\newlabel{sec:discussion@cref}{{[section][4][]4}{[1][7][]8}}
+\newlabel{tab:headline}{{4}{8}{Headline measurements on ImageNet-1k. Top-1 and ODE limit from \cref {tab:r-ablation}; straightness (Str.) and consecutive block cosine at $R{=}1$ (\cref {tab:coherence,app:arch-transport}); parameters from \cref {sec:weight_tied}. Swin-T and the ResNets are torchvision checkpoints that we did not retrain}{table.4}{}}
+\newlabel{tab:headline@cref}{{[table][4][]4}{[1][8][]8}}
+\newlabel{sec:conclusion}{{5}{8}{}{section.5}{}}
+\newlabel{sec:conclusion@cref}{{[section][5][]5}{[1][8][]8}}
 \bibcite{alain2016probes}{{2}{2017}{{Alain \& Bengio}}{{Alain and Bengio}}}
 \bibcite{ansuini2019intrinsic}{{3}{2019}{{Ansuini et~al.}}{{Ansuini, Laio, Macke, and Zoccolan}}}
 \bibcite{bae2024relaxed}{{4}{2025}{{Bae et~al.}}{{Bae, Fisch, Harutyunyan, Ji, Kim, and Schuster}}}
 \bibcite{bai2019deep}{{5}{2019}{{Bai et~al.}}{{Bai, Kolter, and Koltun}}}
 \bibcite{bansal2022endtoend}{{6}{2022}{{Bansal et~al.}}{{Bansal, Schwarzschild, Borgnia, Emam, Huang, Goldblum, and Goldstein}}}
 \bibcite{belrose2023tuned}{{7}{2023}{{Belrose et~al.}}{{Belrose, Furman, Smith, Halawi, Ostrovsky, McKinney, Biderman, and Steinhardt}}}
-\bibcite{vanishingGradient}{{8}{1994}{{Bengio et~al.}}{{Bengio, Simard, and Frasconi}}}
-\bibcite{bengio2013representation}{{9}{2013}{{Bengio et~al.}}{{Bengio, Courville, and Vincent}}}
-\bibcite{sharesnet}{{10}{2017}{{Boulch}}{{}}}
-\bibcite{brahma2016why}{{11}{2016}{{Brahma et~al.}}{{Brahma, Wu, and She}}}
-\bibcite{chang2018multilevel}{{12}{2018}{{Chang et~al.}}{{Chang, Meng, Haber, Tung, and Begert}}}
-\bibcite{chen2019neuralordinarydifferentialequations}{{13}{2018}{{Chen et~al.}}{{Chen, Rubanova, Bettencourt, and Duvenaud}}}
-\bibcite{cohen2021scaling}{{14}{2021}{{Cohen et~al.}}{{Cohen, Cont, Rossier, and Xu}}}
-\bibcite{cohen2020separability}{{15}{2020}{{Cohen et~al.}}{{Cohen, Chung, Lee, and Sompolinsky}}}
-\bibcite{darcet2024vision}{{16}{2024}{{Darcet et~al.}}{{Darcet, Oquab, Mairal, and Bojanowski}}}
-\bibcite{dasgupta2003elementary}{{17}{2003}{{Dasgupta \& Gupta}}{{Dasgupta and Gupta}}}
-\bibcite{dehghani2019universal}{{18}{2019}{{Dehghani et~al.}}{{Dehghani, Gouws, Vinyals, Uszkoreit, and Kaiser}}}
-\bibcite{deng2009imagenet}{{19}{2009}{{Deng et~al.}}{{Deng, Dong, Socher, Li, Li, and Fei-Fei}}}
-\bibcite{dicarlo2007untangling}{{20}{2007}{{DiCarlo \& Cox}}{{DiCarlo and Cox}}}
-\bibcite{dupont2019augmented}{{21}{2019}{{Dupont et~al.}}{{Dupont, Doucet, and Teh}}}
-\bibcite{e2017proposal}{{22}{2017}{{E}}{{}}}
-\bibcite{entezari2022permutation}{{23}{2022}{{Entezari et~al.}}{{Entezari, Sedghi, Saukh, and Neyshabur}}}
-\bibcite{fernando2025transformerdynamics}{{24}{2025}{{Fernando \& Guitchounts}}{{Fernando and Guitchounts}}}
-\bibcite{gan2025ditf}{{25}{2025}{{Gan et~al.}}{{Gan, Tu, Chen, Chen, Li, Harandi, and Lin}}}
-\bibcite{geiping2025recurrent}{{26}{2025}{{Geiping et~al.}}{{Geiping, McLeish, Jain, Kirchenbauer, Singh, Bartoldson, Kailkhura, Bhatele, and Goldstein}}}
-\bibcite{giannou2023looped}{{27}{2023}{{Giannou et~al.}}{{Giannou, Rajput, yong Sohn, Lee, Lee, and Papailiopoulos}}}
-\bibcite{glorot2010understanding}{{28}{2010}{{Glorot \& Bengio}}{{Glorot and Bengio}}}
-\bibcite{greff2017highway}{{29}{2017}{{Greff et~al.}}{{Greff, Srivastava, and Schmidhuber}}}
-\bibcite{gromov2024unreasonable}{{30}{2025}{{Gromov et~al.}}{{Gromov, Tirumala, Shapourian, Glorioso, and Roberts}}}
-\bibcite{haber2017stable}{{31}{2017}{{Haber \& Ruthotto}}{{Haber and Ruthotto}}}
-\bibcite{hairer1993solving}{{32}{1993}{{Hairer et~al.}}{{Hairer, N{\o }rsett, and Wanner}}}
-\bibcite{halko2011finding}{{33}{2011}{{Halko et~al.}}{{Halko, Martinsson, and Tropp}}}
-\bibcite{hauser2017principles}{{34}{2017}{{Hauser \& Ray}}{{Hauser and Ray}}}
-\bibcite{he2016resnet}{{35}{2016}{{He et~al.}}{{He, Zhang, Ren, and Sun}}}
-\bibcite{henaff2019perceptual}{{36}{2019}{{H{\'e}naff et~al.}}{{H{\'e}naff, Goris, and Simoncelli}}}
-\bibcite{hosseini2023straighten}{{37}{2023}{{Hosseini \& Fedorenko}}{{Hosseini and Fedorenko}}}
-\bibcite{huang2016stochastic}{{38}{2016}{{Huang et~al.}}{{Huang, Sun, Liu, Sedra, and Weinberger}}}
-\bibcite{ioffe2015batchnorm}{{39}{2015}{{Ioffe \& Szegedy}}{{Ioffe and Szegedy}}}
-\bibcite{jastrzebski2018iterative}{{40}{2018}{{Jastrz{\k {e}}bski et~al.}}{{Jastrz{\k {e}}bski, Arpit, Ballas, Verma, Che, and Bengio}}}
-\bibcite{johnson1984extensions}{{41}{1984}{{Johnson \& Lindenstrauss}}{{Johnson and Lindenstrauss}}}
-\bibcite{lad2025robustness}{{42}{2025}{{Lad et~al.}}{{Lad, Lee, Gurnee, and Tegmark}}}
-\bibcite{lan2020albert}{{43}{2020}{{Lan et~al.}}{{Lan, Chen, Goodman, Gimpel, Sharma, and Soricut}}}
-\bibcite{li2018visualizinglosslandscapeneural}{{44}{2018}{{Li et~al.}}{{Li, Xu, Taylor, Studer, and Goldstein}}}
-\bibcite{liao2016bridging}{{45}{2016}{{Liao \& Poggio}}{{Liao and Poggio}}}
-\bibcite{liberzon2003switching}{{46}{2003}{{Liberzon}}{{}}}
-\bibcite{liu2021swin}{{47}{2021}{{Liu et~al.}}{{Liu, Lin, Cao, Hu, Wei, Zhang, Lin, and Guo}}}
-\bibcite{liu2022convnext}{{48}{2022}{{Liu et~al.}}{{Liu, Mao, Wu, Feichtenhofer, Darrell, and Xie}}}
-\bibcite{lu2018beyond}{{49}{2018}{{Lu et~al.}}{{Lu, Zhong, Li, and Dong}}}
-\bibcite{marion2024implicit}{{50}{2024}{{Marion et~al.}}{{Marion, Wu, Sander, and Biau}}}
-\bibcite{naitzat2020topology}{{51}{2020}{{Naitzat et~al.}}{{Naitzat, Zhitnikov, and Lim}}}
-\bibcite{pandey2026trajectorygeometrytransformerrepresentations}{{52}{2026}{{Pandey et~al.}}{{Pandey, Singh, and Mahdid}}}
-\bibcite{queiruga2020continuousindepthneuralnetworks}{{53}{2020}{{Queiruga et~al.}}{{Queiruga, Erichson, Taylor, and Mahoney}}}
-\bibcite{sander2022residualneuralnetworksdiscretize}{{54}{2022}{{Sander et~al.}}{{Sander, Ablin, and Peyr{\'e}}}}
-\bibcite{savarese2019learning}{{55}{2019}{{Savarese \& Maire}}{{Savarese and Maire}}}
-\bibcite{simonyan2015deepconvolutionalnetworkslargescale}{{56}{2015}{{Simonyan \& Zisserman}}{{Simonyan and Zisserman}}}
-\bibcite{strogatz2015nonlinear}{{57}{2015}{{Strogatz}}{{}}}
-\bibcite{sun2024massiveactivationslargelanguage}{{58}{2024}{{Sun et~al.}}{{Sun, Chen, Kolter, and Liu}}}
-\bibcite{sun2025painters}{{59}{2025}{{Sun et~al.}}{{Sun, Pickett, Nain, and Jones}}}
-\bibcite{pmlr-v306-sun26d}{{60}{2026}{{Sun et~al.}}{{Sun, Canziani, {LeCun}, and Zhu}}}
-\bibcite{takase2021lessons}{{61}{2023}{{Takase \& Kiyono}}{{Takase and Kiyono}}}
-\bibcite{valeriani2023geometry}{{62}{2023}{{Valeriani et~al.}}{{Valeriani, Doimo, Cuturello, Laio, Ansuini, and Cazzaniga}}}
-\bibcite{veit2016residualnetworksbehavelike}{{63}{2016}{{Veit et~al.}}{{Veit, Wilber, and Belongie}}}
+\bibcite{bengio2013representation}{{8}{2013}{{Bengio et~al.}}{{Bengio, Courville, and Vincent}}}
+\bibcite{sharesnet}{{9}{2017}{{Boulch}}{{}}}
+\bibcite{brahma2016why}{{10}{2016}{{Brahma et~al.}}{{Brahma, Wu, and She}}}
+\bibcite{chang2018multilevel}{{11}{2018}{{Chang et~al.}}{{Chang, Meng, Haber, Tung, and Begert}}}
+\bibcite{chen2019neuralordinarydifferentialequations}{{12}{2018}{{Chen et~al.}}{{Chen, Rubanova, Bettencourt, and Duvenaud}}}
+\bibcite{cohen2021scaling}{{13}{2021}{{Cohen et~al.}}{{Cohen, Cont, Rossier, and Xu}}}
+\bibcite{cohen2020separability}{{14}{2020}{{Cohen et~al.}}{{Cohen, Chung, Lee, and Sompolinsky}}}
+\bibcite{darcet2024vision}{{15}{2024}{{Darcet et~al.}}{{Darcet, Oquab, Mairal, and Bojanowski}}}
+\bibcite{dasgupta2003elementary}{{16}{2003}{{Dasgupta \& Gupta}}{{Dasgupta and Gupta}}}
+\bibcite{dehghani2019universal}{{17}{2019}{{Dehghani et~al.}}{{Dehghani, Gouws, Vinyals, Uszkoreit, and Kaiser}}}
+\bibcite{deng2009imagenet}{{18}{2009}{{Deng et~al.}}{{Deng, Dong, Socher, Li, Li, and Fei-Fei}}}
+\bibcite{dicarlo2007untangling}{{19}{2007}{{DiCarlo \& Cox}}{{DiCarlo and Cox}}}
+\bibcite{dupont2019augmented}{{20}{2019}{{Dupont et~al.}}{{Dupont, Doucet, and Teh}}}
+\bibcite{e2017proposal}{{21}{2017}{{E}}{{}}}
+\bibcite{entezari2022permutation}{{22}{2022}{{Entezari et~al.}}{{Entezari, Sedghi, Saukh, and Neyshabur}}}
+\bibcite{fernando2025transformerdynamics}{{23}{2025}{{Fernando \& Guitchounts}}{{Fernando and Guitchounts}}}
+\bibcite{gan2025ditf}{{24}{2025}{{Gan et~al.}}{{Gan, Tu, Chen, Chen, Li, Harandi, and Lin}}}
+\bibcite{geiping2025recurrent}{{25}{2025}{{Geiping et~al.}}{{Geiping, McLeish, Jain, Kirchenbauer, Singh, Bartoldson, Kailkhura, Bhatele, and Goldstein}}}
+\bibcite{giannou2023looped}{{26}{2023}{{Giannou et~al.}}{{Giannou, Rajput, yong Sohn, Lee, Lee, and Papailiopoulos}}}
+\bibcite{glorot2010understanding}{{27}{2010}{{Glorot \& Bengio}}{{Glorot and Bengio}}}
+\bibcite{greff2017highway}{{28}{2017}{{Greff et~al.}}{{Greff, Srivastava, and Schmidhuber}}}
+\bibcite{gromov2024unreasonable}{{29}{2025}{{Gromov et~al.}}{{Gromov, Tirumala, Shapourian, Glorioso, and Roberts}}}
+\bibcite{haber2017stable}{{30}{2017}{{Haber \& Ruthotto}}{{Haber and Ruthotto}}}
+\bibcite{hairer1993solving}{{31}{1993}{{Hairer et~al.}}{{Hairer, N{\o }rsett, and Wanner}}}
+\bibcite{halko2011finding}{{32}{2011}{{Halko et~al.}}{{Halko, Martinsson, and Tropp}}}
+\bibcite{hauser2017principles}{{33}{2017}{{Hauser \& Ray}}{{Hauser and Ray}}}
+\bibcite{he2016resnet}{{34}{2016}{{He et~al.}}{{He, Zhang, Ren, and Sun}}}
+\bibcite{henaff2019perceptual}{{35}{2019}{{H{\'e}naff et~al.}}{{H{\'e}naff, Goris, and Simoncelli}}}
+\bibcite{hosseini2023straighten}{{36}{2023}{{Hosseini \& Fedorenko}}{{Hosseini and Fedorenko}}}
+\bibcite{huang2016stochastic}{{37}{2016}{{Huang et~al.}}{{Huang, Sun, Liu, Sedra, and Weinberger}}}
+\bibcite{ioffe2015batchnorm}{{38}{2015}{{Ioffe \& Szegedy}}{{Ioffe and Szegedy}}}
+\bibcite{jastrzebski2018iterative}{{39}{2018}{{Jastrz{\k {e}}bski et~al.}}{{Jastrz{\k {e}}bski, Arpit, Ballas, Verma, Che, and Bengio}}}
+\bibcite{johnson1984extensions}{{40}{1984}{{Johnson \& Lindenstrauss}}{{Johnson and Lindenstrauss}}}
+\bibcite{lad2025robustness}{{41}{2025}{{Lad et~al.}}{{Lad, Lee, Gurnee, and Tegmark}}}
+\bibcite{lan2020albert}{{42}{2020}{{Lan et~al.}}{{Lan, Chen, Goodman, Gimpel, Sharma, and Soricut}}}
+\bibcite{liao2016bridging}{{43}{2016}{{Liao \& Poggio}}{{Liao and Poggio}}}
+\bibcite{liberzon2003switching}{{44}{2003}{{Liberzon}}{{}}}
+\bibcite{liu2021swin}{{45}{2021}{{Liu et~al.}}{{Liu, Lin, Cao, Hu, Wei, Zhang, Lin, and Guo}}}
+\bibcite{liu2022convnext}{{46}{2022}{{Liu et~al.}}{{Liu, Mao, Wu, Feichtenhofer, Darrell, and Xie}}}
+\bibcite{lu2018beyond}{{47}{2018}{{Lu et~al.}}{{Lu, Zhong, Li, and Dong}}}
+\bibcite{marion2024implicit}{{48}{2024}{{Marion et~al.}}{{Marion, Wu, Sander, and Biau}}}
+\bibcite{naitzat2020topology}{{49}{2020}{{Naitzat et~al.}}{{Naitzat, Zhitnikov, and Lim}}}
+\bibcite{pandey2026trajectorygeometrytransformerrepresentations}{{50}{2026}{{Pandey et~al.}}{{Pandey, Singh, and Mahdid}}}
+\bibcite{queiruga2020continuousindepthneuralnetworks}{{51}{2020}{{Queiruga et~al.}}{{Queiruga, Erichson, Taylor, and Mahoney}}}
+\bibcite{sander2022residualneuralnetworksdiscretize}{{52}{2022}{{Sander et~al.}}{{Sander, Ablin, and Peyr{\'e}}}}
+\bibcite{savarese2019learning}{{53}{2019}{{Savarese \& Maire}}{{Savarese and Maire}}}
+\bibcite{strogatz2015nonlinear}{{54}{2015}{{Strogatz}}{{}}}
+\bibcite{sun2024massiveactivationslargelanguage}{{55}{2024}{{Sun et~al.}}{{Sun, Chen, Kolter, and Liu}}}
+\bibcite{sun2025painters}{{56}{2025}{{Sun et~al.}}{{Sun, Pickett, Nain, and Jones}}}
+\bibcite{pmlr-v306-sun26d}{{57}{2026}{{Sun et~al.}}{{Sun, Canziani, {LeCun}, and Zhu}}}
+\bibcite{takase2021lessons}{{58}{2023}{{Takase \& Kiyono}}{{Takase and Kiyono}}}
+\bibcite{valeriani2023geometry}{{59}{2023}{{Valeriani et~al.}}{{Valeriani, Doimo, Cuturello, Laio, Ansuini, and Cazzaniga}}}
+\bibcite{veit2016residualnetworksbehavelike}{{60}{2016}{{Veit et~al.}}{{Veit, Wilber, and Belongie}}}
 \bibstyle{icml2025}
 \citation{deng2009imagenet}
 \citation{liu2022convnext}
 \citation{liu2022convnext}
 \citation{liu2022convnext}
+\newlabel{app:training}{{A}{11}{}{appendix.A}{}}
+\newlabel{app:training@cref}{{[appendix][1][2147483647]A}{[1][11][]11}}
+\newlabel{tab:app-training}{{5}{12}{ImageNet-1k training settings. Official ConvNeXt-T from~\citet {liu2022convnext}; the remaining columns are the four models we train. CNX-T: untied baseline. Tied: stage~3 shares one block ($D{=}9$). All: one shared block per stage. dp0: untied ConvNeXt-T with stochastic depth off}{table.5}{}}
+\newlabel{tab:app-training@cref}{{[table][5][2147483647]5}{[1][11][]12}}
+\pgfsyspdfmark {pgfid6}{6070474}{13026831}
+\pgfsyspdfmark {pgfid7}{779760}{12933637}
+\pgfsyspdfmark {pgfid8}{2893295}{12805648}
+\newlabel{app:solvers}{{B}{12}{}{appendix.B}{}}
+\newlabel{app:solvers@cref}{{[appendix][2][2147483647]B}{[1][12][]12}}
+\newlabel{app:solver-endpoints}{{C}{12}{}{appendix.C}{}}
+\newlabel{app:solver-endpoints@cref}{{[appendix][3][2147483647]C}{[1][12][]12}}
 \citation{hairer1993solving}
+\newlabel{tab:app-cnx}{{6}{13}{ConvNeXt-T, piecewise-constant schedule, top-1 (\%)}{table.6}{}}
+\newlabel{tab:app-cnx@cref}{{[table][6][2147483647]6}{[1][12][]13}}
+\newlabel{tab:app-swin}{{7}{13}{Swin-T, piecewise-constant schedule, top-1 (\%)}{table.7}{}}
+\newlabel{tab:app-swin@cref}{{[table][7][2147483647]7}{[1][12][]13}}
+\newlabel{tab:app-r50}{{8}{13}{ResNet-50, piecewise-constant schedule, top-1 (\%)}{table.8}{}}
+\newlabel{tab:app-r50@cref}{{[table][8][2147483647]8}{[1][12][]13}}
+\newlabel{tab:app-r101}{{9}{13}{ResNet-101, piecewise-constant schedule, top-1 (\%)}{table.9}{}}
+\newlabel{tab:app-r101@cref}{{[table][9][2147483647]9}{[1][12][]13}}
+\newlabel{tab:app-shared-t9}{{10}{13}{Shared ConvNeXt-T, fixed $T{=}9$ ($\Delta t{=}1/R$; $9R$ shared steps), top-1 (\%)}{table.10}{}}
+\newlabel{tab:app-shared-t9@cref}{{[table][10][2147483647]10}{[1][12][]13}}
+\newlabel{fig:shared-fractional}{{6}{13}{Weight-tied ConvNeXt-T at fixed $T{=}9$ with $9R\le 9$ steps (Euler solid, RK4 dashed)}{figure.6}{}}
+\newlabel{fig:shared-fractional@cref}{{[figure][6][2147483647]6}{[1][12][]13}}
 \citation{glorot2010understanding}
-\newlabel{app:training}{{A}{18}{}{appendix.A}{}}
-\newlabel{app:training@cref}{{[appendix][1][2147483647]A}{[1][18][]18}}
-\newlabel{app:solvers}{{B}{18}{}{appendix.B}{}}
-\newlabel{app:solvers@cref}{{[appendix][2][2147483647]B}{[1][18][]18}}
-\newlabel{app:solver-endpoints}{{C}{18}{}{appendix.C}{}}
-\newlabel{app:solver-endpoints@cref}{{[appendix][3][2147483647]C}{[1][18][]18}}
-\newlabel{app:random-init}{{D}{18}{}{appendix.D}{}}
-\newlabel{app:random-init@cref}{{[appendix][4][2147483647]D}{[1][18][]18}}
-\newlabel{tab:app-training}{{4}{19}{ImageNet-1k training settings. Official ConvNeXt-T from~\citet {liu2022convnext}; the remaining columns are the four models we train. CNX-T: untied baseline. Tied: stage~3 shares one block ($D{=}9$). All: one shared block per stage. dp0: untied ConvNeXt-T with stochastic depth off}{table.4}{}}
-\newlabel{tab:app-training@cref}{{[table][4][2147483647]4}{[1][18][]19}}
-\newlabel{tab:app-cnx}{{5}{19}{ConvNeXt-T, plain, top-1 (\%)}{table.5}{}}
-\newlabel{tab:app-cnx@cref}{{[table][5][2147483647]5}{[1][18][]19}}
-\newlabel{tab:app-swin}{{6}{19}{Swin-T, plain, top-1 (\%)}{table.6}{}}
-\newlabel{tab:app-swin@cref}{{[table][6][2147483647]6}{[1][18][]19}}
-\newlabel{eq:step-ratio}{{10}{19}{}{equation.D.10}{}}
-\newlabel{eq:step-ratio@cref}{{[equation][10][2147483647]10}{[1][18][]19}}
-\newlabel{tab:app-r50}{{7}{19}{ResNet-50, plain, top-1 (\%)}{table.7}{}}
-\newlabel{tab:app-r50@cref}{{[table][7][2147483647]7}{[1][18][]19}}
-\newlabel{tab:app-r101}{{8}{19}{ResNet-101, plain, top-1 (\%)}{table.8}{}}
-\newlabel{tab:app-r101@cref}{{[table][8][2147483647]8}{[1][18][]19}}
+\newlabel{fig:horizon}{{7}{14}{Weight-tied ConvNeXt-T: top-1 against horizon $T$. Red: fixed $\Delta t{=}1$ and more steps. Purple: nine steps with varying $\Delta t$ ($T{=}9\,\Delta t$). Both peak at the trained horizon $T{=}9$}{figure.7}{}}
+\newlabel{fig:horizon@cref}{{[figure][7][2147483647]7}{[1][12][]14}}
+\newlabel{tab:app-solver-endpoints}{{11}{14}{Pairwise stage-3 endpoint agreement (mean over $N{=}32$; ignore top-1 channel). Horizon $T{=}9$ in every row}{table.11}{}}
+\newlabel{tab:app-solver-endpoints@cref}{{[table][11][2147483647]11}{[1][13][]14}}
+\newlabel{app:random-init}{{D}{14}{}{appendix.D}{}}
+\newlabel{app:random-init@cref}{{[appendix][4][2147483647]D}{[1][13][]14}}
+\newlabel{eq:step-ratio}{{5}{14}{}{equation.D.5}{}}
+\newlabel{eq:step-ratio@cref}{{[equation][5][2147483647]5}{[1][14][]14}}
+\citation{sun2025painters}
 \citation{queiruga2020continuousindepthneuralnetworks}
 \citation{chang2018multilevel}
-\newlabel{tab:app-shared-t9}{{9}{20}{Shared ConvNeXt-T, fixed $T{=}9$ ($\Delta t{=}1/R$; $9R$ shared steps), top-1 (\%)}{table.9}{}}
-\newlabel{tab:app-shared-t9@cref}{{[table][9][2147483647]9}{[1][18][]20}}
-\newlabel{tab:app-solver-endpoints}{{10}{20}{Pairwise stage-3 endpoint agreement (mean over $N{=}32$; ignore top-1 channel). Horizon $T{=}9$ in every row}{table.10}{}}
-\newlabel{tab:app-solver-endpoints@cref}{{[table][10][2147483647]10}{[1][18][]20}}
-\newlabel{tab:app-random-init}{{11}{20}{Angle between $x_T$ and the RK4 $R{=}100$ reference ($T{=}n$, mean over $N{=}32$). $g$: Xavier gain of the stage-3 blocks; $\rho $: mean relative step \eqref {eq:step-ratio}; $^\star $: gain matched to the trained $\rho $. Rows sorted by $\rho $}{table.11}{}}
-\newlabel{tab:app-random-init@cref}{{[table][11][2147483647]11}{[1][20][]20}}
 \citation{entezari2022permutation,ainsworth2023gitrebasin}
+\newlabel{fig:dist-r1-compare}{{8}{15}{Refined ($R{=}100$) against native ($R{=}1$) stage-3 path for the untied (left) and weight-tied (right) ConvNeXt-T. \textbf {Top:} $\|x^{(R)}-x_{R{=}1}\|$ (solid) with both state norms for scale (dashed: refined; squares: native). \textbf {Bottom:} $\cos (x^{(R)},x_{R{=}1})$. Mean and P5--P95 over $500$ images; massive channel removed; dots mark the end of each native step}{figure.8}{}}
+\newlabel{fig:dist-r1-compare@cref}{{[figure][8][2147483647]8}{[1][13][]15}}
+\newlabel{app:block-ops}{{E}{15}{}{appendix.E}{}}
+\newlabel{app:block-ops@cref}{{[appendix][5][2147483647]E}{[1][15][]15}}
+\newlabel{app:bilinear}{{F}{15}{}{appendix.F}{}}
+\newlabel{app:bilinear@cref}{{[appendix][6][2147483647]F}{[1][15][]15}}
+\newlabel{eq:bilinear-theta}{{6}{15}{}{equation.F.6}{}}
+\newlabel{eq:bilinear-theta@cref}{{[equation][6][2147483647]6}{[1][15][]15}}
 \citation{sun2024massiveactivationslargelanguage}
 \citation{sun2024massiveactivationslargelanguage}
-\newlabel{app:block-ops}{{E}{21}{}{appendix.E}{}}
-\newlabel{app:block-ops@cref}{{[appendix][5][2147483647]E}{[1][20][]21}}
-\newlabel{app:bilinear}{{F}{21}{}{appendix.F}{}}
-\newlabel{app:bilinear@cref}{{[appendix][6][2147483647]F}{[1][20][]21}}
-\newlabel{eq:bilinear-theta}{{11}{21}{}{equation.F.11}{}}
-\newlabel{eq:bilinear-theta@cref}{{[equation][11][2147483647]11}{[1][21][]21}}
-\newlabel{app:massive-activations}{{G}{21}{}{appendix.G}{}}
-\newlabel{app:massive-activations@cref}{{[appendix][7][2147483647]G}{[1][21][]21}}
-\newlabel{tab:app-bilinear}{{12}{21}{Bilinear weight interpolation, Euler, top-1 (\%)}{table.12}{}}
-\newlabel{tab:app-bilinear@cref}{{[table][12][2147483647]12}{[1][21][]21}}
-\newlabel{fig:bilinear-norm}{{10}{21}{ConvNeXt-T residual norm along stage~3 at $R{=}100$: plain vs.\ bilinear weight interpolation (mean and P5--P95 over 500 images)}{figure.10}{}}
-\newlabel{fig:bilinear-norm@cref}{{[figure][10][2147483647]10}{[1][21][]21}}
+\newlabel{tab:app-random-init}{{12}{16}{Angle between $x_T$ and the RK4 $R{=}100$ reference ($T{=}n$, mean over $N{=}32$). $g$: Xavier gain of the stage-3 blocks; $\rho $: mean relative step \eqref {eq:step-ratio}; $^\star $: gain matched to the trained $\rho $. Rows sorted by $\rho $}{table.12}{}}
+\newlabel{tab:app-random-init@cref}{{[table][12][2147483647]12}{[1][14][]16}}
+\newlabel{tab:app-block-ops}{{13}{16}{Untied ConvNeXt-T stage~3 replaced by sequences of its own blocks, top-1 (\%). $T$: horizon $L\,\Delta t$. Native nine blocks: $80.96$}{table.13}{}}
+\newlabel{tab:app-block-ops@cref}{{[table][13][2147483647]13}{[1][15][]16}}
+\newlabel{tab:app-bilinear}{{14}{16}{Bilinear weight interpolation, Euler, top-1 (\%)}{table.14}{}}
+\newlabel{tab:app-bilinear@cref}{{[table][14][2147483647]14}{[1][16][]16}}
+\newlabel{fig:bilinear-norm}{{9}{16}{ConvNeXt-T residual norm along stage~3 at $R{=}100$: piecewise-constant against bilinear weights (mean and P5--P95 over 500 images)}{figure.9}{}}
+\newlabel{fig:bilinear-norm@cref}{{[figure][9][2147483647]9}{[1][16][]16}}
+\newlabel{app:massive-activations}{{G}{16}{}{appendix.G}{}}
+\newlabel{app:massive-activations@cref}{{[appendix][7][2147483647]G}{[1][16][]16}}
+\newlabel{fig:massive-norms}{{10}{17}{Stage-3 exit channel norms on the shared ConvNeXt ($R{=}1$, $D{=}9$). Channel~$236$ (red) is the massive activation used in the ablations below}{figure.10}{}}
+\newlabel{fig:massive-norms@cref}{{[figure][10][2147483647]10}{[1][17][]17}}
+\newlabel{tab:app-massive-zero}{{15}{17}{Shared ConvNeXt-T ImageNet validation when zeroing one stage-3 channel after every residual step. Random: mean and range over $20$ channels}{table.15}{}}
+\newlabel{tab:app-massive-zero@cref}{{[table][15][2147483647]15}{[1][17][]17}}
+\newlabel{fig:massive-delta-loss}{{11}{17}{$\Delta $loss vs.\ baseline when zeroing one stage-3 channel on the shared ConvNeXt. Random channels ($n{=}20$ per $R$) cluster near zero; the outlier (vertical lines) sits near $\Delta \mathrm {loss}\approx 0.7$ for both $R{=}1$ and $R{=}10$}{figure.11}{}}
+\newlabel{fig:massive-delta-loss@cref}{{[figure][11][2147483647]11}{[1][17][]17}}
+\citation{pmlr-v306-sun26d}
+\citation{ioffe2015batchnorm}
+\citation{gan2025ditf}
+\citation{sun2024massiveactivationslargelanguage,pmlr-v306-sun26d}
+\citation{strogatz2015nonlinear}
+\citation{dupont2019augmented}
 \citation{sun2024massiveactivationslargelanguage}
-\newlabel{fig:massive-norms}{{11}{22}{Stage-3 exit channel norms on the shared ConvNeXt ($R{=}1$, $D{=}9$). Channel~$236$ (red) is the massive activation used in the ablations below}{figure.11}{}}
-\newlabel{fig:massive-norms@cref}{{[figure][11][2147483647]11}{[1][21][]22}}
-\newlabel{tab:app-massive-zero}{{13}{22}{Shared ConvNeXt-T ImageNet validation when zeroing one stage-3 channel after every residual step. Random: mean and range over $20$ channels}{table.13}{}}
-\newlabel{tab:app-massive-zero@cref}{{[table][13][2147483647]13}{[1][21][]22}}
-\newlabel{fig:massive-delta-loss}{{12}{22}{$\Delta $loss vs.\ baseline when zeroing one stage-3 channel on the shared ConvNeXt. Random channels ($n{=}20$ per $R$) cluster near zero; the outlier (vertical lines) sits near $\Delta \mathrm {loss}\approx 0.7$ for both $R{=}1$ and $R{=}10$}{figure.12}{}}
-\newlabel{fig:massive-delta-loss@cref}{{[figure][12][2147483647]12}{[1][22][]22}}
-\newlabel{fig:massive-phase}{{13}{23}{Phase portraits of stage-3 channel means $(\mathrm {mean}_{H,W}(x_d),\,\mathrm {mean}_{H,W}(h_d))$ over $T{=}9$ ($\Delta t{=}0.01$, $N{=}500$ images). \textbf {Left:} shared ConvNeXt ($D{=}900$). \textbf {Right:} untied ConvNeXt-T ($R{=}100$). One channel reaches spatial means more than an order of magnitude larger than those of the remaining 383 channels, which stay close to the origin}{figure.13}{}}
-\newlabel{fig:massive-phase@cref}{{[figure][13][2147483647]13}{[1][22][]23}}
-\newlabel{fig:swin-massive}{{14}{23}{Swin-T stage~3 ($R{=}100$, $\Delta t{=}0.01$, $T{=}6$, $N{=}500$ images). \textbf {Left:} one trajectory per spatial position, $(\|x_d\|_C,\,\|h_d\|_C)$; the four outlying trajectories are the corner tokens. \textbf {Right:} one trajectory per channel, $(\mathrm {mean}_{H,W}(x_d),\,\mathrm {mean}_{H,W}(h_d))$; one channel grows above the rest in a block-wise sawtooth}{figure.14}{}}
-\newlabel{fig:swin-massive@cref}{{[figure][14][2147483647]14}{[1][22][]23}}
-\newlabel{fig:swin-corner-slice}{{15}{23}{Residual $h_d$ of Swin-T stage~3 at step $d{=}579$ (last block), averaged over $500$ images and shown as channel by height slices at the last column (\textbf {top}) and at $W{=}0$ (\textbf {bottom}). Rows $0$ and $13$ of each panel are the four corner tokens, which share the same dominant channels and signs}{figure.15}{}}
-\newlabel{fig:swin-corner-slice@cref}{{[figure][15][2147483647]15}{[1][22][]23}}
-\gdef \@abspage@last{23}
+\newlabel{fig:massive-phase}{{12}{18}{Phase portraits of stage-3 channel means $(\mathrm {mean}_{H,W}(x_d),\,\mathrm {mean}_{H,W}(h_d))$ over $T{=}9$ ($\Delta t{=}0.01$, $N{=}500$ images). \textbf {Left:} shared ConvNeXt ($D{=}900$). \textbf {Right:} untied ConvNeXt-T ($R{=}100$). One channel reaches spatial means more than an order of magnitude larger than those of the remaining 383 channels, which stay close to the origin}{figure.12}{}}
+\newlabel{fig:massive-phase@cref}{{[figure][12][2147483647]12}{[1][17][]18}}
+\newlabel{fig:swin-massive}{{13}{19}{Swin-T stage~3 ($R{=}100$, $\Delta t{=}0.01$, $T{=}6$, $N{=}500$ images). \textbf {Left:} one trajectory per spatial position, $(\|x_d\|_C,\,\|h_d\|_C)$; the four outlying trajectories are the corner tokens. \textbf {Right:} one trajectory per channel, $(\mathrm {mean}_{H,W}(x_d),\,\mathrm {mean}_{H,W}(h_d))$; one channel grows above the rest in a block-wise sawtooth}{figure.13}{}}
+\newlabel{fig:swin-massive@cref}{{[figure][13][2147483647]13}{[1][18][]19}}
+\newlabel{fig:swin-corner-slice}{{14}{19}{Residual $h_d$ of Swin-T stage~3 at step $d{=}579$ (last block), averaged over $500$ images and shown as channel by height slices at the last column (\textbf {top}) and at $W{=}0$ (\textbf {bottom}). Rows $0$ and $13$ of each panel are the four corner tokens, which share the same dominant channels and signs}{figure.14}{}}
+\newlabel{fig:swin-corner-slice@cref}{{[figure][14][2147483647]14}{[1][18][]19}}
+\newlabel{app:per-coordinate}{{H}{19}{}{appendix.H}{}}
+\newlabel{app:per-coordinate@cref}{{[appendix][8][2147483647]H}{[1][19][]19}}
+\newlabel{app:arch-transport}{{I}{20}{}{appendix.I}{}}
+\newlabel{app:arch-transport@cref}{{[appendix][9][2147483647]I}{[1][20][]20}}
+\newlabel{tab:app-per-coordinate}{{16}{20}{Per-coordinate statistics of stage~3 at integer times ($R{=}100$, $500$ images, massive channel removed) for the real increments and for Gaussian increments with the same Gram matrix (mean over three seeds; std $\le 0.001$)}{table.16}{}}
+\newlabel{tab:app-per-coordinate@cref}{{[table][16][2147483647]16}{[1][20][]20}}
+\newlabel{tab:app-arch-transport}{{17}{20}{Stage-3 Gram statistics at $R{=}1$ (mean over $500$ images). $s_k{<}0$: share of image and block pairs with negative survival; $E$: opposed fraction}{table.17}{}}
+\newlabel{tab:app-arch-transport@cref}{{[table][17][2147483647]17}{[1][20][]20}}
+\newlabel{fig:pooled-dynamics}{{15}{21}{Stage-3 coordinates pooled over $500$ images ($R{=}100$; massive channel removed). \textbf {Top:} weight-tied ConvNeXt; \textbf {bottom:} untied ConvNeXt-T. \textbf {Left:} per-coordinate progress $p_i(t)$ (median and P5--P95; thin lines: random coordinates). \textbf {Middle:} velocity toward the final value, coordinates sorted by peak time (red: toward the end state; blue: away). \textbf {Right:} phase density $(p_i,\,h_i/\mathrm {net}_i)$}{figure.15}{}}
+\newlabel{fig:pooled-dynamics@cref}{{[figure][15][2147483647]15}{[1][20][]21}}
+\gdef \@abspage@last{21}

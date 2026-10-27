@@ -1,4 +1,4 @@
-\begin{thebibliography}{63}
+\begin{thebibliography}{60}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -56,13 +56,6 @@ Belrose, N., Furman, Z., Smith, L., Halawi, D., Ostrovsky, I., McKinney, L.,
 \newblock Eliciting latent predictions from transformers with the tuned lens,
   2023.
 \newblock arXiv preprint.
-
-\bibitem[Bengio et~al.(1994)Bengio, Simard, and Frasconi]{vanishingGradient}
-Bengio, Y., Simard, P., and Frasconi, P.
-\newblock Learning long-term dependencies with gradient descent is difficult.
-\newblock \emph{IEEE Transactions on Neural Networks}, 5\penalty0 (2):\penalty0
-  157--166, 1994.
-\newblock \doi{10.1109/72.279181}.
 
 \bibitem[Bengio et~al.(2013)Bengio, Courville, and
   Vincent]{bengio2013representation}
@@ -298,13 +291,6 @@ Lan, Z., Chen, M., Goodman, S., Gimpel, K., Sharma, P., and Soricut, R.
 \newblock In \emph{International Conference on Learning Representations
   (ICLR)}, 2020.
 
-\bibitem[Li et~al.(2018)Li, Xu, Taylor, Studer, and
-  Goldstein]{li2018visualizinglosslandscapeneural}
-Li, H., Xu, Z., Taylor, G., Studer, C., and Goldstein, T.
-\newblock Visualizing the loss landscape of neural nets.
-\newblock In \emph{Advances in Neural Information Processing Systems
-  (NeurIPS)}, volume~31, 2018.
-
 \bibitem[Liao \& Poggio(2016)Liao and Poggio]{liao2016bridging}
 Liao, Q. and Poggio, T.
 \newblock Bridging the gaps between residual learning, recurrent neural
@@ -375,13 +361,6 @@ Savarese, P. and Maire, M.
 \newblock Learning implicitly recurrent {CNN}s through parameter sharing.
 \newblock In \emph{International Conference on Learning Representations
   (ICLR)}, 2019.
-
-\bibitem[Simonyan \& Zisserman(2015)Simonyan and
-  Zisserman]{simonyan2015deepconvolutionalnetworkslargescale}
-Simonyan, K. and Zisserman, A.
-\newblock Very deep convolutional networks for large-scale image recognition.
-\newblock In \emph{International Conference on Learning Representations
-  (ICLR)}, 2015.
 
 \bibitem[Strogatz(2015)]{strogatz2015nonlinear}
 Strogatz, S.~H.
