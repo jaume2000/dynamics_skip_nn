@@ -11,7 +11,7 @@ In Swin the corner tokens fail that channel-wise test (ratios of about $16$), so
 On the shared ConvNeXt we integrate the native stage-3 schedule ($D{=}9$, $\Delta t{=}1$, Euler) on a single ImageNet validation image and rank the $384$ channels by the Frobenius norm $\|x_c\|_F$ of the stage-3 state just before LayerNorm and downsampling.
 Channel~$236$ dominates by more than an order of magnitude ($\|x_{236}\|_F\approx 3.6{\times}10^3$ vs.\ $\approx 1.4{\times}10^2$ for the runner-up; \cref{fig:massive-norms}).
 The same index remains the top channel under the refined schedule ($R{=}10$, $D{=}90$, $\Delta t{=}0.1$), so the outlier is not an artefact of the unit-step discretisation.
-An analogous ranking on the untied ConvNeXt-T likewise isolates one channel of comparable relative size; ResNet stage~3 has no channel of this dominance.
+An analogous ranking on the untied ConvNeXt-T likewise isolates one channel of comparable relative size, channel~$195$; ResNet stage~3 has no channel of this dominance.
 
 \begin{figure}[t]
     \centering
@@ -41,13 +41,13 @@ The drop is essentially unchanged from $R{=}1$ to $R{=}10$, so the channel remai
         \toprule
         $R$ & condition & top-1 (\%) & loss & $\Delta$loss \\
         \midrule
-        1  & baseline            & 80.34 & 0.896 & --- \\
+        1  & baseline            & 80.34 & 0.896 & -- \\
         1  & zero ch~$236$       & 67.81 & 1.595 & $+0.699$ \\
-        1  & zero random ($n{=}20$) & $80.25$ [$80.05$,\,$80.38$] & --- & $\le 0.018$ \\
+        1  & zero random ($n{=}20$) & $80.25$ [$80.05$,\,$80.38$] & -- & $\le 0.018$ \\
         \midrule
-        10 & baseline            & 80.14 & 0.904 & --- \\
+        10 & baseline            & 80.14 & 0.904 & -- \\
         10 & zero ch~$236$       & 67.59 & 1.590 & $+0.686$ \\
-        10 & zero random ($n{=}20$) & $80.11$ [$79.85$,\,$80.18$] & --- & $\le 0.019$ \\
+        10 & zero random ($n{=}20$) & $80.11$ [$79.85$,\,$80.18$] & -- & $\le 0.019$ \\
         \bottomrule
     \end{tabular}%
     }
@@ -107,6 +107,27 @@ Averaging over positions instead (\cref{fig:swin-massive}, right), one channel g
     \caption{Residual $h_d$ of Swin-T stage~3 at step $d{=}579$ (last block), averaged over $500$ images and shown as channel by height slices at the last column (\textbf{top}) and at $W{=}0$ (\textbf{bottom}). Rows $0$ and $13$ of each panel are the four corner tokens, which share the same dominant channels and signs.}
     \label{fig:swin-corner-slice}
 \end{figure*}
+
+\paragraph{Interpretation.}
+Massive activations arise in pre-norm residual blocks and are suppressed when the
+vector-wise normalisation is replaced by an element-wise one~\citep{pmlr-v306-sun26d}.
+This fits what we see: ConvNeXt and Swin normalise each position across channels with
+LayerNorm, whereas BatchNorm~\citep{ioffe2015batchnorm} in ResNet normalises each
+channel independently; ResNet stage~3 shows no outlier.
+A channel-concentrated pattern has also been reported for diffusion
+transformers~\citep{gan2025ditf}.
+In language models massive activations are injected by a few early blocks and then stay
+nearly constant until late blocks remove them, acting as fixed bias
+terms~\citep{sun2024massiveactivationslargelanguage,pmlr-v306-sun26d}.
+The ConvNeXt channel instead evolves throughout the stage with the same kinematic
+profile as the rest of the state (\cref{fig:massive-phase}).
+In the shared model the explicit parameters are identical at every step, so the block
+can access depth only through the state.
+We conjecture that this channel provides that signal, as an autonomous system can
+emulate a non-autonomous one by carrying time as an extra state
+variable~\citep{strogatz2015nonlinear}, which time-dependent Neural ODEs implement
+explicitly~\citep{dupont2019augmented}.
+Our observations are consistent with this reading but do not establish it.
 
 \paragraph{Open questions.}
 Two tests would clarify the role of the ConvNeXt channel.

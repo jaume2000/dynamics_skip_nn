@@ -4,8 +4,8 @@
 \Cref{app:solver-endpoints} shows that the trained stage~3 has a continuous limit.
 That alone is weak evidence.
 Every residual field we study (convolutions, linear layers, normalisation, GELU/ReLU,
-softmax attention) is locally Lipschitz with at most linear growth---attention outputs
-are convex combinations of the values---so the ODE $\dot x=f_i(x)$ has a unique solution
+softmax attention) is locally Lipschitz with at most linear growth (attention outputs
+are convex combinations of the values), so the ODE $\dot x=f_i(x)$ has a unique solution
 on $[0,T]$ and Euler converges to it at first order, whatever the
 weights~\citep{hairer1993solving}.
 We check this empirically on all five architectures and use random fields of
@@ -19,7 +19,9 @@ $\gamma{=}1$ (its default $10^{-6}$ makes $f\approx0$).
 The stage-3 blocks are then re-drawn with Xavier gain $g\in\{0.25,0.5,1,2,4,8\}$, so the
 stage-3 input is identical across gains and only the field strength changes.
 For ResNet the field is $f_i(x)=\mathrm{block}_i(x)-x$, which includes the ReLU applied
-after the addition; for Swin one block contains both residual sub-layers (attention and
+after the addition, and the first stage-3 block, whose projection shortcut changes the
+resolution and width, runs once without refinement, so $n{=}5$ for ResNet-50 and
+$n{=}22$ for ResNet-101 (the same convention holds in every experiment); for Swin one block contains both residual sub-layers (attention and
 MLP), as in the main text.
 For each network we integrate stage~3 to $T{=}n$ and compare the endpoint $x_T$ of Euler
 at $R\in\{1,10,100,1000\}$ and of RK4 at $R{=}1$ against RK4 at $R{=}100$, on the $N{=}32$
@@ -105,7 +107,7 @@ ResNet at $g\ge4$ overflows in float32: without a normalisation inside the block
 $\|f_i(x)\|$ grows with $\|x\|$, so the state grows exponentially ($\rho\approx18$ per block at
 $g{=}4$).
 Swin at $g{=}8$ is still $15.7^\circ$ away at $R{=}1000$: the attention logits are so large
-that the softmax is nearly a hard selection, the field becomes very stiff, and a finer
+that the softmax is nearly a hard selection, the field becomes very stiff and a finer
 step is needed.
 Convergence of the refinement to a single $\hat x_T$ is therefore a property of the
 residual parameterisation, not something learned.

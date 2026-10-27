@@ -5,13 +5,19 @@ We train on ImageNet-1k~\citep{deng2009imagenet} at $224{\times}224$.
 \Cref{tab:app-training} lists the full hyper-parameter table, next to the official
 ConvNeXt-T recipe~\citep{liu2022convnext}.
 The four models we train from scratch share the same augmentation, regularisation and
-optimiser; they differ only in peak learning rate, warmup length, minimum learning rate
-and stochastic depth, as marked in the table.
+optimiser; they differ in peak learning rate, warmup length, minimum learning rate,
+stochastic depth and parallelism, as marked in the table.
 The official ConvNeXt-T uses batch size $4096$ and base learning rate $4{\times}10^{-3}$.
 Linear scaling to our batch of $1024$ gives $1{\times}10^{-3}$, which is the peak we use
 for the weight-tied and all-stages runs.
-The untied ConvNeXt-T (and its drop-path-free sibling) use half of that,
+The untied ConvNeXt-T and its drop-path-free sibling use half of that,
 $5{\times}10^{-4}$, with the official $20$-epoch warmup.
+The untied runs use one process with \texttt{DataParallel} over a batch of $1024$; the
+tied and all-stages runs use four distributed processes with $256$ images each.
+Mixup and CutMix are drawn per process batch, so the mixing statistics are not
+identical between the two set-ups.
+No run fixes a random seed, so the accuracy gaps of \cref{sec:weight_tied} come from
+single runs under recipes that are close but not matched.
 
 Weight decay is applied only to convolution and linear weights (tensors of rank
 $\ge 2$).
@@ -44,10 +50,12 @@ decay to the listed minimum, advanced once per optimiser step.
         warmup epochs              & 20 & 20 & 10 & 10 & 20 \\
         optimizer                  & AdamW & AdamW & AdamW & AdamW & AdamW \\
         base learning rate         & $4{\times}10^{-3}$ & $5{\times}10^{-4}$ & $1{\times}10^{-3}$ & $1{\times}10^{-3}$ & $5{\times}10^{-4}$ \\
-        min.\ learning rate        & --- & $10^{-6}$ & $10^{-7}$ & $10^{-7}$ & $10^{-6}$ \\
+        min.\ learning rate        & -- & $10^{-6}$ & $10^{-7}$ & $10^{-7}$ & $10^{-6}$ \\
         weight decay               & $0.05$ & $0.05$ & $0.05$ & $0.05$ & $0.05$ \\
         optimizer momentum         & $\beta{=}(0.9,0.999)$ & $\beta{=}(0.9,0.999)$ & $\beta{=}(0.9,0.999)$ & $\beta{=}(0.9,0.999)$ & $\beta{=}(0.9,0.999)$ \\
         batch size                 & $4096$ & $1024$ & $1024$ & $1024$ & $1024$ \\
+        processes $\times$ batch   & -- & $1{\times}1024$ & $4{\times}256$ & $4{\times}256$ & $1{\times}1024$ \\
+        random seed                & -- & none & none & none & none \\
         learning rate schedule     & cosine & cosine & cosine & cosine & cosine \\
         warmup schedule            & linear & linear & linear & linear & linear \\
         layer-wise lr decay        & None & None & None & None & None \\
@@ -61,7 +69,7 @@ decay to the listed minimum, advanced once per optimiser step.
         LayerScale init            & $10^{-6}$ & $10^{-6}$ & $10^{-6}$ & $10^{-6}$ & $10^{-6}$ \\
         gradient clip              & None & None & None & None & None \\
         exp.\ moving average       & None & None & None & None & None \\
-        mixed precision            & --- & off & off & off & off \\
+        mixed precision            & -- & off & off & off & off \\
         \bottomrule
     \end{tabular}
 \end{table*}
@@ -74,12 +82,31 @@ RandAugment \texttt{rand-m9-mstd0.5}, color jitter $0.4$ and random erasing
 Validation uses the standard centre crop.
 Stochastic depth, when enabled, is ramped linearly from $0$ to the listed peak across the
 $18$ residual blocks.
+In the weight-tied model it is applied per application of the shared block: the $k$-th
+application in stage~3 uses the rate of the $k$-th untied stage-3 block,
+$\mathrm{linspace}(0,0.1,18)[6{+}k]$, i.e.\ $0.035$ to $0.082$, so both models drop the
+same expected fraction of stage-3 updates.
 
-\paragraph{Stage-4 + head finetune after unrolling.}
-The decoder-adaptation probe of \cref{sec:indefinite_looping} freezes stem and
-stages~1--3, unrolls stage~3 at inference resolution ($R{=}100$, $\Delta t{=}0.01$,
-$T{=}9$; $900$ residual steps on the weight-tied model) and trains only stage~4, the
-global pool and the classification head.
-We run $10$ epochs at a constant learning rate $5{\times}10^{-6}$ (no warmup, no cosine
-decay), with the same optimiser, weight decay, batch size and augmentation as
+\paragraph{Stage-4 and head finetune after refinement.}
+The decoder-adaptation result of \cref{sec:indefinite_looping} starts from the final
+weight-tied checkpoint, freezes stem, stages~1--2 and the shared block, refines stage~3
+to $128$ applications ($\Delta t{=}9/128$) and trains only stage~4, the global pool and
+the classification head; we checked that every frozen tensor is bit-identical to the
+starting checkpoint.
+It runs $50$ epochs with no warmup and a cosine schedule from $10^{-6}$ to $10^{-8}$,
+with the optimiser, weight decay, batch size and augmentation of
 \cref{tab:app-training}.
+Top-1 goes from $80.14\%$ to $80.33\%$ at the last epoch ($80.34\%$ at the best,
+epoch $28$).
+The script of that run is no longer in the repository, so we cannot check whether the
+frozen stages ran with stochastic depth active.
+
+That check matters: our later finetuning script left the frozen stages in training
+mode, so stochastic depth kept dropping stage-3 updates during finetuning while
+evaluation used the full stage.
+We discard the runs made with it.
+The corrected protocol (\texttt{scripts/finetune\_s4\_head\_protocol.py}) keeps every
+frozen module in evaluation mode, asserts that no stochastic-depth layer outside stage~4
+is active, uses a constant learning rate $5{\times}10^{-6}$ for $10$ epochs with seed
+$0$ and evaluates the unmodified decoder before training as epoch $0$.
+\todo{Results of the corrected protocol at $R{=}1$ and $R{=}100$, untied and tied.}

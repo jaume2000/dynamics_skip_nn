@@ -1,6 +1,55 @@
-\section{Block permutation, duplication and substitution}
+\section{Block selection, reordering and duplication}
 \label{app:block-ops}
 
-% TODO: report ImageNet val ablations on pretrained ConvNeXt stage~3
-% (permute block order, duplicate / drop blocks, replace all blocks by a middle one),
-% in the spirit of \citet{sun2025painters}.
+\Cref{sec:weight_tied} trains a stage to use a single function.
+Here we ask the opposite question on the trained untied ConvNeXt-T, without any
+retraining: can a subset of its stage-3 blocks, reordered or reused, replace the nine
+blocks?
+Each configuration is a sequence of block indices applied with one Euler step
+$\Delta t$, so the horizon is $T{=}L\,\Delta t$ for a sequence of length $L$
+(\cref{tab:app-block-ops}; full ImageNet validation).
+The same evaluation run gives $80.79$, $80.53$ and $80.36\%$ for the refined schedules
+$R{=}2,4,10$, matching \cref{tab:r-ablation} within $0.01$ points, so it uses the
+same checkpoint.
+Script: \texttt{scripts/convnext\_interpolation.py}.
+
+\begin{table}[t]
+    \centering
+    \caption{Untied ConvNeXt-T stage~3 replaced by sequences of its own blocks, top-1
+    (\%). $T$: horizon $L\,\Delta t$. Native nine blocks: $80.96$.}
+    \label{tab:app-block-ops}
+    \small
+    \setlength{\tabcolsep}{3pt}
+    \begin{tabular}{lrrr}
+        \toprule
+        Blocks & $\Delta t$ & $T$ & top-1 \\
+        \midrule
+        best single block ($5$)           & $9$   & $9$    & 39.67 \\
+        best single block ($5$)           & $1$   & $1$    & 43.12 \\
+        $0,8$ / $8,0$                     & $4.5$ & $9$    & 49.03 / 15.31 \\
+        $1,7$ / $7,1$                     & $4.5$ & $9$    & 23.14 / 15.12 \\
+        $2,6$ / $6,2$                     & $4.5$ & $9$    & 13.81 / 3.97 \\
+        $3,5$ / $5,3$                     & $4.5$ & $9$    & 57.57 / 35.18 \\
+        $4,4$                             & $4.5$ & $9$    & 30.73 \\
+        $0,4,8$                           & $4.5$ & $13.5$ & 38.16 \\
+        $0,4,8$                           & $3$   & $9$    & 60.62 \\
+        $0,4,8$                           & $2.25$& $6.75$ & 66.57 \\
+        $(0,4,8)\times3$                  & $1$   & $9$    & 52.42 \\
+        $0,0,2,2,4,4,6,6,8$               & $1$   & $9$    & 74.69 \\
+        $0,0,0,3,3,3,6,6,6$               & $1$   & $9$    & 55.13 \\
+        $0,0,0,0,4,8,8,8,8$               & $1$   & $9$    & 54.60 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+No single block suffices: the best one, block $5$, reaches $39.7\%$ when integrated
+over the whole horizon in one step and $43.1\%$ with a unit step, and block $6$ peaks
+at $29.2\%$ near $\Delta t{=}1$ over a sweep from $0.1$ to $20$.
+With two blocks the original order wins in all four pairs we tested in both orders,
+by $8.0$ to $33.7$ points.
+Using every other block twice keeps $74.7\%$, the best substitute we found, whereas
+cycling blocks $0,4,8$ three times gives $52.4\%$.
+The blocks are therefore not interchangeable copies of one operation, consistent
+with the nearly orthogonal increments of \cref{sec:coherence} and with
+the finding that repeating one middle layer is the most harmful intervention in
+pretrained transformers~\citep{sun2025painters}.

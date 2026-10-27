@@ -4,7 +4,7 @@
 \Cref{sec:indefinite_looping} asks whether a fine Euler step recovers the native
 $R{=}1$ state.
 A related question is whether two fine discretisations of the \emph{same} residual
-field agree with each other---i.e.\ whether a continuous limit exists at all.
+field agree with each other, that is, whether a continuous limit exists at all.
 \Cref{tab:app-solver-endpoints} compares stage-3 endpoints $x_T$ on the same
 $N{=}32$ ImageNet validation images (one per random class, seed~$0$), after zeroing
 the massive channel used in the main-text metrics.
@@ -45,3 +45,30 @@ Midpoint at $R{=}1$ matches the limit in top-1 ($80.23\%$, \cref{tab:app-cnx}) w
 state is still $12\%$ away, a reminder that accuracy is a coarse probe of $x_T$.
 % TODO: optional re-run with N=500 for table error bars; script
 % scripts/compare_solver_convergence.py.
+
+\paragraph{Accumulated and bounded refinement error.}
+\Cref{fig:dist-r1-compare} follows the gap between the refined ($R{=}100$) and the
+native path along the whole stage, on the $500$ images of the main text.
+After the first native step both models have cosine $0.99$ to the native path.
+In the untied ConvNeXt-T the block-end cosine keeps falling, to $0.93$ at $t{=}9$
+($21.4^\circ$), and the distance grows from $5.6$ to $76.4$ while the norms differ by
+$3\%$ ($203.5$ against $210.3$): each block receives an input that has already
+drifted, and the gap is mostly a rotation.
+In the weight-tied model the cosine settles at about $0.98$ after two or three steps
+and stays there ($11.1^\circ$ at $t{=}9$); its refined path ends $7\%$ shorter
+($425.5$ against $458.4$), so part of its smaller relative gap ($0.20$ against $0.36$)
+is radial.
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=\textwidth]{figures/dist_cos_r1_compare.pdf}
+    \caption{Refined ($R{=}100$) against native ($R{=}1$) stage-3 path for the untied
+    (left) and weight-tied (right) ConvNeXt-T.
+    \textbf{Top:} $\|x^{(R)}-x_{R{=}1}\|$ (solid) with both state norms for scale
+    (dashed: refined; squares: native).
+    \textbf{Bottom:} $\cos(x^{(R)},x_{R{=}1})$.
+    Mean and P5--P95 over $500$ images; massive channel removed; dots mark the end of
+    each native step.}
+    \label{fig:dist-r1-compare}
+\end{figure*}
+
