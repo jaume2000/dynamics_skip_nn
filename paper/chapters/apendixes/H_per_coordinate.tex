@@ -29,14 +29,6 @@ All statistics use every coordinate; the earlier text described a selection of t
 coordinates whose net displacement is above the per-image median, but the code applied
 it only to the median $t_{50}$ of the per-coordinate progress.
 
-\paragraph{Gaussian prediction.}
-If two increments are jointly Gaussian across coordinates with correlation $c$, a
-coordinate changes sign with probability $\arccos(c)/\pi$.
-With the measured consecutive cosine, this predicts a sign-change rate of $0.447$ for
-the untied stage at $R{=}1$, against $0.447$ measured, and $0.217$ for the tied stage,
-against $0.183$ measured; the prediction and the measurement correlate at $0.92$ to
-$0.96$ across images and block pairs, and random blocks give $0.500$.
-
 \paragraph{Surrogates.}
 We replace the real increments by two surrogates that keep $G$ and discard everything
 else: Gaussian increments with the same Gram matrix, and the real increments after a
@@ -74,6 +66,25 @@ no position has a cosine below $-0.3$.
     }
 \end{table}
 
+\paragraph{Gaussian prediction.}
+If two increments are jointly Gaussian across coordinates with correlation $c$, a
+coordinate changes sign with probability $\arccos(c)/\pi$.
+With the measured consecutive cosine, this predicts a sign-change rate of $0.447$ for
+the untied stage at $R{=}1$, against $0.447$ measured, and $0.217$ for the tied stage,
+against $0.183$ measured; the prediction and the measurement correlate at $0.92$ to
+$0.96$ across images and block pairs, and random blocks give $0.500$.
+
+\paragraph{A nuance on the rotation argument.}
+A literal channel-wise rotation absorbed by the adjacent linear layers would leave the
+network's function unchanged and would change the per-coordinate statistics.
+ConvNeXt is not quite that object: the depthwise convolution, the per-channel
+LayerScale and the gains of LayerNorm all act per channel, and the massive activation
+shows that the channel basis is partly privileged
+(\cref{app:massive-activations}).
+The empirical result nevertheless stands: Gaussian and randomly rotated surrogates that
+keep $G$ reproduce the per-coordinate statistics to the tolerances above, so those
+statistics add nothing beyond the Gram geometry of \cref{sec:coherence}.
+
 \paragraph{Pooled coordinates.}
 \Cref{fig:pooled-dynamics} shows the per-coordinate progress
 $p_i(t)=(x_i(t)-x_i(0))/\mathrm{net}_i$ pooled over images.
@@ -88,7 +99,7 @@ Script: \texttt{scripts/undo\_geometry\_audit.py}; outputs in
 
 \begin{figure*}[t]
     \centering
-    \includegraphics[width=\textwidth]{figures/pooled_dynamics.png}
+    \includegraphics[width=\textwidth]{figures/pooled_dynamics.pdf}
     \caption{Stage-3 coordinates pooled over $500$ images ($R{=}100$; massive channel
     removed).
     \textbf{Top:} weight-tied ConvNeXt; \textbf{bottom:} untied ConvNeXt-T.

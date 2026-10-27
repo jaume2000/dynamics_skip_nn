@@ -4,16 +4,16 @@
 We train on ImageNet-1k~\citep{deng2009imagenet} at $224{\times}224$.
 \Cref{tab:app-training} lists the full hyper-parameter table, next to the official
 ConvNeXt-T recipe~\citep{liu2022convnext}.
-The four models we train from scratch share the same augmentation, regularisation and
+The models we train from scratch share the same augmentation, regularisation and
 optimiser; they differ in peak learning rate, warmup length, minimum learning rate,
-stochastic depth and parallelism, as marked in the table.
+stochastic depth, stage-3 depth and parallelism, as marked in the table.
 The official ConvNeXt-T uses batch size $4096$ and base learning rate $4{\times}10^{-3}$.
 Linear scaling to our batch of $1024$ gives $1{\times}10^{-3}$, which is the peak we use
-for the weight-tied and all-stages runs.
+for the weight-tied, $D{=}27$ and all-stages runs.
 The untied ConvNeXt-T and its drop-path-free sibling use half of that,
 $5{\times}10^{-4}$, with the official $20$-epoch warmup.
 The untied runs use one process with \texttt{DataParallel} over a batch of $1024$; the
-tied and all-stages runs use four distributed processes with $256$ images each.
+tied, $D{=}27$ and all-stages runs use four distributed processes with $256$ images each.
 Mixup and CutMix are drawn per process batch, so the mixing statistics are not
 identical between the two set-ups.
 No run fixes a random seed, so the accuracy gaps of \cref{sec:weight_tied} come from
@@ -34,42 +34,46 @@ decay to the listed minimum, advanced once per optimiser step.
     \centering
     \caption{ImageNet-1k training settings.
     Official ConvNeXt-T from~\citet{liu2022convnext}; the remaining columns are the
-    four models we train.
+    models we train.
     CNX-T: untied baseline.
-    Tied: stage~3 shares one block ($D{=}9$).
+    Tied: stage~3 shares one block ($9$ applications, $T{=}9$, $\Delta t{=}1$).
+    $D{=}27$: same shared block applied $27$ times, trained from scratch at $T{=}27$,
+    $\Delta t{=}1$ (same parameter count as Tied).
     All: one shared block per stage.
     dp0: untied ConvNeXt-T with stochastic depth off.}
     \label{tab:app-training}
     \small
-    \setlength{\tabcolsep}{3.2pt}
-    \begin{tabular}{lccccc}
+    \setlength{\tabcolsep}{2.6pt}
+    \begin{tabular}{lcccccc}
         \toprule
-        & Official & CNX-T & Tied & All & dp0 \\
+        & Official & CNX-T & Tied & $D{=}27$ & All & dp0 \\
         \midrule
-        training epochs            & 300 & 300 & 300 & 300 & 300 \\
-        warmup epochs              & 20 & 20 & 10 & 10 & 20 \\
-        optimizer                  & AdamW & AdamW & AdamW & AdamW & AdamW \\
-        base learning rate         & $4{\times}10^{-3}$ & $5{\times}10^{-4}$ & $1{\times}10^{-3}$ & $1{\times}10^{-3}$ & $5{\times}10^{-4}$ \\
-        min.\ learning rate        & -- & $10^{-6}$ & $10^{-7}$ & $10^{-7}$ & $10^{-6}$ \\
-        weight decay               & $0.05$ & $0.05$ & $0.05$ & $0.05$ & $0.05$ \\
-        optimizer momentum         & $\beta{=}(0.9,0.999)$ & $\beta{=}(0.9,0.999)$ & $\beta{=}(0.9,0.999)$ & $\beta{=}(0.9,0.999)$ & $\beta{=}(0.9,0.999)$ \\
-        batch size                 & $4096$ & $1024$ & $1024$ & $1024$ & $1024$ \\
-        processes $\times$ batch   & -- & $1{\times}1024$ & $4{\times}256$ & $4{\times}256$ & $1{\times}1024$ \\
-        random seed                & -- & none & none & none & none \\
-        learning rate schedule     & cosine & cosine & cosine & cosine & cosine \\
-        warmup schedule            & linear & linear & linear & linear & linear \\
-        layer-wise lr decay        & None & None & None & None & None \\
-        RandAugment                & $(9,0.5)$ & $(9,0.5)$ & $(9,0.5)$ & $(9,0.5)$ & $(9,0.5)$ \\
-        Mixup $\alpha$             & $0.8$ & $0.8$ & $0.8$ & $0.8$ & $0.8$ \\
-        CutMix $\alpha$            & $1.0$ & $1.0$ & $1.0$ & $1.0$ & $1.0$ \\
-        random erasing             & $0.25$ & $0.25$ & $0.25$ & $0.25$ & $0.25$ \\
-        color jitter               & $0.4$ & $0.4$ & $0.4$ & $0.4$ & $0.4$ \\
-        label smoothing            & $0.1$ & $0.1$ & $0.1$ & $0.1$ & $0.1$ \\
-        stochastic depth           & $0.1$ & $0.1$ & $0.1$ & $0.1$ & $0$ \\
-        LayerScale init            & $10^{-6}$ & $10^{-6}$ & $10^{-6}$ & $10^{-6}$ & $10^{-6}$ \\
-        gradient clip              & None & None & None & None & None \\
-        exp.\ moving average       & None & None & None & None & None \\
-        mixed precision            & -- & off & off & off & off \\
+        training epochs            & 300 & 300 & 300 & 300 & 300 & 300 \\
+        warmup epochs              & 20 & 20 & 10 & 10 & 10 & 20 \\
+        optimizer                  & AdamW & AdamW & AdamW & AdamW & AdamW & AdamW \\
+        base learning rate         & $4{\times}10^{-3}$ & $5{\times}10^{-4}$ & $1{\times}10^{-3}$ & $1{\times}10^{-3}$ & $1{\times}10^{-3}$ & $5{\times}10^{-4}$ \\
+        min.\ learning rate        & -- & $10^{-6}$ & $10^{-7}$ & $10^{-7}$ & $10^{-7}$ & $10^{-6}$ \\
+        weight decay               & $0.05$ & $0.05$ & $0.05$ & $0.05$ & $0.05$ & $0.05$ \\
+        optimizer momentum         & $\beta{=}(0.9,0.999)$ & $\beta{=}(0.9,0.999)$ & $\beta{=}(0.9,0.999)$ & $\beta{=}(0.9,0.999)$ & $\beta{=}(0.9,0.999)$ & $\beta{=}(0.9,0.999)$ \\
+        batch size                 & $4096$ & $1024$ & $1024$ & $1024$ & $1024$ & $1024$ \\
+        processes $\times$ batch   & -- & $1{\times}1024$ & $4{\times}256$ & $4{\times}256$ & $4{\times}256$ & $1{\times}1024$ \\
+        stage-3 applications       & $9$ & $9$ & $9$ & $27$ & $9$ & $9$ \\
+        trained horizon $T$        & $9$ & $9$ & $9$ & $27$ & $9$ & $9$ \\
+        random seed                & -- & none & none & none & none & none \\
+        learning rate schedule     & cosine & cosine & cosine & cosine & cosine & cosine \\
+        warmup schedule            & linear & linear & linear & linear & linear & linear \\
+        layer-wise lr decay        & None & None & None & None & None & None \\
+        RandAugment                & $(9,0.5)$ & $(9,0.5)$ & $(9,0.5)$ & $(9,0.5)$ & $(9,0.5)$ & $(9,0.5)$ \\
+        Mixup $\alpha$             & $0.8$ & $0.8$ & $0.8$ & $0.8$ & $0.8$ & $0.8$ \\
+        CutMix $\alpha$            & $1.0$ & $1.0$ & $1.0$ & $1.0$ & $1.0$ & $1.0$ \\
+        random erasing             & $0.25$ & $0.25$ & $0.25$ & $0.25$ & $0.25$ & $0.25$ \\
+        color jitter               & $0.4$ & $0.4$ & $0.4$ & $0.4$ & $0.4$ & $0.4$ \\
+        label smoothing            & $0.1$ & $0.1$ & $0.1$ & $0.1$ & $0.1$ & $0.1$ \\
+        stochastic depth           & $0.1$ & $0.1$ & $0.1$ & $0.1$ & $0.1$ & $0$ \\
+        LayerScale init            & $10^{-6}$ & $10^{-6}$ & $10^{-6}$ & $10^{-6}$ & $10^{-6}$ & $10^{-6}$ \\
+        gradient clip              & None & None & None & None & None & None \\
+        exp.\ moving average       & None & None & None & None & None & None \\
+        mixed precision            & -- & off & off & off & off & off \\
         \bottomrule
     \end{tabular}
 \end{table*}
@@ -81,32 +85,17 @@ RandAugment \texttt{rand-m9-mstd0.5}, color jitter $0.4$ and random erasing
 (probability $0.25$, pixel mode).
 Validation uses the standard centre crop.
 Stochastic depth, when enabled, is ramped linearly from $0$ to the listed peak across the
-$18$ residual blocks.
+$18$ residual blocks of the untied model.
 In the weight-tied model it is applied per application of the shared block: the $k$-th
 application in stage~3 uses the rate of the $k$-th untied stage-3 block,
 $\mathrm{linspace}(0,0.1,18)[6{+}k]$, i.e.\ $0.035$ to $0.082$, so both models drop the
 same expected fraction of stage-3 updates.
+For the $D{=}27$ run the same per-application schedule is extended over the $27$
+applications (\texttt{scripts/train\_shared\_convnext\_D27.py}).
 
-\paragraph{Stage-4 and head finetune after refinement.}
-The decoder-adaptation result of \cref{sec:indefinite_looping} starts from the final
-weight-tied checkpoint, freezes stem, stages~1--2 and the shared block, refines stage~3
-to $128$ applications ($\Delta t{=}9/128$) and trains only stage~4, the global pool and
-the classification head; we checked that every frozen tensor is bit-identical to the
-starting checkpoint.
-It runs $50$ epochs with no warmup and a cosine schedule from $10^{-6}$ to $10^{-8}$,
-with the optimiser, weight decay, batch size and augmentation of
-\cref{tab:app-training}.
-Top-1 goes from $80.14\%$ to $80.33\%$ at the last epoch ($80.34\%$ at the best,
-epoch $28$).
-The script of that run is no longer in the repository, so we cannot check whether the
-frozen stages ran with stochastic depth active.
-
-That check matters: our later finetuning script left the frozen stages in training
-mode, so stochastic depth kept dropping stage-3 updates during finetuning while
-evaluation used the full stage.
-We discard the runs made with it.
-The corrected protocol (\texttt{scripts/finetune\_s4\_head\_protocol.py}) keeps every
-frozen module in evaluation mode, asserts that no stochastic-depth layer outside stage~4
-is active, uses a constant learning rate $5{\times}10^{-6}$ for $10$ epochs with seed
-$0$ and evaluates the unmodified decoder before training as epoch $0$.
-\todo{Results of the corrected protocol at $R{=}1$ and $R{=}100$, untied and tied.}
+We do not report decoder fine-tuning after refinement.
+An earlier result that raised the tied $128$-step top-1 from $80.14\%$ to $80.33\%$
+used a script that is no longer in the repository and may have left stochastic depth
+active on frozen stages; the corrected protocol
+(\texttt{scripts/finetune\_s4\_head\_protocol.py}) has no completed runs in
+\texttt{outputs/}, so we omit that claim.

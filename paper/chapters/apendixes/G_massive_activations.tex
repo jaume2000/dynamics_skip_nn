@@ -8,15 +8,15 @@ On the shared and untied ConvNeXt the stage-3 exit also meets the numerical crit
 In Swin the corner tokens fail that channel-wise test (ratios of about $16$), so the label there refers only to their outlying L2 norms.
 
 \paragraph{Detection.}
-On the shared ConvNeXt we integrate the native stage-3 schedule ($D{=}9$, $\Delta t{=}1$, Euler) on a single ImageNet validation image and rank the $384$ channels by the Frobenius norm $\|x_c\|_F$ of the stage-3 state just before LayerNorm and downsampling.
+On the shared ConvNeXt we integrate the native stage-3 schedule ($9$ applications of the shared block, $\Delta t{=}1$, Euler) on a single ImageNet validation image and rank the $384$ channels by the Frobenius norm $\|x_c\|_F$ of the stage-3 state just before LayerNorm and downsampling.
 Channel~$236$ dominates by more than an order of magnitude ($\|x_{236}\|_F\approx 3.6{\times}10^3$ vs.\ $\approx 1.4{\times}10^2$ for the runner-up; \cref{fig:massive-norms}).
-The same index remains the top channel under the refined schedule ($R{=}10$, $D{=}90$, $\Delta t{=}0.1$), so the outlier is not an artefact of the unit-step discretisation.
+The same index remains the top channel under the refined schedule ($R{=}10$, $90$ applications, $\Delta t{=}0.1$), so the outlier is not an artefact of the unit-step discretisation.
 An analogous ranking on the untied ConvNeXt-T likewise isolates one channel of comparable relative size, channel~$195$; ResNet stage~3 has no channel of this dominance.
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{figures/massive_channel_norms.png}
-    \caption{Stage-3 exit channel norms on the shared ConvNeXt ($R{=}1$, $D{=}9$). Channel~$236$ (red) is the massive activation used in the ablations below.}
+    \caption{Stage-3 exit channel norms on the shared ConvNeXt ($R{=}1$, $9$ applications). Channel~$236$ (red) is the massive activation used in the ablations below.}
     \label{fig:massive-norms}
 \end{figure}
 
@@ -75,7 +75,7 @@ This dominance is why we exclude the outlier channel when computing the trajecto
     \hfill
     \includegraphics[width=0.49\textwidth]{figures/massive_phase_convnext.png}
     \caption{Phase portraits of stage-3 channel means $(\mathrm{mean}_{H,W}(x_d),\,\mathrm{mean}_{H,W}(h_d))$ over $T{=}9$ ($\Delta t{=}0.01$, $N{=}500$ images).
-    \textbf{Left:} shared ConvNeXt ($D{=}900$).
+    \textbf{Left:} shared ConvNeXt ($900$ applications of the shared block).
     \textbf{Right:} untied ConvNeXt-T ($R{=}100$).
     One channel reaches spatial means more than an order of magnitude larger than those of the remaining 383 channels, which stay close to the origin.}
     \label{fig:massive-phase}

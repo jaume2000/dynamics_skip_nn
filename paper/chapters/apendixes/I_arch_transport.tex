@@ -49,11 +49,12 @@ $0.42$), so the coherence is not only the growth of the corner tokens along thei
 direction.
 Its random baseline sits at $1/\sqrt 6$, as for ConvNeXt.
 
-Both ResNets go the other way.
+Both ResNets go the other way and are the only architectures here with genuine
+reversal: opposed fraction $E$ is $0.19$ (ResNet-50) and $0.24$ (ResNet-101), against
+about $0.07$--$0.09$ for their random baselines, while ConvNeXt and Swin have $E{=}0$.
 Trained ResNet-50 is \emph{less} straight than its random baseline ($0.37$ against
 $0.43$), with negative consecutive cosine ($-0.11$) and negative survival for every
-image and block, so later blocks partly move against earlier ones; ResNet-101 behaves
-similarly ($0.16$ against $0.22$ to $0.23$, $E{=}0.24$).
+image and block; ResNet-101 behaves similarly ($0.16$ against $0.22$ to $0.23$).
 Random ResNet stages already show negative survival, unlike random ConvNeXt stages.
 One candidate is the ReLU after the sum, which makes $f_i$ include a rectification of
 $x+F_i(x)$ that can remove part of $x$; we have not tested it, and we report the ResNet

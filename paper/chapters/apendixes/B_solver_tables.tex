@@ -121,6 +121,12 @@ nondeterministic GPU kernels.
 
 \paragraph{Large steps and the trained horizon.}
 \Cref{fig:shared-fractional} plots the fractional rows of \cref{tab:app-shared-t9}.
+Those coarse steps evidence the trained horizon; they are not a general compute
+advantage of the tied stage.
+With three Euler steps of size $3$ the tied model reaches only $37.5\%$, below the
+$60.6\%$ of the untied blocks $0,4,8$ with the same $\Delta t{=}3$
+(\cref{app:block-ops}), so saving evaluations by enlarging $\Delta t$ at fixed $T$
+favours neither model in a simple way.
 Euler is not monotone in the number of steps: one step of $\Delta t{=}9$ keeps
 $47.1\%$, two steps of $4.5$ fall to $5.9\%$ and three steps of $3$ recover $37.5\%$.
 The two-step path overshoots.
