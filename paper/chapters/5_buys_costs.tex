@@ -35,19 +35,34 @@ tied stage is anytime with its own downstream network.
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{figures/block_evals_acc.pdf}
-    \caption{ImageNet top-1 against the number of stage-3 block evaluations (Euler counts
-    $1$ per step, Midpoint $2$, RK4 $4$), without retraining.
-    Purple: native tied prefixes ($k{=}1{\ldots}9$).
-    Blue: native untied prefixes.
-    Blue dashed: best untied subsequence of length $L$ at horizon $T{=}9$
-    (App.~\ref{app:block-ops} and equispaced subsets
-    $\mathrm{round}(\mathrm{linspace}(0,8,L))$ with $\Delta t{=}9/L$).
-    Purple dotted: coarse Euler of the tied stage at $T{=}9$ (App.~\ref{app:solvers}).
+    \caption{ImageNet top-1 against the number of stage-3 block evaluations (Euler
+    counts $1$ per step), without retraining.
+    Purple solid: native tied prefixes ($k{=}1{\ldots}9$).
+    Blue solid: native untied prefixes.
+    Blue dashed: selected untied subsequences from App.~\ref{app:block-ops}.
+    Blue dotted: equispaced untied subsets
+    $\mathrm{round}(\mathrm{linspace}(0,8,L))$ with $\Delta t{=}9/L$
+    (\cref{tab:app-equispaced}).
+    Purple dotted: coarse Euler of the tied stage at $T{=}9$
+    (App.~\ref{app:solvers}).
     Horizontal lines: full-depth accuracy of each model.
     The tied stage dominates at few evaluations through its prefixes; the untied stage
     wins at nine; coarse Euler of the tied stage is not the way to save compute.}
     \label{fig:block-evals}
 \end{figure}
+
+\Cref{fig:block-evals} puts the same prefixes on a compute axis against other ways of
+spending few block evaluations at horizon $T{=}9$.
+At three evaluations the tied prefix already reaches $\prefixTiedThree\%$, while the
+equispaced untied triple $\{0,4,8\}$ with $\Delta t{=}3$ reaches only
+$\untiedBlocksZeroFourEight\%$ and the best two-block pair we tested reaches $57.6\%$
+(\cref{app:block-ops}).
+Equispaced untied subsets climb toward the native score as $L$ grows (e.g.\
+$\eqLFour\%$ at $L{=}4$, $\eqLSix\%$ at $L{=}6$, $\eqLEight\%$ at $L{=}8$), but they
+stay below the tied prefix until late in the stage.
+Coarse Euler on the tied field at the same $T$ is worse still at small step counts
+($\eulerTiedThree\%$ with three steps of size $3$), so enlarging $\Delta t$ is not a
+substitute for the anytime prefixes.
 
 \paragraph{What it costs.}
 Sharing costs $\accGapTied$ points with $\paramsTiedFracFewer\%$ fewer parameters

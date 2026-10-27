@@ -23,13 +23,13 @@ FINE = [
     {
         "csv": ROOT / "outputs/prefix_s4_head_acc_shared_R20/results.csv",
         "label": "Weight-tied",
-        "color": "#9467bd",
+        "color": "#7B2D8E",
         "disc_key": "shared_D9",
     },
     {
         "csv": ROOT / "outputs/prefix_s4_head_acc_convnext_R20/results.csv",
         "label": "ConvNeXt-T",
-        "color": "#1f77b4",
+        "color": "#2F5FA6",
         "disc_key": "convnext",
     },
 ]
@@ -44,13 +44,13 @@ def _style(ax: plt.Axes) -> None:
         ax.axvline(k, color="0.82", lw=0.55, zorder=0)
     ax.set_xlim(0, 9)
     ax.set_xticks(range(0, 10, 1))
-    ax.set_xlabel(r"Stage-3 depth $t$", fontsize=9, labelpad=1)
-    ax.tick_params(labelsize=7.5)
+    ax.set_xlabel(r"Stage-3 depth $t$", fontsize=10, labelpad=2)
+    ax.tick_params(labelsize=9)
 
 
 def plot_prefix_acc(out_path: Path = OUT) -> Path:
     disc = pd.read_csv(DISC)
-    fig, axes = plt.subplots(1, 2, figsize=(8.4, 2.25), constrained_layout=True)
+    fig, axes = plt.subplots(1, 2, figsize=(7.0, 3.2), constrained_layout=True)
 
     for spec in FINE:
         df = pd.read_csv(spec["csv"]).sort_values("t")

@@ -53,3 +53,38 @@ The blocks are therefore not interchangeable copies of one operation, consistent
 with the nearly orthogonal increments of \cref{sec:coherence} and with
 the finding that repeating one middle layer is the most harmful intervention in
 pretrained transformers~\citep{sun2025painters}.
+
+\paragraph{Equispaced subsets at fixed horizon.}
+\Cref{tab:app-equispaced} reports the systematic family used in
+\cref{fig:block-evals}: for each length $L{=}1{\ldots}9$, the indices
+$\mathrm{round}(\mathrm{linspace}(0,8,L))$ (duplicates removed) with step
+$\Delta t{=}9/L$, so $T{=}9$.
+$L{=}2$ and $L{=}3$ reproduce the App.~\ref{app:block-ops} rows for $\{0,8\}$ and
+$\{0,4,8\}$; $L{=}9$ recovers the native stage.
+Script: \texttt{paper/scripts/plot\_block\_evals.py} (calls the same validation path as
+\texttt{scripts/convnext\_interpolation.py}); results in
+\texttt{outputs/block\_evals\_figure/equispaced\_results.csv}.
+
+\begin{table}[t]
+    \centering
+    \caption{Equispaced untied stage-3 subsets at $T{=}9$, ImageNet top-1 (\%).
+    Indices: $\mathrm{round}(\mathrm{linspace}(0,8,L))$, unique, order preserved.}
+    \label{tab:app-equispaced}
+    \small
+    \setlength{\tabcolsep}{3pt}
+    \begin{tabular}{lrrr}
+        \toprule
+        $L$ & Blocks & $\Delta t$ & top-1 \\
+        \midrule
+        $1$ & $0$                         & $9$     & 9.40 \\
+        $2$ & $0,8$                       & $4.5$   & 49.03 \\
+        $3$ & $0,4,8$                     & $3$     & 60.62 \\
+        $4$ & $0,3,5,8$                   & $2.25$  & 73.01 \\
+        $5$ & $0,2,4,6,8$                 & $1.8$   & 73.64 \\
+        $6$ & $0,2,3,5,6,8$               & $1.5$   & 78.25 \\
+        $7$ & $0,1,3,4,5,7,8$             & $1.286$ & 79.64 \\
+        $8$ & $0,1,2,3,5,6,7,8$           & $1.125$ & 80.53 \\
+        $9$ & $0,1,2,3,4,5,6,7,8$         & $1$     & 80.96 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
