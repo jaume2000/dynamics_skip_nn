@@ -1,4 +1,4 @@
-\section{Method}
+\section{Refining Residual Stages}
 \label{sec:method}
 
 We study residual vision networks as a three-part map.
@@ -6,7 +6,8 @@ The first part---stem, stage~1 and stage~2---encodes the image into a latent sta
 $x_0$; the second part---the deepest residual stage---transports $x_0$ to a state
 $x_T$ ready for decoding; the third part---stage~4 and the prediction head---maps
 $x_T$ to class logits.
-We focus on that middle transport (stage~3 in ConvNeXt, Swin and ResNet). It holds
+We focus on that middle transport (stage~3 in ConvNeXt~\citep{liu2022convnext},
+Swin~\citep{liu2021swin} and ResNet~\citep{he2016resnet}). It holds
 most of the residual depth, keeps a fixed representation and spatial resolution, and
 is the stage with enough blocks to study dynamics: in ConvNeXt-T, for example,
 stages~1,~2 and~4 have three blocks each, while stage~3 has nine. ConvNeXt inherits
@@ -48,13 +49,11 @@ We organise the section accordingly:
     \item \cref{sec:geometrical_analysis} compares the refined trajectories, autonomous
     (tied) versus switched (untied);
     \item \cref{sec:overparametrized_undoing} measures that pull-and-push along depth,
-    and probes when stage~3 prefixes become usable by a frozen stage~4+head;
-    \item \cref{sec:deltas} tests a hypothesis: small per-block corrections on a shared
-    field as a way to recover what over-parameterisation wastes.
+    and probes when stage~3 prefixes become usable by a frozen stage~4+head.
 \end{enumerate}
 
 \input{chapters/subsections/3_1_weight_tied}
 \input{chapters/subsections/3_2_indefinite_looping}
 \input{chapters/subsections/3_3_geometrical_analysis}
 \input{chapters/subsections/3_4_overparametrized_undoing}
-\input{chapters/subsections/3_5_deltas}
+%\input{chapters/subsections/3_5_deltas}

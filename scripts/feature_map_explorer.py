@@ -3185,11 +3185,12 @@ def phase_trajectories(
     path: Path,
     xlabel: str,
     ylabel: str,
+    color_label: str = "channel",
 ) -> None:
     """Phase-plane trajectories t ↦ (x(t), h(t)), one line per column of ``xs`` / ``ys``.
 
-    Hue = channel (``SCATTER_ANIM_CMAP``); each line darkens with depth until it is
-    ``PHASE_DARKEN`` black at the last step, so direction and time read off the colour.
+    Hue = ``channels`` index (``SCATTER_ANIM_CMAP``); each line darkens with depth until
+    it is ``PHASE_DARKEN`` black at the last step, so direction and time read off the colour.
     """
     from matplotlib.collections import LineCollection
     from matplotlib.colors import LinearSegmentedColormap, ListedColormap
@@ -3218,7 +3219,7 @@ def phase_trajectories(
 
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=0, vmax=max(n_channels - 1, 1)))
     sm.set_array([])
-    fig.colorbar(sm, ax=ax, fraction=0.046, pad=0.02, label="channel")
+    fig.colorbar(sm, ax=ax, fraction=0.046, pad=0.02, label=color_label)
     lo = 1.0 - PHASE_DARKEN
     shade_cmap = LinearSegmentedColormap.from_list("depth_shade", [(1, 1, 1), (lo, lo, lo)])
     t_end = (n_t - 1) * float(euler_step)
@@ -3250,6 +3251,76 @@ def phase_trajectories_means(res: dict, *, path: Path) -> None:
         path=path,
         xlabel=r"$\mathrm{mean}_{H,W}(x_d)$",
         ylabel=r"$\mathrm{mean}_{H,W}(h_d)$",
+    )
+
+
+def _mask_channels(
+    maps: torch.Tensor, skip_channels: set[int] | None = None
+) -> torch.Tensor:
+    """Drop ignored channels from ``maps`` (T, C, H, W)."""
+    if not skip_channels:
+        return maps
+    keep = [c for c in range(maps.shape[1]) if c not in skip_channels]
+    return maps[:, keep]
+
+
+def _spatial_channel_means(
+    maps: torch.Tensor, skip_channels: set[int] | None = None
+) -> torch.Tensor:
+    """Per-depth, per-spatial mean over C. ``maps`` is (T, C, H, W) → (T, H·W)."""
+    maps = _mask_channels(maps, skip_channels)
+    t, _, h, w = maps.shape
+    return maps.mean(1).reshape(t, h * w)
+
+
+def _spatial_channel_norms(
+    maps: torch.Tensor, skip_channels: set[int] | None = None
+) -> torch.Tensor:
+    """Per-depth, per-spatial L2 norm over C. ``maps`` is (T, C, H, W) → (T, H·W)."""
+    maps = _mask_channels(maps, skip_channels)
+    t, _, h, w = maps.shape
+    return maps.norm(dim=1).reshape(t, h * w)
+
+
+def phase_trajectories_spatial_means(res: dict, *, path: Path) -> None:
+    """(mean_C x_{h,w}, mean_C h_{h,w}) along depth, one trajectory per spatial site."""
+    skip = set(res.get("ignored_channels") or [])
+    mx = _spatial_channel_means(res["mean_x"], skip)
+    mh = _spatial_channel_means(res["mean_h"], skip)
+    n_hw = mx.shape[1]
+    idx = np.arange(n_hw)
+    phase_trajectories(
+        mx.numpy(),
+        mh.numpy(),
+        idx,
+        n_hw,
+        euler_step=res["euler_step"],
+        title=f"{res['name']}\nphase portrait of spatial means",
+        path=path,
+        xlabel=r"$\mathrm{mean}_{C}(x_d)$",
+        ylabel=r"$\mathrm{mean}_{C}(h_d)$",
+        color_label="spatial idx (row-major)",
+    )
+
+
+def phase_trajectories_spatial_norms(res: dict, *, path: Path) -> None:
+    """(||x_{h,w}||_C, ||h_{h,w}||_C) along depth, one trajectory per spatial site."""
+    skip = set(res.get("ignored_channels") or [])
+    nx = _spatial_channel_norms(res["mean_x"], skip)
+    nh = _spatial_channel_norms(res["mean_h"], skip)
+    n_hw = nx.shape[1]
+    idx = np.arange(n_hw)
+    phase_trajectories(
+        nx.numpy(),
+        nh.numpy(),
+        idx,
+        n_hw,
+        euler_step=res["euler_step"],
+        title=f"{res['name']}\nphase portrait of spatial norms",
+        path=path,
+        xlabel=r"$\|x_d\|_{C}$",
+        ylabel=r"$\|h_d\|_{C}$",
+        color_label="spatial idx (row-major)",
     )
 
 
@@ -3833,6 +3904,18 @@ def save_visuals(res: dict, channels: list[int], run_dir: Path) -> None:
     write_static(
         run_dir / "scatter_h_traj_means.png",
         lambda: phase_trajectories_means(res, path=run_dir / "scatter_h_traj_means.png"),
+    )
+    write_static(
+        run_dir / "scatter_h_traj_spatial_means.png",
+        lambda: phase_trajectories_spatial_means(
+            res, path=run_dir / "scatter_h_traj_spatial_means.png"
+        ),
+    )
+    write_static(
+        run_dir / "scatter_h_traj_spatial_norms.png",
+        lambda: phase_trajectories_spatial_norms(
+            res, path=run_dir / "scatter_h_traj_spatial_norms.png"
+        ),
     )
     write_static(
         run_dir / f"scatter_h_traj_{k}.png",

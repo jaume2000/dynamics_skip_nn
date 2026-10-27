@@ -6,35 +6,12 @@ independent ones ($-0.61$ top-1 points, $33\%$ fewer parameters).
 A natural explanation is that the untied stack is over-parametrised along depth:
 consecutive blocks need not push the state in a coherent direction, and part of
 what block $k{+}1$ does can cancel what block $k$ just did.
+Residual stages have been read as iterative refinement of a single
+representation~\citep{greff2017highway,jastrzebski2018iterative}; we ask how much of
+that refinement is net progress.
 We test that claim directly on feature trajectories, using the same 500 ImageNet
 validation images (one per class) as in \cref{sec:geometrical_analysis}, stage~3
 only, with the massive channel removed (\cref{sec:massive_activations}).
-
-\paragraph{Setup.}
-For each image we integrate the stage from $t{=}0$ to $t{=}9$ at native resolution
-($R{=}1$) and under Euler refinement ($R{=}100$, $\Delta t{=}0.01$), and reduce every
-spatial feature coordinate whose net displacement $|\Delta_i|=|x_i(9)-x_i(0)|$ is above
-the per-image median.
-We partition the trajectory into the nine unit intervals $[k,k{+}1]$ (native blocks
-in ConvNeXt-T; the same time bins in the weight-tied model) and write
-$\mathrm{d}x_k$ for the displacement of a coordinate over interval $k$.
-The scalars we report are means $\pm$ std over the 500 images
-(\cref{tab:undo}):
-\begin{itemize}
-    \item \emph{straightness}: $\|\sum_k\mathrm{d}x_k\|\,/\,\sum_k\|\mathrm{d}x_k\|$
-    in feature space (path length vs.\ net displacement);
-    \item \emph{wasted motion}: $1-\sum_i|\mathrm{net}_i|/\sum_{k,i}|\mathrm{d}x_{k,i}|$,
-    the fraction of per-coordinate travel that cancels before $t{=}9$;
-    \item $\cos(\mathrm{d}x_k,\mathrm{d}x_{k+1})$: mean cosine between consecutive
-    block displacements;
-    \item \emph{undo fraction}: when $\mathrm{sign}(\mathrm{d}x_k)$ flips at the next
-    block, the cancelled mass
-    $\min(|\mathrm{d}x_k|,|\mathrm{d}x_{k+1}|)$ normalised by $\sum|\mathrm{d}x_k|$;
-    \item \emph{zig-zag share}: mass-weighted share of coordinates that reverse at
-    least twice across the nine blocks;
-    \item \emph{sign flips at $t\in\mathbb{N}$}: fraction of consecutive steps whose
-    sign changes exactly at integer depths (block boundaries).
-\end{itemize}
 
 \begin{table*}[t]
     \centering
@@ -66,6 +43,45 @@ The scalars we report are means $\pm$ std over the 500 images
     \label{fig:pooled-dynamics}
 \end{figure*}
 
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=\textwidth]{figures/prefix_s4_head_acc.pdf}
+    \caption{ImageNet top-1 (left) and cross-entropy (right) of each model's
+    trained stage~4+head on stage~3 prefixes (full validation).
+    After each prefix we skip the rest of stage~3 and decode.
+    \textbf{Solid:} refined path ($R{=}20$, $\Delta t{=}0.05$).
+    \textbf{Open markers:} native discrete prefixes ($R{=}1$) at block ends.
+    Weight-tied features become usable early and smoothly; ConvNeXt-T
+    postpones most of the gain until late in the stage.}
+    \label{fig:prefix-acc}
+\end{figure*}
+
+\paragraph{Setup.}
+For each image we integrate the stage from $t{=}0$ to $t{=}9$ at native resolution
+($R{=}1$) and under Euler refinement ($R{=}100$, $\Delta t{=}0.01$), and reduce every
+spatial feature coordinate whose net displacement $|\Delta_i|=|x_i(9)-x_i(0)|$ is above
+the per-image median.
+We partition the trajectory into the nine unit intervals $[k,k{+}1]$ (native blocks
+in ConvNeXt-T; the same time bins in the weight-tied model) and write
+$\mathrm{d}x_k$ for the displacement of a coordinate over interval $k$.
+The scalars we report are means $\pm$ std over the 500 images
+(\cref{tab:undo}):
+\begin{itemize}
+    \item \emph{straightness}: $\|\sum_k\mathrm{d}x_k\|\,/\,\sum_k\|\mathrm{d}x_k\|$
+    in feature space (path length vs.\ net displacement);
+    \item \emph{wasted motion}: $1-\sum_i|\mathrm{net}_i|/\sum_{k,i}|\mathrm{d}x_{k,i}|$,
+    the fraction of per-coordinate travel that cancels before $t{=}9$;
+    \item $\cos(\mathrm{d}x_k,\mathrm{d}x_{k+1})$: mean cosine between consecutive
+    block displacements;
+    \item \emph{undo fraction}: when $\mathrm{sign}(\mathrm{d}x_k)$ flips at the next
+    block, the cancelled mass
+    $\min(|\mathrm{d}x_k|,|\mathrm{d}x_{k+1}|)$ normalised by $\sum|\mathrm{d}x_k|$;
+    \item \emph{zig-zag share}: mass-weighted share of coordinates that reverse at
+    least twice across the nine blocks;
+    \item \emph{sign flips at $t\in\mathbb{N}$}: fraction of consecutive steps whose
+    sign changes exactly at integer depths (block boundaries).
+\end{itemize}
+
 \paragraph{Results.}
 \Cref{tab:undo} and \cref{fig:pooled-dynamics} give a consistent picture.
 Under refinement ($R{=}100$), the weight-tied model is nearly monotone along depth:
@@ -85,29 +101,35 @@ refinement error of \cref{sec:refinement_error}.
 \paragraph{Functional progress along depth.}
 Geometry shows wasted motion; a complementary probe asks when the stage~3 state
 becomes usable by the rest of the network.
-For each $k{=}1,\ldots,9$ we stop after the $k$-th residual block and classify with
-the model's own trained downsample, stage~4 and head---no remaining stage~3 blocks
-(\cref{fig:prefix-acc}; full ImageNet validation).
-Under weight tying the top-1 rises early and smoothly: $33.6\%$ after one block,
-$72.2\%$ after three, and $78.9\%$ by block~5, already close to the final
-$80.3\%$.
-On standard ConvNeXt-T the same frozen decoder stays weak for longer
-($11.5\%$, $33.2\%$, $66.9\%$ at those depths) and only approaches the final
-$81.0\%$ in the last few blocks.
+After a prefix of stage~3 we skip the remainder of the stage and classify with
+the model's own trained downsample, stage~4 and head
+(\cref{fig:prefix-acc}; full ImageNet validation, $50{,}000$ images).
+This is a frozen-decoder variant of intermediate-layer probes~\citep{alain2016probes}
+and of the logit and tuned lens in language models~\citep{belrose2023tuned}: no probe
+is trained, so the score measures how close each prefix is to the state the decoder expects.
+Solid curves integrate the prefix at $R{=}20$ ($\Delta t{=}0.05$) and decode after
+every micro-step; connected markers are the native discrete prefixes
+($R{=}1$, one evaluation at each block end).
+Under weight tying the top-1 rises early and smoothly: at $t{=}1,3,5$ the
+refined path already scores $39.5\%$, $74.7\%$ and $79.5\%$, against a final
+$80.1\%$ (native prefixes: $33.6\%$, $72.2\%$, $78.9\%$, final $80.3\%$).
+The cross-entropy falls the same way ($3.29\to 1.18\to 0.94$ refined,
+$3.63\to 1.31\to 0.97$ native; floor $0.90$).
+On untied ConvNeXt-T the same frozen decoder stays weak for longer
+($10.7\%$, $30.6\%$, $65.5\%$ refined; $11.5\%$, $33.2\%$, $66.9\%$ native;
+losses $5.26$, $3.83$, $1.64$ refined and $5.18$, $3.65$, $1.54$ native)
+and only approaches the final $80.3\%$--$81.0\%$ in the last few blocks.
+The tied curve is a single sigmoid; the untied curve is piecewise, with most of
+the gain between integers---the same block-wise rewrites as in
+\cref{fig:kinematics-compare}.
+Native and refined tracks stay close, so the contrast is not an artefact of the
+solver: if anything, refining the shared field \emph{helps} early prefixes
+($+6$~pp at $t{=}1$), whereas refining the untied stack sits slightly
+\emph{below} the native block ends the head was trained on.
 Mid-stage accuracy is not a claim that early features lack information---the head
 was trained on $x_T$---but it does show that the tied path enters the decoder's
 operating region steadily, whereas the untied path aligns with that region late,
 consistent with a transport that rewrites features before committing.
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=0.7\linewidth]{figures/prefix_s4_head_acc.pdf}
-    \caption{ImageNet top-1 of each model's trained stage~4+head on stage~3
-    prefixes: after $k$ residual blocks, skip the rest of stage~3 and decode.
-    Weight-tied features become usable earlier and more evenly; ConvNeXt-T
-    concentrates most of the gain toward the end of the stage.}
-    \label{fig:prefix-acc}
-\end{figure}
 
 \paragraph{Reading.}
 Untied stage~3 does not implement nine steps of one transport: consecutive blocks

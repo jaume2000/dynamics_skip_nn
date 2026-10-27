@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.2.9)  26 OCT 2026 00:45
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.2.9)  26 OCT 2026 22:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -22,6 +22,9 @@ File: size10.clo 2023/05/17 v1.4n Standard LaTeX file (size option)
 \abovecaptionskip=\skip48
 \belowcaptionskip=\skip49
 \bibindent=\dimen140
+)
+(/usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
 )
 (/usr/share/texlive/texmf-dist/tex/latex/microtype/microtype.sty
 Package: microtype 2023/03/13 v3.1a Micro-typographical refinements (RS)
@@ -122,6 +125,9 @@ Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 Package: flafter 2021/07/31 v1.4e Standard LaTeX floats after reference (FMi)
 Applying: [2015/01/01] float order in 2-column on input line 49.
 Already applied: [0000/00/00] float order in 2-column on input line 151.
+)
+(/usr/share/texlive/texmf-dist/tex/latex/placeins/placeins.sty
+Package: placeins 2005/04/18  v 2.2
 )
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2024-01-20 v7.01h Hypertext links for LaTeX
@@ -779,11 +785,11 @@ File: tikzlibrarypositioning.code.tex 2023-01-15 v3.1.10 (3.1.10)
 )
 \c@@todonotes@numberoftodonotes=\count334
 )
-LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 4
-5.
+LaTeX Font Info:    Trying to load font information for T1+ptm on input line 55
+.
 
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1ptm.fd
-File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1ptm.fd
+File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
 )
 (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
@@ -793,37 +799,37 @@ File: l3backend-pdftex.def 2024-01-04 L3 backend support: PDF output (pdfTeX)
 (./paper.aux)
 \openout1 = `paper.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 45.
-LaTeX Font Info:    ... okay on input line 45.
-LaTeX Info: Redefining \microtypecontext on input line 45.
-Package microtype Info: Applying patch `item' on input line 45.
-Package microtype Info: Applying patch `toc' on input line 45.
-Package microtype Info: Applying patch `eqnum' on input line 45.
-Package microtype Info: Applying patch `footnote' on input line 45.
-Package microtype Info: Applying patch `verbatim' on input line 45.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Info: Redefining \microtypecontext on input line 55.
+Package microtype Info: Applying patch `item' on input line 55.
+Package microtype Info: Applying patch `toc' on input line 55.
+Package microtype Info: Applying patch `eqnum' on input line 55.
+Package microtype Info: Applying patch `footnote' on input line 55.
+Package microtype Info: Applying patch `verbatim' on input line 55.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `alltext-nott'.
-LaTeX Info: Redefining \showhyphens on input line 45.
+LaTeX Info: Redefining \showhyphens on input line 55.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
@@ -852,7 +858,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring ON on input line 45.
+Package hyperref Info: Link coloring ON on input line 55.
 
 (./paper.out) (./paper.out)
 \@outlinefile=\write4
@@ -864,7 +870,7 @@ Package hyperref Info: Link coloring ON on input line 45.
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
 (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msa on input line 59.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 71.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -873,7 +879,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 59.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 71.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -883,23 +889,15 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 
-Package hyperref Warning: Ignoring empty anchor on input line 61.
+Package hyperref Warning: Ignoring empty anchor on input line 73.
 
-LaTeX Font Info:    Trying to load font information for OMS+ptm on input line 6
-1.
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsptm.fd
-File: omsptm.fd 
-)
-LaTeX Font Info:    Font shape `OMS/ptm/b/n' in size <9> not available
-(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 61.
-LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 6
-6.
-
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1pcr.fd
-File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
+LaTeX Font Info:    Trying to load font information for T1+pcr on input line 95
+.
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1pcr.fd
+File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 )
 Package microtype Info: Loading generic protrusion settings for font family
-(microtype)             `pcr' (encoding: OT1).
+(microtype)             `pcr' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
@@ -907,259 +905,377 @@ Package microtype Info: Loading generic protrusion settings for font family
 <figures/hero_trajectories.png, id=8, 803.28105pt x 413.02306pt>
 File: figures/hero_trajectories.png Graphic file (type png)
 <use figures/hero_trajectories.png>
-Package pdftex.def Info: figures/hero_trajectories.png  used on input line 7.
+Package pdftex.def Info: figures/hero_trajectories.png  used on input line 6.
 (pdftex.def)             Requested size: 487.8225pt x 250.8282pt.
-LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 4
-0.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [1{/home/jaume/.texlive2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr
+/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}
+
+
+
+]
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 7
+5.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 ))
-(./chapters/2_related_work.tex) (./chapters/3_method.tex [1{/home/jaume/.texliv
-e2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texlive/texmf-di
-st/fonts/enc/dvips/base/8r.enc}
+(./chapters/2_related_work.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-
-
-] (./chapters/subsections/3_1_weight_tied.tex
-[2
+ [2
 pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.12 
-      <./figures/hero_trajectories.png>]
-Underfull \hbox (badness 1052) in paragraph at lines 20--24
-[]\OT1/ptm/m/n/10 (+20) The weight-tied model (18.97M params, 33% fewer)
+l.43 
+      <./figures/hero_trajectories.png>]) (./chapters/3_method.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [3]
+(./chapters/subsections/3_1_weight_tied.tex
+Underfull \hbox (badness 1052) in paragraph at lines 31--35
+[]\T1/ptm/m/n/10 (+20) The weight-tied model (18.97M params, 33% fewer)
  []
 
 ) (./chapters/subsections/3_2_indefinite_looping.tex
-<figures/teaser.png, id=75, 731.3724pt x 250.536pt>
+<figures/teaser.png, id=290, 731.3724pt x 250.536pt>
 File: figures/teaser.png Graphic file (type png)
 <use figures/teaser.png>
 Package pdftex.def Info: figures/teaser.png  used on input line 7.
 (pdftex.def)             Requested size: 487.8225pt x 167.10895pt.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [3]
-<figures/shared_fractional.png, id=137, 355.8093pt x 249.3315pt>
-File: figures/shared_fractional.png Graphic file (type png)
-<use figures/shared_fractional.png>
-Package pdftex.def Info: figures/shared_fractional.png  used on input line 201.
-
-(pdftex.def)             Requested size: 234.8775pt x 164.59352pt.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [4
+ [4] [5
 pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.215 
-       <./figures/teaser.png>]
-<figures/horizon_ablation.png, id=157, 372.6723pt x 236.082pt>
+l.126 \begin{equation}
+                       <./figures/teaser.png>]
+<figures/shared_fractional.png, id=372, 355.8093pt x 249.3315pt>
+File: figures/shared_fractional.png Graphic file (type png)
+<use figures/shared_fractional.png>
+Package pdftex.def Info: figures/shared_fractional.png  used on input line 211.
+
+(pdftex.def)             Requested size: 234.8775pt x 164.59352pt.
+<figures/horizon_ablation.png, id=374, 372.6723pt x 236.082pt>
 File: figures/horizon_ablation.png Graphic file (type png)
 <use figures/horizon_ablation.png>
-Package pdftex.def Info: figures/horizon_ablation.png  used on input line 218.
+Package pdftex.def Info: figures/horizon_ablation.png  used on input line 228.
 (pdftex.def)             Requested size: 234.8775pt x 148.79367pt.
-<figures/dist_cos_r1.pdf, id=162, 236.42326pt x 271.92592pt>
-File: figures/dist_cos_r1.pdf Graphic file (type pdf)
-<use figures/dist_cos_r1.pdf>
-Package pdftex.def Info: figures/dist_cos_r1.pdf  used on input line 261.
-(pdftex.def)             Requested size: 234.8775pt x 270.14522pt.
-
-Underfull \hbox (badness 2310) in paragraph at lines 273--288
-\OT1/ptm/m/n/10 (+20) ing rate $\OT1/cmr/m/n/10 10[]$ \OT1/ptm/m/n/10 (+20) (\O
-T1/pcr/m/n/10 finetune[]s4[]r100[]convnext.sh\OT1/ptm/m/n/10 (+20) ,
- []
-
-
-Underfull \hbox (badness 1127) in paragraph at lines 273--288
-\OT1/pcr/m/n/10 finetune[]s4[]d900[]shared[]convnext.sh\OT1/ptm/m/n/10 (+20) ).
- Pre-
- []
-
-[5
+ [6
 pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
  been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.288 
-      
+l.268 
+      ]
+<figures/dist_cos_r1.pdf, id=393, 236.42326pt x 271.92592pt>
+File: figures/dist_cos_r1.pdf Graphic file (type pdf)
+<use figures/dist_cos_r1.pdf>
+Package pdftex.def Info: figures/dist_cos_r1.pdf  used on input line 271.
+(pdftex.def)             Requested size: 234.8775pt x 270.14522pt.
+ [7
 pdfTeX warning (ext4): destination with the same identifier (name{figure.3}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.288 
+l.315 
       
 pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.288 
-       <./figures/shared_fractional.png> <./figures/horizon_ablation.png>])
-(./chapters/subsections/3_3_geometrical_analysis.tex
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [6
+l.315 
+      
 pdfTeX warning (ext4): destination with the same identifier (name{figure.5}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.1 \subsection
-               {Geometrical analysis of feature trajectories} <./figures/dist_c
-os_r1.pdf>]
+l.315 
+       <./figures/shared_fractional.png> <./figures/horizon_ablation.png> <./fi
+gures/dist_cos_r1.pdf>]) (./chapters/subsections/3_3_geometrical_analysis.tex
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-<figures/dist_cos_r1_compare.pdf, id=259, 482.14127pt x 270.27975pt>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [8]
+<figures/kinematics_compare.pdf, id=516, 817.65938pt x 337.2595pt>
+File: figures/kinematics_compare.pdf Graphic file (type pdf)
+<use figures/kinematics_compare.pdf>
+Package pdftex.def Info: figures/kinematics_compare.pdf  used on input line 45.
+
+(pdftex.def)             Requested size: 487.8225pt x 201.20967pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+<figures/dist_cos_r1_compare.pdf, id=525, 482.14127pt x 270.27975pt>
 File: figures/dist_cos_r1_compare.pdf Graphic file (type pdf)
 <use figures/dist_cos_r1_compare.pdf>
-Package pdftex.def Info: figures/dist_cos_r1_compare.pdf  used on input line 60
-.
+Package pdftex.def Info: figures/dist_cos_r1_compare.pdf  used on input line 17
+2.
 (pdftex.def)             Requested size: 487.8225pt x 273.47116pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [7])
-(./chapters/subsections/3_4_overparametrized_undoing.tex
+ [9]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [8
+)
+(./chapters/subsections/3_4_overparametrized_undoing.tex
+(./figures/pooled_dynamics_table.tex)
+<figures/pooled_dynamics.png, id=546, 875.55106pt x 441.93105pt>
+File: figures/pooled_dynamics.png Graphic file (type png)
+<use figures/pooled_dynamics.png>
+Package pdftex.def Info: figures/pooled_dynamics.png  used on input line 32.
+(pdftex.def)             Requested size: 487.8225pt x 246.22543pt.
+<figures/prefix_s4_head_acc.pdf, id=547, 615.49902pt x 191.86658pt>
+File: figures/prefix_s4_head_acc.pdf Graphic file (type pdf)
+<use figures/prefix_s4_head_acc.pdf>
+Package pdftex.def Info: figures/prefix_s4_head_acc.pdf  used on input line 48.
+
+(pdftex.def)             Requested size: 487.8225pt x 152.07355pt.
+
+Underfull \vbox (badness 3803) has occurred while \output is active []
+
+ [10
 pdfTeX warning (ext4): destination with the same identifier (name{figure.6}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.37 \end{itemize}
-                   <./figures/dist_cos_r1_compare.pdf>]
-(./figures/pooled_dynamics_table.tex)
-<figures/pooled_dynamics.png, id=346, 875.55106pt x 441.93105pt>
-File: figures/pooled_dynamics.png Graphic file (type png)
-<use figures/pooled_dynamics.png>
-Package pdftex.def Info: figures/pooled_dynamics.png  used on input line 55.
-(pdftex.def)             Requested size: 487.8225pt x 246.22543pt.
-
-Underfull \hbox (badness 1127) in paragraph at lines 86--101
- \OT1/ptm/b/n/10 (+20) Func-tional progress along depth. \OT1/ptm/m/n/10 (+20) 
-Ge-om-e-try shows
- []
-
-<figures/prefix_s4_head_acc.pdf, id=352, 397.485pt x 245.718pt>
-File: figures/prefix_s4_head_acc.pdf Graphic file (type pdf)
-<use figures/prefix_s4_head_acc.pdf>
-Package pdftex.def Info: figures/prefix_s4_head_acc.pdf  used on input line 104
-.
-(pdftex.def)             Requested size: 164.41353pt x 101.64111pt.
-) (./chapters/subsections/3_5_deltas.tex)) (./chapters/4_discussion.tex)
-(./chapters/5_conclusion.tex
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [9])
-(./paper.bbl
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [10
-pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
- been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.43 ...lorot and Bengio]{glorot2010understanding}
-                                                  
+l.69 \begin{itemize}
+                     <./figures/kinematics_compare.pdf>] [11
 pdfTeX warning (ext4): destination with the same identifier (name{figure.7}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.43 ...lorot and Bengio]{glorot2010understanding}
-                                                   <./figures/pooled_dynamics.p
-ng>]) [11
+l.100 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.100 
+       <./figures/dist_cos_r1_compare.pdf>]
+Underfull \hbox (badness 1127) in paragraph at lines 102--133
+ \T1/ptm/b/n/10 (+20) Func-tional progress along depth. \T1/ptm/m/n/10 (+20) Ge
+-om-e-try shows
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [12
 pdfTeX warning (ext4): destination with the same identifier (name{figure.8}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.78 \newpage
-             
-pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
- been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.78 \newpage
-              <./figures/prefix_s4_head_acc.pdf>] (./chapters/appendix.tex
-Underfull \vbox (badness 4686) has occurred while \output is active []
-
-
-Underfull \hbox (badness 1024) in paragraph at lines 268--281
- \OT1/ptm/b/n/10 (+20) Setup. \OT1/ptm/m/n/10 (+20) Ev-ery con-vo-lu-tion and l
-in-ear layer is drawn
- []
-
-[12] [13
-pdfTeX warning (ext4): destination with the same identifier (name{table.4}) has
- been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.383 
+l.133 
       
-pdfTeX warning (ext4): destination with the same identifier (name{table.5}) has
- been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.383 
-      
-pdfTeX warning (ext4): destination with the same identifier (name{table.6}) has
- been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.383 
-      ]
-<figures/bilinear_norm.png, id=507, 388.0899pt x 249.5724pt>
-File: figures/bilinear_norm.png Graphic file (type png)
-<use figures/bilinear_norm.png>
-Package pdftex.def Info: figures/bilinear_norm.png  used on input line 439.
-(pdftex.def)             Requested size: 234.8775pt x 151.04697pt.
-) [14
-pdfTeX warning (ext4): destination with the same identifier (name{table.7}) has
- been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.81 \end{document}
-                   
-pdfTeX warning (ext4): destination with the same identifier (name{table.8}) has
- been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.81 \end{document}
-                   
-pdfTeX warning (ext4): destination with the same identifier (name{table.9}) has
- been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.81 \end{document}
-                   
-pdfTeX warning (ext4): destination with the same identifier (name{table.10}) ha
-s been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.81 \end{document}
-                   ] [15
-pdfTeX warning (ext4): destination with the same identifier (name{table.11}) ha
-s been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.81 \end{document}
-                   
-pdfTeX warning (ext4): destination with the same identifier (name{table.12}) ha
-s been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.81 \end{document}
-                   
 pdfTeX warning (ext4): destination with the same identifier (name{figure.9}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.81 \end{document}
-                    <./figures/bilinear_norm.png>] (./paper.aux)
+l.133 
+       <./figures/pooled_dynamics.png> <./figures/prefix_s4_head_acc.pdf>]))
+(./chapters/4_discussion.tex [13]) (./chapters/5_conclusion.tex) [14
+pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.103 
+      ] (./paper.bbl [15] [16]) [17] (./chapters/appendix.tex
+(./chapters/apendixes/A_training_recipe.tex)
+(./chapters/apendixes/B_solver_tables.tex
+Underfull \vbox (badness 4686) has occurred while \output is active []
+
+)
+(./chapters/apendixes/C_solver_endpoints.tex)
+(./chapters/apendixes/D_random_init.tex
+Underfull \hbox (badness 1024) in paragraph at lines 15--28
+ \T1/ptm/b/n/10 (+20) Setup. \T1/ptm/m/n/10 (+20) Ev-ery con-vo-lu-tion and lin
+-ear layer is drawn
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [18]
+[19
+pdfTeX warning (ext4): destination with the same identifier (name{table.4}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.42 
+     
+pdfTeX warning (ext4): destination with the same identifier (name{table.5}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.42 
+     
+pdfTeX warning (ext4): destination with the same identifier (name{table.6}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.42 
+     
+pdfTeX warning (ext4): destination with the same identifier (name{table.7}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.42 
+     
+pdfTeX warning (ext4): destination with the same identifier (name{table.8}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.42 
+     ]) (./chapters/apendixes/E_block_ops.tex)
+(./chapters/apendixes/F_bilinear.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [20
+pdfTeX warning (ext4): destination with the same identifier (name{table.9}) has
+ been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.10 \begin{equation}
+                     
+pdfTeX warning (ext4): destination with the same identifier (name{table.10}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.10 \begin{equation}
+                     
+pdfTeX warning (ext4): destination with the same identifier (name{table.11}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.10 \begin{equation}
+                     ]
+<figures/bilinear_norm.png, id=931, 388.0899pt x 249.5724pt>
+File: figures/bilinear_norm.png Graphic file (type png)
+<use figures/bilinear_norm.png>
+Package pdftex.def Info: figures/bilinear_norm.png  used on input line 54.
+(pdftex.def)             Requested size: 234.8775pt x 151.04697pt.
+) (./chapters/apendixes/G_massive_activations.tex
+<figures/massive_channel_norms.png, id=938, 722.7pt x 260.172pt>
+File: figures/massive_channel_norms.png Graphic file (type png)
+<use figures/massive_channel_norms.png>
+Package pdftex.def Info: figures/massive_channel_norms.png  used on input line 
+18.
+(pdftex.def)             Requested size: 234.8775pt x 84.55489pt.
+
+[21
+pdfTeX warning (ext4): destination with the same identifier (name{table.12}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.54 \end{table}
+                
+pdfTeX warning (ext4): destination with the same identifier (name{figure.10}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.54 \end{table}
+                 <./figures/bilinear_norm.png>]
+<figures/massive_delta_loss_hist.png, id=953, 578.16pt x 303.534pt>
+File: figures/massive_delta_loss_hist.png Graphic file (type png)
+<use figures/massive_delta_loss_hist.png>
+Package pdftex.def Info: figures/massive_delta_loss_hist.png  used on input lin
+e 58.
+(pdftex.def)             Requested size: 199.64731pt x 104.81197pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 66--71
+ \T1/ptm/b/n/10 (+20) Phase por-traits. \T1/ptm/m/n/10 (+20) Fig-ure [][]13[][]
+ plots, for ev-ery
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 66--71
+\T1/ptm/m/n/10 (+20) stage-3 chan-nel, the tra-jec-tory of spa-tial means
+ []
+
+<figures/massive_phase_shared.png, id=955, 542.025pt x 433.62pt>
+File: figures/massive_phase_shared.png Graphic file (type png)
+<use figures/massive_phase_shared.png>
+Package pdftex.def Info: figures/massive_phase_shared.png  used on input line 7
+4.
+(pdftex.def)             Requested size: 239.03569pt x 191.23007pt.
+<figures/massive_phase_convnext.png, id=956, 542.025pt x 433.62pt>
+File: figures/massive_phase_convnext.png Graphic file (type png)
+<use figures/massive_phase_convnext.png>
+Package pdftex.def Info: figures/massive_phase_convnext.png  used on input line
+ 76.
+(pdftex.def)             Requested size: 239.03569pt x 191.23007pt.
+<figures/swin_phase_token_norms.png, id=960, 542.025pt x 433.62pt>
+File: figures/swin_phase_token_norms.png Graphic file (type png)
+<use figures/swin_phase_token_norms.png>
+Package pdftex.def Info: figures/swin_phase_token_norms.png  used on input line
+ 94.
+(pdftex.def)             Requested size: 239.03569pt x 191.23007pt.
+<figures/swin_phase_channel_means.png, id=961, 542.025pt x 433.62pt>
+File: figures/swin_phase_channel_means.png Graphic file (type png)
+<use figures/swin_phase_channel_means.png>
+Package pdftex.def Info: figures/swin_phase_channel_means.png  used on input li
+ne 96.
+(pdftex.def)             Requested size: 239.03569pt x 191.23007pt.
+<figures/swin_corner_slice_W13.png, id=962, 2251.9332pt x 208.1376pt>
+File: figures/swin_corner_slice_W13.png Graphic file (type png)
+<use figures/swin_corner_slice_W13.png>
+Package pdftex.def Info: figures/swin_corner_slice_W13.png  used on input line 
+105.
+(pdftex.def)             Requested size: 487.8225pt x 45.08536pt.
+<figures/swin_corner_slice_W0.png, id=963, 2251.9332pt x 208.1376pt>
+File: figures/swin_corner_slice_W0.png Graphic file (type png)
+<use figures/swin_corner_slice_W0.png>
+Package pdftex.def Info: figures/swin_corner_slice_W0.png  used on input line 1
+06.
+(pdftex.def)             Requested size: 487.8225pt x 45.08536pt.
+[22
+pdfTeX warning (ext4): destination with the same identifier (name{figure.11}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.117 \FloatBarrier
+                   
+pdfTeX warning (ext4): destination with the same identifier (name{table.13}) ha
+s been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.117 \FloatBarrier
+                   
+pdfTeX warning (ext4): destination with the same identifier (name{figure.12}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.117 \FloatBarrier
+                    <./figures/massive_channel_norms.png> <./figures/massive_de
+lta_loss_hist.png>] [23
+pdfTeX warning (ext4): destination with the same identifier (name{figure.13}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.117 \FloatBarrier
+                   
+pdfTeX warning (ext4): destination with the same identifier (name{figure.14}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.117 \FloatBarrier
+                   
+pdfTeX warning (ext4): destination with the same identifier (name{figure.15}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.117 \FloatBarrier
+                    <./figures/massive_phase_shared.png> <./figures/massive_pha
+se_convnext.png> <./figures/swin_phase_token_norms.png> <./figures/swin_phase_c
+hannel_means.png> <./figures/swin_corner_slice_W13.png> <./figures/swin_corner_
+slice_W0.png>])) (./paper.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
@@ -1168,39 +1284,38 @@ Package rerunfilecheck Info: File `paper.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 26973 strings out of 476182
- 499668 string characters out of 5795596
- 1979975 words of memory out of 5000000
- 48048 multiletter control sequences out of 15000+600000
- 601080 words of font info for 301 fonts, out of 8000000 for 9000
+ 27565 strings out of 476182
+ 513435 string characters out of 5795596
+ 1971975 words of memory out of 5000000
+ 48473 multiletter control sequences out of 15000+600000
+ 626951 words of font info for 355 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 99i,12n,101p,1002b,639s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy9.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/
-share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/
-texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf
--dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/pub
-lic/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pf
-b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/
-share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/
-texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/fo
-nts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texlive/texmf-dist/fon
-ts/type1/public/amsfonts/symbols/msbm7.pfb></usr/share/texlive/texmf-dist/fonts
-/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/ti
-mes/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on paper.pdf (15 pages, 3457874 bytes).
+ 99i,12n,101p,1368b,664s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr
+/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.p
+fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr
+/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share
+/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texlive/texmf-dist/fo
+nts/type1/public/amsfonts/symbols/msbm7.pfb></usr/share/texlive/texmf-dist/font
+s/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/t
+imes/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/te
+xlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on paper.pdf (23 pages, 4233197 bytes).
 PDF statistics:
- 646 PDF objects out of 1000 (max. 8388607)
- 415 compressed objects within 5 object streams
- 94 named destinations out of 1000 (max. 500000)
- 63546 words of extra memory for PDF output out of 74296 (max. 10000000)
+ 1115 PDF objects out of 1200 (max. 8388607)
+ 784 compressed objects within 8 object streams
+ 154 named destinations out of 1000 (max. 500000)
+ 63079 words of extra memory for PDF output out of 74296 (max. 10000000)
 

@@ -1,56 +1,168 @@
 \subsection{Geometrical analysis of feature trajectories}
 \label{sec:geometrical_analysis}
 
-In this section we analyze the geometry of the trajectories regarding the weight-tied convnext vs the standard convnext.
-We also compare the standard convnext with resnet and swin, whose properties are very similar since they are non weight-tied and
-the network learned to make the blocks perform an unique functionality of one step, so there is no reason for the network to learn a more
-complex dynamic.
+We now compare the geometry of stage-3 trajectories under a single shared field
+versus nine independent blocks.
+The weight-tied ConvNeXt traces a smooth three-phase arc over $T{=}9$.
+The untied ConvNeXt-T---and likewise ResNet and Swin---does not: each block
+learns a one-step map, so the refined path is a polyline with a new heading at
+every integer.
 
 \subsubsection{Massive activations excluded from analysis}
 \label{sec:massive_activations}
 
-After analyzing some trajectories on our first aproach, they seemed too homogeneos in convnext and swin cases, so we analyzed the features and
-founded the so called massive activations \cite{sun2024massiveactivationslargelanguage}. In convnext shared and non-shared there is one channel that grows indifinetly.
-We did a similar analysis and concluded the same as \cite{sun2024massiveactivationslargelanguage}
+While inspecting the trajectories obtained with our first approach, we noticed that those of ConvNeXt and Swin were unusually homogeneous. Analysing the features revealed massive activations \citep{sun2024massiveactivationslargelanguage}. In both the shared and the untied ConvNeXt a single stage-3 channel exceeds all others by more than an order of magnitude and keeps growing in magnitude along the stage, a channel-concentrated pattern also reported for diffusion transformers \citep{gan2025ditf}. In Swin the outliers are instead the four corner tokens, whose norms end the stage more than an order of magnitude above those of typical positions, reminiscent of the high-norm tokens of vision transformers \citep{darcet2024vision}. ResNet stage~3 shows no comparable outlier. This is consistent with \citet{pmlr-v306-sun26d}, who find that massive activations arise in pre-norm residual blocks and are suppressed when the vector-wise normalisation is replaced by an element-wise one: ConvNeXt and Swin normalise each position across channels with LayerNorm, whereas BatchNorm~\citep{ioffe2015batchnorm} in ResNet normalises each channel independently. Details and figures for all models are given in \cref{app:massive-activations}.
 
-\subsubsection{Trajectories of weight-tied convnxt vs standard convnext}
+The trained ConvNeXt relies on this channel: zeroing it after every residual step of the shared model reduces ImageNet top-1 from $80.3\%$ to $67.8\%$, whereas zeroing a random stage-3 channel costs at most $0.3$~pp. This does not make the channel necessary, since zeroing it also changes the LayerNorm statistics of every position, and in LLMs massive activations can be removed through architectural changes without loss of performance \citep{pmlr-v306-sun26d}.
 
+Unlike in LLMs, where massive activations are injected by a few early blocks and then stay nearly constant until late blocks cancel them \citep{pmlr-v306-sun26d}, the ConvNeXt channel evolves throughout the stage with the same kinematic profile as the rest of the state (\cref{fig:massive-phase}). In LLMs these activations act as fixed, input-independent bias terms, i.e.\ implicit parameters of the network \citep{sun2024massiveactivationslargelanguage,pmlr-v306-sun26d}, but in the shared model the explicit parameters are identical at every step, so the blocks can only access depth through the state itself. We conjecture that this channel provides that signal, in the same way that an autonomous system can emulate a non-autonomous one by carrying time as an extra state variable \citep{strogatz2015nonlinear}, which time-dependent Neural ODEs implement explicitly as an extra input channel \citep{dupont2019augmented}. Our observations are consistent with this reading but do not establish it; a dedicated study comparing the dynamics with and without the channel is left for future work.
 
-\subsubsection{Trajectory analysis of weight-tied convnext}
+\subsubsection{Trajectories of weight-tied ConvNeXt}
 \label{sec:tied-trajectory-shape}
-Inpired by some of the metrics of \cite{pandey2026trajectorygeometrytransformerrepresentations} we perform an analysis of the trajectories
-ignoring the massive channels of Convnext and the massive tokens of swin. Resnet does not show signs of massive activations.
+We report the same four kinematics on every model, ignoring the massive ConvNeXt
+channel and the massive Swin tokens (ResNet has neither).
+We measure velocity $\|v\|$, angular velocity $\omega$, the tangential/normal split
+$(a_t,a_n)$ of acceleration, and curvature $\kappa{=}a_n/\|v\|^2$
+(\cref{fig:kinematics-compare}; $N{=}500$).
+A turning-angle curvature between consecutive layers has been used for language
+models~\citep{pandey2026trajectorygeometrytransformerrepresentations}, and curvature of
+representation trajectories has been used to show that human visual
+perception~\citep{henaff2019perceptual} and language models~\citep{hosseini2023straighten}
+straighten their inputs; there it is measured across the input sequence (frames or
+tokens), here along depth for a fixed input.
+Speed says how fast the state moves; $\omega$ and $\kappa$ say how much its
+heading bends.
+Here $\kappa=\mathrm{d}\theta/\mathrm{d}s$ is Frenet curvature of the heading of
+$v$: $\kappa=0$ is a straight path, $\kappa\to\infty$ a corner.
+The number is in $1/\mathrm{length}$, so it is read against the arc travelled
+per unit depth, $s\approx\|v\|\Delta t$.
+Then $\Delta\theta\approx\kappa\|v\|\Delta t$ (equivalently $\omega\Delta t$).
+A value of order $1$ with $\|v\|$ of tens would be a hairpin per unit of depth;
+$\kappa\sim 10^{-2}$ still turns the heading by tens of degrees over a block.
 
-In weight-tied convnext we can see in \cref{fig:refinement}~(right) and
-\cref{fig:teaser}~(bottom left) the norm of the velocity, that is $f(x(t))$ that has a shape of a bell curve.
-This information only shows if the point is moving or not, but it doesn't tell if it rotates or move towards the same direction.
-That's why we plot several new metrics:
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=\textwidth]{figures/kinematics_compare.pdf}
+    \caption{Stage-3 kinematics over $T{=}9$ ($R{=}100$, Euler $\Delta t{=}0.01$;
+    massive channel ignored; mean and P5--P95 over $N{=}500$).
+    \textbf{Top:} weight-tied ConvNeXt.
+    \textbf{Bottom:} untied ConvNeXt-T.
+    Columns: velocity $\|v\|$, angular velocity $\omega$, acceleration
+    decomposition $(\|a\|,a_t,a_n)$, curvature $\kappa{=}a_n/\|v\|^2$.
+    The shared field traces a smooth three-phase arc; the untied stack is
+    piecewise within each block.
+    On the untied row, pairs that straddle a block boundary are omitted from
+    $\omega$, $a$ and $\kappa$: there $v$ is discontinuous, so finite differences
+    diverge as $\Delta t\!\to\!0$ and are not representative of the within-block
+    dynamics.}
+    \label{fig:kinematics-compare}
+\end{figure*}
 
-\textbf{Acceleration}
+Read together, the shared curves in \cref{fig:kinematics-compare}~(top) are a
+single arc with three phases, not a catalogue of independent plots.
 
-Here we decompose the acceleration vector into the sum of two components: The tangential and normal accelerations with respect to the velocity.
-Note, that in a high-dimentional space of 300,000 dimensions (the case of Stage 3 in convnext), there are 299.999 dimentions that are normal with the velocity, and only 1 that is tangent.
-The tangent component can be negative or positive with respect to the velocity that is, it reduces or increases the current velocity in this 1D line, but we cna only analyze the norm of the normal acceleration.
-Even in a such space, that tangential acceleration has a big representation.
+Early on, $\|v\|$ is still moderate while $\omega$ and $\kappa$ peak
+($\omega{\approx}0.70\,\mathrm{rad}/t$, $\kappa{\approx}1.4{\times}10^{-2}$).
+Per unit of depth that is $\Delta\theta\approx\kappa\|v\|\approx 0.7\,\mathrm{rad}$
+($\approx 40^\circ$): small steps that keep changing direction, as if committing
+to an axis.
 
-We can see
+Through the first half of the stage that axis is used.
+The signed tangential acceleration $a_t=\langle\hat v,a\rangle$ turns
+positive, peaks near $t{\approx}2.3$, and $\|v\|$ follows a bell, as in
+\cref{fig:refinement}~(right) and \cref{fig:teaser}~(bottom left).
+Meanwhile $\omega$ and $\kappa$ fall, and $\kappa$ reaches its minimum
+(${\approx}4{\times}10^{-3}$, $\Delta\theta\approx 19^\circ$ per unit of depth)
+exactly when $a_t$ crosses zero at mid-horizon $t{=}4$: the path is at its
+straightest while features of different classes are pushed apart.
+That single tangent direction still carries on average $\approx 27\%$ of
+$\|a\|$, a large share in a $\sim\!70{,}000$-dimensional state
+($384{\times}14{\times}14$); the rest is $a_n>0$, so the trajectory never
+becomes purely one-dimensional.
 
-\textbf{Angular acceleration}
-\textbf{Trajectory curvature}
+After $t{=}4$ the same geometry returns as braking rather than search:
+$a_t$ is negative (most so near $t{\approx}5.3$), $\|v\|$ decreases, and
+$\omega$ and $\kappa$ rebound (secondary peaks near $t{=}6$--$6.5$).
+Total $\|a\|$ declines overall (${\approx}34\to 8$) with a rebound while the
+field brakes.
 
-\textbf{The shape of the trajectory}
+At $t{=}9$, $\|a\|$ is small, $\|v\|$ remains finite, and both $\omega$
+and $\kappa$ are low but non-zero (${\approx}0.20\,\mathrm{rad}/t$,
+${\approx}4.8{\times}10^{-3}$).
+This is a coasting state, not an identity map: features keep drifting, the
+regime of \cref{sec:beyond_horizon}.
 
-With all this tools, we conclude that the trajectory at the start rotates at high speeds, giving the trajectory a high curvature,
-but with low velocity norm, that implies that it does small steps changing constantly of direction. The model is computing the direction where it has to accelerate the point to.
+Therefore the shared stage can be read as three jobs in one field.
+At the start the model searches for a heading: $\|v\|$ is still moderate, so
+the steps are small, while $\omega$ and $\kappa$ are high and the tangent turns
+by tens of degrees per unit of depth.
+It then accelerates along that heading more nearly in a straight line
+($a_t>0$, $\omega$ and $\kappa$ fall, $\|v\|$ peaks): this is the expansion of
+class features.
+Finally it brakes and turns again with small steps ($a_t<0$, $\|v\|$ drops,
+$\omega$ and $\kappa$ rebound)---a refinement of the same geometry as the
+search, not a new block.
+Over the $500$ images this profile is typical; $\|v\|$ varies most in the
+expansion phase, where classes separate along different directions.
 
-After that, the model starts to accelerate towards one direction, angular speed decreases, norm of angular acceleration increases due to the reduction of velocity
-the result is a major reduction on the curvature of the trajectory, while tangential acceleration hits its maximum. The model is expanding the most important features.
+\subsubsection{Trajectories of untied ConvNeXt}
+\label{sec:untied-trajectory-shape}
+The untied ConvNeXt-T has no such arc (\cref{fig:kinematics-compare}, bottom).
+Each block is a similar one-step map; the next block replaces the vector field
+and sends the state into a different direction.
+ResNet and Swin look the same.
+At every integer, $v$ jumps, so finite-difference $\omega$, $a$ and
+$\kappa$ diverge as $\Delta t\!\to\!0$.
+Those inter-block pairs are omitted from the figure.
+The reported $\omega{\sim}130$--$150\,\mathrm{rad}/t$ is not a turn of a
+hundred radians: it is $\arccos\langle\hat v_d,\hat v_{d+1}\rangle/\Delta t$ on
+a \emph{single} micro-step of $\Delta t{=}0.01$, so the heading jump between
+blocks is $\omega\Delta t\approx 1.3$--$1.5\,\mathrm{rad}$
+($\approx 75^\circ$--$86^\circ$).
+Dividing a finite angle by a vanishing step is why the spikes explode; they
+only record that neighbouring blocks do not share a direction.
+What remains is the within-block motion, which is the fair comparison to the
+shared flow.
 
-Finally, angular acceleration decreases, tangential acceleration rapidly decreases, becoming negative, the velocity decreases, the angular velocity increases again, and curvature raises again. We have the same
-scenario as in the first phase. The model is refining features again.
+Inside a block the dynamics are short.
+$\|v\|$ is set by the new field and then decays slightly ($a_t<0$ on most of
+the interval; a small positive tail appears only in the last blocks).
+The envelope of $\|v\|$ grows in steps (${\approx}17$ after the first block,
+${\approx}112$ at the start of the last), not as a bell.
+After each switch, $\omega$ starts high (${\approx}0.6$--$0.9\,\mathrm{rad}/t$)
+and falls toward ${\approx}0.45$--$0.55$: a brief reorientation, then a more
+stable heading.
+As in the shared model $a_n$ dominates (${\approx}97\%$ of $\|a\|$), so the
+segment still bends, but there is no stage-wide accelerate-then-brake cycle.
 
-We observe that for the 500 images we analyzed, the trajectory is mostly of this form. But in the variance analysis,
-the velocity has its maximum variance on the second phase since the model is pushing the features of different classes apart from the origin in different directions.
+That bending is not a hairpin and not a straight line.
+Early intra-block $\kappa{\approx}4{\times}10^{-2}$ with $\|v\|{\approx}17$ is
+\emph{larger} than the shared peak, again about $40^\circ$ of heading per unit
+of depth; by the last block $\kappa$ has fallen to
+${\approx}5{\times}10^{-3}$ (still $\sim 30^\circ$ per block, because $\|v\|$ is
+larger), matching the shared \emph{minimum}.
+Relative to the $80^\circ$ kinks at the integers the segments look nearly
+linear; relative to a Euclidean straight line they still turn tens of degrees.
+
+Therefore the picture to keep in mind is not a semicircle and not the shared
+three-phase arc.
+It is a chain of nine similar strokes, each pointing a different way.
+Within a stroke the heading changes by a comparable angle
+($\sim 30^\circ$--$40^\circ$): most of the turn sits at the start of the block,
+where $\omega$ is high, and then the path flattens---a shallow arc, closer to a
+stretched parabolic segment than to a circular quarter.
+Because $\|v\|$ grows with depth, later strokes have the same order of heading
+change but a longer arc: the pieces get larger, not more tightly wound.
+At every integer those arcs are joined by an $\approx 80^\circ$ kink, where the
+next block replaces the field.
+The refined path is that polyline, not a search--expand--refine flow over
+$T{=}9$.
+That geometry is what \cref{sec:overparametrized_undoing} measures as
+consecutive-block cosine $0.17$ and undo fraction $0.25$.
+A deeper untied stack need not grow a shared-style flow: independent residual
+blocks already behave like ensembles of short paths
+\citep{veit2016residualnetworksbehavelike}.
+
 
 \subsubsection{Refinement error: accumulated vs.\ bounded}
 \label{sec:refinement_error}
@@ -87,10 +199,22 @@ of its smaller gap is radial.
 
 \subsubsection{Integrating beyond the trained horizon}
 \label{sec:beyond_horizon}
-% TODO: constant velocity regime: f(x) saturates, x grows along a fixed direction for T >> n.
-There is big difference between weight-tied convnext and standard convnext: First one reaches a velocity plateau
-where the input just grows indifinetly in the same direction.
+% TODO: plots for T >> 9: ||v|| plateau, a -> 0, kappa flat, x rectilinear.
+At the end of the trained horizon the shared field has small acceleration but
+non-zero velocity (\cref{sec:tied-trajectory-shape}).
+Integrating past $T{=}9$ therefore enters an approximately uniform rectilinear
+regime: $a$ and $\kappa$ flatten, $\|v\|$ stays roughly constant, and $x$ drifts
+indefinitely along a fixed direction.
+That continuation leaves the domain that stage~4 and the classification head were
+trained on, and predictions collapse, as in the overthinking of recurrent networks
+run past their training depth~\citep{bansal2022endtoend}.
+If instead the block at $T{=}9$ were the identity ($v{=}0$), the state would sit
+still and one could in principle integrate indefinitely without that drift, as in
+deep equilibrium models that solve directly for such a fixed point~\citep{bai2019deep};
+the trained shared field does not realise that fixed point.
 
-In standard convnext, swin and resnet are different, we used R=100 with euler step 1,
-since the blocks use different parameters and the network was not trained to reuse params,
-it has a similar dynamics as the R=100 with Euler step of 0.01 but with more magnitude.
+The untied ConvNeXt, Swin and ResNet behave differently: with $R{=}100$ and Euler
+step~$1$ (blocks never trained for reuse) the dynamics resemble a coarse version
+of the $R{=}100$, $\Delta t{=}0.01$ refinement---larger magnitude, still tied to
+block boundaries rather than a single coasting field.
+

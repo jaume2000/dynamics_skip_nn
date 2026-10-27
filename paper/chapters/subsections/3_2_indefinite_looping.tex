@@ -37,7 +37,8 @@ trajectory geometry is deferred to \cref{sec:geometrical_analysis}.
 
 A residual block computes $x + f(x)$~\citep{he2016resnet}.
 With step size $1$, that is exactly one step of the explicit Euler method for the ODE
-$\dot x = f(x,t)$~\citep{e2017proposal,haber2017stable,lu2018beyond}.
+$\dot x = f(x,t)$~\citep{e2017proposal,haber2017stable,lu2018beyond}, whose
+continuous-depth limit is a Neural ODE~\citep{chen2019neuralordinarydifferentialequations}.
 Write the residual of block $i$ as
 \begin{equation}
     f_i(x) \;=\; \mathrm{block}_i(x) - x.
@@ -52,14 +53,18 @@ Then the native network is one Euler step of size $1$ per block. Over a stage of
     \label{eq:euler-stage}
 \end{equation}
 
-Some argue that this algebraic form is already enough to call the network an Euler
-solver~\citep{e2017proposal,haber2017stable,lu2018beyond},
-but algebraic form alone is not sufficient evidence:
+These works interpret the residual update as a forward-Euler
+step~\citep{e2017proposal,haber2017stable,lu2018beyond},
+but algebraic form alone is not sufficient evidence that a trained network behaves as
+an Euler solver:
 \citet{queiruga2020continuousindepthneuralnetworks} argue that ResNets fail to be meaningful
 dynamical integrators beyond that syntactic similarity, and
-\citet{sander2022residualneuralnetworksdiscretize} show that a ResNet approaches its associated
-Neural ODE only when the residual maps vary smoothly in depth
-(otherwise the discrete stack need not be a consistent discretization of a single continuous flow).
+\citet{sander2022residualneuralnetworksdiscretize} show that the gap between a ResNet and
+its associated Neural ODE need not vanish with depth unless the residual maps vary
+smoothly in depth
+(otherwise the discrete stack need not be a consistent discretization of a single continuous flow);
+\citet{marion2024implicit} prove that, under gradient flow and in the large-depth limit,
+a ResNet initialised as such a discretization keeps that property through training.
 
 We suggest reading the stage as a \emph{sum of several ODEs}, one per block, where the network
 is trained to solve each unit interval with a single Euler step.
@@ -186,6 +191,11 @@ The same holds for the weight-tied network when $T$ leaves the trained horizon
 (\cref{fig:horizon,fig:shared-fractional}).
 The Euler step must be $\Delta t{=}1/R$, equivalently $T{=}n$ for an $n$-block stage
 ($T{=}9$ when $n{=}9$).
+Recurrent networks iterated past their training depth show the same degradation,
+termed overthinking~\citep{bansal2022endtoend}; recurrent models that unroll to
+arbitrary depth at test time are trained with a randomly sampled number of
+iterations~\citep{bansal2022endtoend,geiping2025recurrent}, whereas our blocks were
+trained for one horizon.
 The trajectory dynamics behind this collapse are analysed in \cref{sec:beyond_horizon}.
 
 \paragraph{Weight-tied fractional $R<1$.}
@@ -273,66 +283,31 @@ The next paragraph asks whether a light finetune of that decoder closes the rest
 As a complementary check, we freeze stem and stages~1--3 and finetune only stage~4
 and the classification head on the unrolled transport (horizon $T{=}9$ conserved).
 On ConvNeXt-T with $R{=}3$ ($\Delta t{=}1/3$) this recovers $80.93\%$ top-1---within
-$0.04$ points of the untied baseline ($80.97\%$).\footnote{Script:
-\texttt{scripts/finetune\_s4\_r\_convnext.py}.
-For contrast, $R{=}3$ with $\Delta t{=}1$ (broken horizon $T{=}27$) collapses to
-$41\%$ \emph{without} finetuning (\texttt{convnext\_r3\_quick}).}
-% TODO: fill XX when Leonardo S4+head runs finish (preliminaries look positive).
-The same protocol at the fine step of \cref{fig:dist-r1} is running now; we report
-$\mathrm{XX}\%$ top-1 for ConvNeXt-T at $R{=}100$ ($\Delta t{=}0.01$) and
-$\mathrm{XX}\%$ for the weight-tied model at $R{=}100$ ($900$ shared steps) after
-$10$ epochs at learning rate $10^{-6}$
-(\texttt{finetune\_s4\_r100\_convnext.sh}, \texttt{finetune\_s4\_d900\_shared\_convnext.sh}).
-Preliminary runs suggest the gap closes essentially to baseline, consistent with the
-$R{=}3$ result: the transport changes; a light decoder adaptation re-reads it.
+$0.04$ points of the untied baseline ($80.97\%$).
+For contrast, the same $R{=}3$ with $\Delta t{=}1$ (broken horizon $T{=}27$) collapses
+to $41\%$ \emph{without} finetuning.
+That recovery indicates that the residual gap is mostly a decoder mismatch---stage~4
+and the head were trained on the native $R{=}1$ landing zone, not on the refined
+$x_T$---rather than a collapse of class information in the transport itself.
+% TODO: fill XX when Leonardo S4+head runs finish.
+The same protocol at the fine step of \cref{fig:dist-r1} yields
+$\mathrm{XX}\%$ / $\mathrm{XX}\%$ for ConvNeXt-T / weight-tied at $R{=}100$
+($10$ epochs, learning rate $10^{-6}$).
 
 \paragraph{Takeaway.}
-Three facts summarise the looping probe.
-\emph{(i)~Discretisation.}
-Refining the Euler step at fixed~$T$ does \emph{not} reproduce the native one-step
-state: at $R{=}100$, after removing the massive channel, the stage-3 endpoint has
-relative $\ell_2$ gap $\approx 0.36$ to the parallel $R{=}1$ path
-(\cref{fig:dist-r1}) and cosine $\approx 0.93$ ($\sim\!21^\circ$), so the mismatch is
-mostly angular rather than a pure rescaling of $\|x\|$.
-The weight-tied stage does not accumulate this error: its cosine to the $R{=}1$ path
-settles at $\approx 0.98$ (relative gap $\approx 0.20$) instead of falling block after
-block (\cref{sec:refinement_error}).
-\emph{(ii)~Continuous limit.}
-That gap is \emph{not} solver noise: Euler and RK4 at the same fine step, and Euler
-$R{=}100$ vs.\ $R{=}200$, agree on $x_T$ to relative distance $\ll 10^{-2}$
-(\cref{app:solver-endpoints}).
-A continuous limit of the piecewise residual field therefore exists, but it is not
-the trained $R{=}1$ discretisation.
-Neither fact is specific to training.
-A random-initialisation control (\cref{app:random-init}) shows that the blocks of all
-five architectures, random or trained, converge to a single $\hat x_T$ under refinement.
-How far the one-step path lies from that limit is governed mainly by how far each block
-moves the state, $\|f_i(x_i)\|/\|x_i\|$: weights trained to be used once produce steps of
-$30$--$90\%$ of $\|x\|$ and sit $10$--$21^\circ$ from their limit, too far for one Euler step
-to track the flow.
-At the same relative step, training moves that distance in an architecture-dependent
-direction: trained Swin-T and ConvNeXt-T are closer to their limit than a random field
-($19.5^\circ$ vs.\ $47.6^\circ$, $21.1^\circ$ vs.\ $30.2^\circ$), the weight-tied model is level
-with it ($10.9^\circ$ vs.\ $11.9^\circ$), and the ResNets are farther.
-What distinguishes the trained networks is therefore not \emph{whether} the refinement
-converges but \emph{how} the trajectory is built: one shared block applied throughout
-the stage versus nine different blocks applied once each.
-\Cref{sec:geometrical_analysis} contrasts the two regimes.
-\emph{(iii)~Accuracy.}
-Top-1 nevertheless barely moves under refinement without training, because the head
-cares about class margins, not isometry of the full feature space.
-Finetuning stage~4 and the head recovers $80.93\%$ at $R{=}3$ and
-$\mathrm{XX}\%$ / $\mathrm{XX}\%$ for ConvNeXt-T / weight-tied at $R{=}100$
-% TODO: fill XX from Leonardo S4+head runs (10 epochs, lr=1e-6).
----essentially the baseline once the decoder adapts.
-In short: residual blocks admit a well-defined fine-step flow, as any Lipschitz residual
-field does; their single unit step is too large to be a consistent solver of that flow;
-the flow nonetheless retains the network's function (the limit keeps $\approx 80\%$ top-1,
-which a random field cannot show), accuracy survives because the head is tolerant, and a
-light S4+head adaptation closes almost all of the remaining gap.
+Refinement at fixed $T$ yields a real continuous limit---solver-independent
+(\cref{app:solver-endpoints}), present even for random weights
+(\cref{app:random-init})---that is \emph{not} the native $R{=}1$ state, yet remains
+decoder-usable and nearly recoverable by adapting stage~4 and the head.
+What training selects is therefore not convergence itself, but \emph{how} the path is
+built: one shared block throughout the stage versus a switched stack of one-shot
+blocks.
+\Cref{sec:geometrical_analysis} contrasts those two regimes.
 
-Influenced by continuous-in-depth models~\citep{queiruga2020continuousindepthneuralnetworks,chang2018multilevel},
-we also tried replacing the piecewise-constant schedule
+Continuous-in-depth models express the weights as a function of depth in a
+basis~\citep{queiruga2020continuousindepthneuralnetworks}; the piecewise-constant basis
+recovers the ResNet, and smoother bases are a natural alternative.
+We tried the simplest one, replacing the piecewise-constant schedule
 $\theta_t=\theta_{\lfloor t\rfloor}$ by a bilinear blend of consecutive block weights.
 It performs relatively badly on every architecture (e.g.\ $-6.6$ points on ConvNeXt-T at
 $R{=}128$ vs.\ plain); full numbers and the residual-norm trajectories are in
@@ -347,7 +322,8 @@ over 500 images.
 In the non-tied ConvNeXt, $\|f_k(x)\|$ is approximately constant inside each block and
 jumps at integer depths: a \emph{smooth function by parts}, i.e.\ an autonomous field on
 each unit interval $[i,i+1]$ with discontinuous switches of $\theta$ between blocks
-(\cref{eq:sum-of-integrals}).
+(\cref{eq:sum-of-integrals}), a switched system in the control-theory
+sense~\citep{liberzon2003switching}.
 In the weight-tied model the same shared $f$ is applied for the whole stage, so the
 residual norm evolves as one continuous curve that rises and then decays
 (\cref{eq:weight-tied-ode}).

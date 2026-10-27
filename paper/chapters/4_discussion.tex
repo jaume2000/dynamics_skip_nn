@@ -1,8 +1,13 @@
 \section{Discussion}
 \label{sec:discussion}
 
-The experiments of \cref{sec:method} are one argument, not five independent facts.
-\Cref{tab:headline} collects the numbers that carry it.
+The weight-tied stage~3 was introduced as a control: the simplest residual stage
+whose refinement is a genuine autonomous ODE.
+It ended up as the other half of the argument.
+Read side by side, the two models show that the same residual algebra $x+f(x)$
+supports two different transports, and that the difference explains most of what
+nine independent blocks buy.
+\Cref{tab:headline} collects the numbers that carry this reading.
 
 \begin{table}[t]
     \centering
@@ -29,56 +34,134 @@ The experiments of \cref{sec:method} are one argument, not five independent fact
     \end{tabular}
 \end{table}
 
-One shared residual map, applied nine times, already carries almost all of the
-accuracy of an untied ConvNeXt-T stage~3 ($-0.61$ top-1; the sweep checkpoint in
-\cref{tab:headline} is $80.34$ vs.\ $80.95$).
-Sharing every stage still reaches $79.01$ with $70\%$ fewer parameters.
-That is possible because the nine independent blocks do not implement nine steps of
-one transport.
-Almost half of their travel cancels before $t{=}9$ (undo $0.25$, wasted motion $0.48$),
-consecutive displacements are nearly orthogonal (cosine $0.17$), and nearly half of
-the sign flips sit on block boundaries---the switches of
-$\theta(t)=\theta_{\lfloor t\rfloor}$.
-A single autonomous field cannot undo itself in that way (undo $0.02$, cosine $0.92$,
-straightness $0.78$).
-The leftover six tenths of a point are then the part that independent $\theta_k$ still
-specialise, not evidence of a different dynamical mechanism
-(\cref{sec:overparametrized_undoing}).
-Closing that gap with small per-block corrections on top of the shared field is the
-content of \cref{sec:deltas}.
+\paragraph{Why one shared block is enough.}
+One shared residual map, applied nine times, carries almost all of the accuracy of
+an untied ConvNeXt-T stage~3 ($-0.61$ top-1 with $33\%$ fewer parameters), and
+sharing every stage still reaches $79.01\%$ with $70\%$ fewer.
+We read this as a consequence of how the shared block is trained.
+Because it is applied at every depth, it must act sensibly on every state it
+visits, so it cannot defer work to a later block that does not exist.
+The prefix probe shows this directly (\cref{fig:prefix-acc}): decoding with the
+frozen stage~4 and head, the tied path already reaches $39.5\%$ at $t{=}1$ and
+$74.7\%$ at $t{=}3$, against $10.7\%$ and $30.6\%$ for the untied stack; half of
+the net displacement is done by $t{\approx}4.1$ instead of $7.2$ (\cref{tab:undo}).
+The kinematics agree (\cref{fig:kinematics-compare}).
+The untied stack accelerates toward the end ($\|v\|$ grows from ${\approx}17$ to
+${\approx}112$ across blocks), whereas the shared field makes its largest step in
+mid-stage and spends the last third braking and turning, i.e.\ refining.
+This is close to the iterative-refinement reading of residual stages
+\citep{greff2017highway,jastrzebski2018iterative} and to the observation that a
+weight-shared ResNet behaves as a recurrent network at little cost
+\citep{liao2016bridging}; our contribution is to show what that refinement looks
+like as a trajectory.
 
-The same contrast appears when the discretisation is refined at inference, with no
-training.
-Every architecture we tested---tied or not---converges to a single continuous limit
-once $T$ is held fixed, and that limit keeps the network's function (gaps $0.2$--$0.9$
+\paragraph{The untied stack spends depth undoing itself.}
+The nine independent blocks do not implement nine steps of one transport.
+Almost half of their per-coordinate travel cancels before $t{=}9$ (wasted motion
+$0.48$, undo $0.25$), and consecutive block displacements are nearly orthogonal
+(cosine $0.17$); the shared field barely cancels (undo $0.02$, cosine $0.92$).
+This redundancy is already present in the native network: the $R{=}1$ and
+$R{=}100$ statistics of ConvNeXt-T are identical.
+What refinement adds is \emph{where} it happens.
+At $R{=}100$, $45\%$ of all sign flips fall on the eight block boundaries, which
+are under $1\%$ of the transitions, a concentration of about fifty times.
+Within a block the path is a shallow arc that turns $30^\circ$--$40^\circ$; at the
+integers it turns by $\approx 80^\circ$ as the next block replaces the field
+(\cref{sec:untied-trajectory-shape}).
+The redundancy is therefore a property of switching the field, not of the
+integration inside each block.
+
+\paragraph{A kinematic reading of the stage.}
+These trajectories argue against reading a residual stage as a sequence of new
+representations---a unit that detects ``a wheel'' in one block and ``a car'' in
+the next.
+Within a stage the representation is transported, not replaced: the same block can
+be applied a hundred times at $\Delta t{=}0.01$ and the decoder still reads the
+result.
+A more useful picture follows from the manifold hypothesis
+\citep{bengio2013representation}: natural images lie near a low-dimensional
+manifold, and the stage deforms its image under the encoder into an output
+manifold where classes are separable, in line with the untangling view of
+object recognition \citep{dicarlo2007untangling} and with geometric and
+topological analyses of deep representations
+\citep{brahma2016why,hauser2017principles,naitzat2020topology,cohen2020separability}.
+In the weight-tied model that deformation is smooth: the state searches for a
+heading, expands along it, and then refines (\cref{sec:tied-trajectory-shape}).
+In the untied stack it proceeds in jolts: each block bends the state locally,
+stops, and the next one pushes elsewhere, with increasing speed.
+Since the same field acts on every input, the $500$ trajectories we integrate are a
+finite sample of how the whole manifold is transported.
+What we do not measure are properties of the manifold itself, such as its intrinsic
+dimension or the separability of classes along $t$; a sample of one image per class
+is too sparse for that, and we leave it to future work.
+
+\paragraph{Refined and native paths are displaced but equivalent.}
+Every architecture we tested converges to a single continuous limit once the
+horizon $T$ is held fixed, and that limit keeps the function (gaps $0.2$--$0.9$
 points).
-A random residual field has a continuous limit too (\cref{app:random-init}); what
+The native unit-step path is not that limit, and the gap is not small in
+geometric terms.
+On ConvNeXt-T the refined endpoint is $21^\circ$ away from the native state, a
+relative distance of $0.36$; the whole stage rotates the state by only
+${\approx}78^\circ$ from $x_0$ to $x_9$.
+On the weight-tied model the drift saturates at $11^\circ$ (relative distance
+$0.20$; \cref{sec:refinement_error}).
+Yet top-1 moves by $0.7$ and $0.2$ points.
+The decoder is thus nearly invariant to large displacements along the directions
+that refinement explores, which is consistent with a light adaptation of stage~4
+and the head restoring the baseline at $R{=}3$ ($80.93\%$).
+What the decoder does depend on is the integration time: breaking the horizon
+($R$ repeats at $\Delta t{=}1$) collapses every network to chance, and integrating
+the shared field past $T$ drifts out of the decoder's domain
+(\cref{sec:beyond_horizon}).
+A trained stage is therefore a sum of one-step Euler solves, each replaceable by a
+finer integral of the \emph{same} block, but not a Neural ODE whose parameters vary
+smoothly with depth: bilinear interpolation of consecutive $\theta_k$ costs
+$6$--$23$ points (\cref{app:bilinear}).
+A random residual field also has a continuous limit (\cref{app:random-init}); what
 training adds is that the limit remains a classifier.
-The native unit-step path is \emph{not} that limit.
-On ConvNeXt-T the refined endpoint sits $\approx 21^\circ$ from the $R{=}1$ state and
-the mismatch accumulates at every block; on the weight-tied model it saturates at
-$\approx 11^\circ$ (\cref{sec:refinement_error}).
-Breaking the horizon ($R$ repeats at $\Delta t{=}1$) collapses every network to chance.
-The invariant the head expects is the integration time $T{=}n$, not the number of
-residual applications.
-In that sense a trained stage is a sum of one-step Euler solves, each accurate enough
-for the decoder at $\Delta t{=}1$ and each replaceable by a finer integral of the
-\emph{same} block, but not a Neural ODE whose parameters vary smoothly with depth:
-bilinear interpolation of consecutive $\theta_k$ costs $6$--$23$ points
-(\cref{app:bilinear}).
 
-Two regimes therefore sit under the same residual algebra $x+f(x)$.
-Reuse one block throughout the stage and the field is autonomous: speed rises and
-falls as one curve, refinement error stays bounded, features advance mostly
-monotonically.
-Use a new block at every integer and the field is switched: piecewise autonomous
-inside each unit interval, discontinuous at the integers, with a sawtooth residual
-norm and systematic undoing between neighbours
-(\cref{fig:teaser,fig:refinement,fig:pooled-dynamics}).
-That is the reading we take into the geometry of \cref{sec:geometrical_analysis}.
-A light adaptation of stage~4 and the head already restores the baseline at $R{=}3$
-($80.93\%$), which is consistent with the transport changing while remaining readable;
-whether the same holds at the fine step of \cref{fig:dist-r1} is the remaining
-decoder check.
-Whether one can retain the expressivity of independent $\theta_k$ while suppressing
-cancellation---and thus get more accuracy per parameter---is left for future work.
+\paragraph{Refinement as a probe.}
+Refining at a fixed horizon requires no retraining and turns any residual stage
+into a trajectory sampled as finely as needed.
+The weight-tied model is the clearest case, because its refined path is continuous
+over the whole stage, but the same procedure separates within-block motion from
+block switches in untied networks.
+Nothing in the probe is specific to ConvNeXt.
+We already apply the refinement to Swin-T and ResNet-50/101
+(\cref{sec:indefinite_looping}, \cref{app:solvers,app:random-init,app:massive-activations}),
+whose limits behave like ConvNeXt's, although the kinematic analysis of
+\cref{sec:geometrical_analysis} is reported for ConvNeXt only.
+The velocity decomposition, curvature, undo statistics and prefix decoding apply to
+any residual stream.
+In language models the prefix probe is the logit or tuned lens
+\citep{belrose2023tuned}, trajectory geometry across layers is starting to be
+measured \citep{pandey2026trajectorygeometrytransformerrepresentations}, and
+looped or universal transformers \citep{dehghani2019universal,giannou2023looped}
+are the weight-tied counterpart of our shared stage.
+
+\paragraph{Limitations.}
+All results are on ImageNet-1k classification, and the trained comparison between
+tied and untied stages uses one architecture, ConvNeXt-T.
+The trajectory metrics exclude the massive ConvNeXt channel and the Swin corner
+tokens (\cref{sec:massive_activations}); they describe the remaining state, and the
+role of the massive channel as a depth signal remains a conjecture.
+The prefix probe uses a decoder trained only on $x_T$, so low mid-stage accuracy
+means the state has not yet entered the decoder's operating region, not that it
+lacks information.
+Finally, we track a sample of the manifold rather than its geometry; pairwise
+distances or class separability along $t$, on many images per class, would make
+that reading quantitative.
+
+\paragraph{Toward more expressivity per parameter.}
+The leftover $0.6$ points are what independent $\theta_k$ still specialise, but the
+untied stack pays for them with a large share of cancelled motion.
+An architecture that keeps every parameter pushing toward the same goal would
+combine a mostly autonomous field with a controlled degree of non-autonomy.
+Two directions follow from our results: small per-block corrections on top of a
+shared block, regularised so that the field stays close to autonomous, and cycles
+of a few shared blocks instead of one.
+Related ideas exist for convolutional networks \citep{savarese2019learning} and
+transformers, through cyclic layer sharing \citep{takase2021lessons} and shared
+layers with layer-wise low-rank updates \citep{bae2024relaxed}.
+Designing and training such an architecture is beyond the scope of this work.

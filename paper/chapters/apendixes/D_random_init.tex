@@ -1,0 +1,129 @@
+\section{Random-initialisation control for the continuous limit}
+\label{app:random-init}
+
+\Cref{app:solver-endpoints} shows that the trained stage~3 has a continuous limit.
+That alone is weak evidence.
+Every residual field we study (convolutions, linear layers, normalisation, GELU/ReLU,
+softmax attention) is locally Lipschitz with at most linear growth---attention outputs
+are convex combinations of the values---so the ODE $\dot x=f_i(x)$ has a unique solution
+on $[0,T]$ and Euler converges to it at first order, whatever the
+weights~\citep{hairer1993solving}.
+We check this empirically on all five architectures and use random fields of
+controlled strength as a reference scale for the trained ones.
+
+\paragraph{Setup.}
+Every convolution and linear layer is drawn with Xavier-normal
+initialisation~\citep{glorot2010understanding} (gain~$1$, zero bias, seed~$0$);
+normalisation layers keep their default parameters, and ConvNeXt LayerScale is set to
+$\gamma{=}1$ (its default $10^{-6}$ makes $f\approx0$).
+The stage-3 blocks are then re-drawn with Xavier gain $g\in\{0.25,0.5,1,2,4,8\}$, so the
+stage-3 input is identical across gains and only the field strength changes.
+For ResNet the field is $f_i(x)=\mathrm{block}_i(x)-x$, which includes the ReLU applied
+after the addition; for Swin one block contains both residual sub-layers (attention and
+MLP), as in the main text.
+For each network we integrate stage~3 to $T{=}n$ and compare the endpoint $x_T$ of Euler
+at $R\in\{1,10,100,1000\}$ and of RK4 at $R{=}1$ against RK4 at $R{=}100$, on the $N{=}32$
+images of \cref{app:solver-endpoints}.
+The field strength is summarised by the mean relative step of the native path,
+\begin{equation}
+    \rho \;=\; \frac{1}{n}\sum_{i=0}^{n-1}\frac{\|f_i(x_i)\|}{\|x_i\|},
+    \qquad x_{i+1}=x_i+f_i(x_i),
+    \label{eq:step-ratio}
+\end{equation}
+i.e.\ how far a single block moves the state relative to its size.
+Because $\rho$ grows with $g$ at a different rate in each architecture (about $g^3$ for
+ResNet, whose bottleneck has three unnormalised convolutions), we compare trained and random networks at
+matched~$\rho$: for each architecture we add one gain $g^\star$ chosen so that $\rho$
+matches the trained network.
+Trained ConvNeXt rows zero the massive channel (\cref{sec:massive_activations});
+ResNet and Swin have no channel of comparable dominance at stage~3 (zeroing the largest
+one changes every entry by less than $0.6^\circ$), so all rows except those use all
+channels.
+
+\begin{table}[t]
+    \centering
+    \caption{Angle between $x_T$ and the RK4 $R{=}100$ reference ($T{=}n$, mean over
+    $N{=}32$). $g$: Xavier gain of the stage-3 blocks; $\rho$: mean relative step
+    \eqref{eq:step-ratio}; $^\star$: gain matched to the trained $\rho$.
+    Rows sorted by $\rho$.}
+    \label{tab:app-random-init}
+    \small
+    \setlength{\tabcolsep}{3pt}
+    \begin{tabular}{lrrrrr}
+        \toprule
+        Init & $\rho$ & \multicolumn{3}{c}{Euler} & RK4 \\
+        \cmidrule(lr){3-5}
+             &        & $R{=}1$ & $R{=}10$ & $R{=}100$ & $R{=}1$ \\
+        \midrule
+        \multicolumn{6}{l}{\emph{ConvNeXt-T (nine blocks)}} \\
+        $g{=}0.5$  & 0.13 & $1.5^\circ$  & $0.15^\circ$ & $0.02^\circ$ & $0.00^\circ$ \\
+        $g{=}1$    & 0.41 & $15.8^\circ$ & $1.6^\circ$  & $0.16^\circ$ & $0.07^\circ$ \\
+        \textbf{Trained} & \textbf{0.54} & $\mathbf{21.1^\circ}$ & $\mathbf{2.4^\circ}$ & $\mathbf{0.25^\circ}$ & $\mathbf{0.53^\circ}$ \\
+        $g^\star{=}1.35$ & 0.56 & $30.2^\circ$ & $3.4^\circ$ & $0.34^\circ$ & $0.92^\circ$ \\
+        $g{=}2$    & 0.77 & $47.0^\circ$ & $6.7^\circ$  & $0.69^\circ$ & $8.4^\circ$ \\
+        \midrule
+        \multicolumn{6}{l}{\emph{Weight-tied ConvNeXt-T (one block)}} \\
+        $g{=}0.5$  & 0.12 & $2.7^\circ$  & $0.27^\circ$ & $0.03^\circ$ & $0.00^\circ$ \\
+        $g^\star{=}1$ & 0.30 & $11.9^\circ$ & $1.3^\circ$ & $0.13^\circ$ & $0.05^\circ$ \\
+        \textbf{Trained} & \textbf{0.31} & $\mathbf{10.9^\circ}$ & $\mathbf{1.0^\circ}$ & $\mathbf{0.10^\circ}$ & $\mathbf{0.16^\circ}$ \\
+        $g{=}2$    & 0.63 & $27.1^\circ$ & $4.3^\circ$  & $0.46^\circ$ & $5.9^\circ$ \\
+        \midrule
+        \multicolumn{6}{l}{\emph{ResNet-50 ($n{=}5$)}} \\
+        $g{=}0.5$  & 0.04 & $0.4^\circ$  & $0.03^\circ$ & $0.00^\circ$ & $0.01^\circ$ \\
+        $g{=}1$    & 0.34 & $7.0^\circ$  & $0.66^\circ$ & $0.07^\circ$ & $0.24^\circ$ \\
+        $g^\star{=}1.15$ & 0.51 & $12.0^\circ$ & $1.2^\circ$ & $0.12^\circ$ & $0.48^\circ$ \\
+        \textbf{Trained} & \textbf{0.52} & $\mathbf{17.0^\circ}$ & $\mathbf{1.4^\circ}$ & $\mathbf{0.15^\circ}$ & $\mathbf{0.65^\circ}$ \\
+        $g{=}2$    & 2.29 & $40.6^\circ$ & $7.8^\circ$  & $0.83^\circ$ & $6.6^\circ$ \\
+        \midrule
+        \multicolumn{6}{l}{\emph{ResNet-101 ($n{=}22$)}} \\
+        $g{=}0.5$  & 0.05 & $0.7^\circ$  & $0.05^\circ$ & $0.01^\circ$ & $0.02^\circ$ \\
+        \textbf{Trained} & \textbf{0.30} & $\mathbf{15.3^\circ}$ & $\mathbf{1.4^\circ}$ & $\mathbf{0.15^\circ}$ & $\mathbf{0.74^\circ}$ \\
+        $g^\star{=}0.95$ & 0.30 & $8.9^\circ$ & $0.83^\circ$ & $0.08^\circ$ & $0.29^\circ$ \\
+        $g{=}1$    & 0.35 & $10.3^\circ$ & $0.97^\circ$ & $0.10^\circ$ & $0.36^\circ$ \\
+        $g{=}2$    & 2.33 & $39.6^\circ$ & $5.9^\circ$  & $0.63^\circ$ & $6.4^\circ$ \\
+        \midrule
+        \multicolumn{6}{l}{\emph{Swin-T ($n{=}6$)}} \\
+        $g{=}0.5$  & 0.15 & $1.7^\circ$  & $0.17^\circ$ & $0.02^\circ$ & $0.00^\circ$ \\
+        $g{=}1$    & 0.48 & $17.2^\circ$ & $1.8^\circ$  & $0.18^\circ$ & $0.10^\circ$ \\
+        \textbf{Trained} & \textbf{0.87} & $\mathbf{19.5^\circ}$ & $\mathbf{4.3^\circ}$ & $\mathbf{1.02^\circ}$ & $\mathbf{2.7^\circ}$ \\
+        $g^\star{=}1.8$ & 0.89 & $47.6^\circ$ & $7.1^\circ$ & $0.74^\circ$ & $6.6^\circ$ \\
+        $g{=}2$    & 0.98 & $52.7^\circ$ & $8.7^\circ$  & $0.91^\circ$ & $10.5^\circ$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\paragraph{Results.}
+\Cref{tab:app-random-init} supports two observations.
+
+\emph{(i)~The limit exists for every architecture.}
+For every row, trained or random, the Euler error falls by roughly $10\times$ per
+decade of $R$, the first-order rate (trained Swin-T is slower between $R{=}10$ and
+$R{=}100$), and Euler at $R{=}1000$ is within $0.1^\circ$ of the reference.
+The same holds at the larger gains not shown, with two numerical exceptions that
+confirm the mechanism rather than contradict it.
+ResNet at $g\ge4$ overflows in float32: without a normalisation inside the block,
+$\|f_i(x)\|$ grows with $\|x\|$, so the state grows exponentially ($\rho\approx18$ per block at
+$g{=}4$).
+Swin at $g{=}8$ is still $15.7^\circ$ away at $R{=}1000$: the attention logits are so large
+that the softmax is nearly a hard selection, the field becomes very stiff, and a finer
+step is needed.
+Convergence of the refinement to a single $\hat x_T$ is therefore a property of the
+residual parameterisation, not something learned.
+
+\emph{(ii)~The native gap is of the order set by $\rho$, and training moves it in an
+architecture-dependent direction.}
+Within each architecture the distance from the single-step path ($R{=}1$) to the limit
+grows monotonically with $\rho$, and with $\rho\approx0.3$--$0.9$ every trained network
+lies $10$--$21^\circ$ away: one Euler step of size~$1$ is far from tracking the flow.
+At matched $\rho$, however, the trained and random networks differ, and not in a
+consistent direction.
+Trained Swin-T and ConvNeXt-T are \emph{closer} to their limit than a random field of the
+same strength ($19.5^\circ$ vs.\ $47.6^\circ$ and $21.1^\circ$ vs.\ $30.2^\circ$), the
+weight-tied model is level with it ($10.9^\circ$ vs.\ $11.9^\circ$), and both ResNets are
+\emph{farther} ($17.0^\circ$ vs.\ $12.0^\circ$ and $15.3^\circ$ vs.\ $8.9^\circ$).
+RK4 at $\Delta t{=}1$ follows the same split.
+Training thus changes how well a single step approximates the flow, but there is no
+universal tendency for single-use blocks to be better (or worse) one-step solvers than
+random ones.
+Script: \texttt{scripts/random\_init\_convergence.py}.
+% Raw numbers: outputs/random_init_convergence/xavier.csv

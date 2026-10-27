@@ -1,10 +1,12 @@
 \documentclass{article}
 
+\usepackage[T1]{fontenc}
 \usepackage{microtype}
 \usepackage{graphicx}
 \usepackage{subfigure}
 \usepackage{booktabs}
 \usepackage{flafter}  % floats never appear before their point of definition
+\usepackage{placeins}  % \FloatBarrier to keep appendix floats in-section
 \usepackage{hyperref}
 
 \newcommand{\theHalgorithm}{\arabic{algorithm}}
@@ -40,18 +42,28 @@
 
 \usepackage[textsize=tiny]{todonotes}
 
-\icmltitlerunning{Residual Blocks Can Be Refined Indefinitely: Representation Dynamics in Vision Models}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\dbltopfraction}{0.9}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.8}
+\renewcommand{\dblfloatpagefraction}{0.8}
+\setcounter{topnumber}{3}
+\setcounter{dbltopnumber}{3}
+
+\icmltitlerunning{Residual Blocks Undo Each Other}
 
 \begin{document}
 
 \twocolumn[
-\icmltitle{More Parameters Undo what Previous Params Did: An analysis on Representational Kinematic Redundancy Using Infinite Interpolation Over Residual Blocks Without Retraining}
+\icmltitle{More Parameters Undo What Previous Ones Did: Refining Residual Blocks Indefinitely Without Retraining}
 
 \begin{icmlauthorlist}
 \icmlauthor{Jaume Ivars Grimalt}{comp}
 \end{icmlauthorlist}
 
 \icmlaffiliation{comp}{Mycrospace AI Research, Valencia, Spain}
+
+\icmlcorrespondingauthor{Jaume Ivars Grimalt}{jaumeig95@gmail.com}
 
 \icmlkeywords{Machine Learning, Residual Networks, Neural ODEs, Representation Dynamics}
 
@@ -60,9 +72,26 @@
 
 \printAffiliationsAndNotice{}
 
-% WRITE LAST
 \begin{abstract}
-The abstract must contain a brief intro of the field you are attacking on, the phenomenon you observed, an explanation and an interpretation.
+Residual blocks compute $x+f(x)$, the form of one explicit Euler step, yet whether
+trained residual networks behave as discretised flows remains debated.
+We refine residual stages at inference---applying each block $R$ times with step
+$1/R$ so that the integration horizon is conserved---without any retraining.
+On ConvNeXt, Swin and ResNet the refined stages converge to a continuous limit that
+costs less than one ImageNet top-1 point, whereas changing the horizon collapses
+every network.
+Refinement turns each stage into a high-resolution trajectory on which we measure
+speed, angular velocity, acceleration and curvature.
+Comparing a standard ConvNeXt-T with a variant whose nine stage-3 blocks share a
+single set of weights reveals two regimes behind the same algebra.
+The shared block is an autonomous flow that searches for a heading, expands along it
+and refines.
+The independent blocks form a switched flow: shallow arcs joined by turns of about
+$80^\circ$ at every block boundary, where almost half of the motion is undone by
+later blocks.
+This redundancy explains why the shared stage loses only $0.6$ top-1 points with
+$33\%$ fewer parameters, and suggests that residual depth can do more with fewer,
+better-used parameters.
 Code is available at \url{https://github.com/jaume2000/dynamics_skip_nn}.
 \end{abstract}
 

@@ -3,46 +3,44 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: paper.aux
 The style file: icml2025.bst
 Database file #1: paper.bib
-Warning--can't use both volume and number fields in sun2025painters
-You've used 16 entries,
+You've used 63 entries,
             2773 wiz_defined-function locations,
-            678 strings with 7863 characters,
-and the built_in function-call counts, 8399 in all, are:
-= -- 697
-> -- 568
-< -- 10
-+ -- 190
-- -- 174
-* -- 690
-:= -- 1248
-add.period$ -- 48
-call.type$ -- 16
-change.case$ -- 106
-chr.to.int$ -- 16
-cite$ -- 33
-duplicate$ -- 389
-empty$ -- 677
-format.name$ -- 194
-if$ -- 1785
+            887 strings with 16333 characters,
+and the built_in function-call counts, 32291 in all, are:
+= -- 2614
+> -- 2337
+< -- 38
++ -- 781
+- -- 718
+* -- 2691
+:= -- 4911
+add.period$ -- 193
+call.type$ -- 63
+change.case$ -- 424
+chr.to.int$ -- 63
+cite$ -- 126
+duplicate$ -- 1476
+empty$ -- 2582
+format.name$ -- 809
+if$ -- 6784
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 14
-newline$ -- 88
-num.names$ -- 64
-pop$ -- 250
+missing$ -- 60
+newline$ -- 326
+num.names$ -- 254
+pop$ -- 985
 preamble$ -- 1
-purify$ -- 90
+purify$ -- 362
 quote$ -- 0
-skip$ -- 317
+skip$ -- 1138
 stack$ -- 0
-substring$ -- 210
-swap$ -- 71
-text.length$ -- 7
+substring$ -- 624
+swap$ -- 195
+text.length$ -- 20
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 171
-warning$ -- 1
-while$ -- 63
+type$ -- 678
+warning$ -- 0
+while$ -- 231
 width$ -- 0
-write$ -- 209
-(There was 1 warning)
+write$ -- 805

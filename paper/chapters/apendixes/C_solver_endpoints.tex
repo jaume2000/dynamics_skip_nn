@@ -1,0 +1,47 @@
+\section{Solver agreement at the stage-3 endpoint}
+\label{app:solver-endpoints}
+
+\Cref{sec:indefinite_looping} asks whether a fine Euler step recovers the native
+$R{=}1$ state.
+A related question is whether two fine discretisations of the \emph{same} residual
+field agree with each other---i.e.\ whether a continuous limit exists at all.
+\Cref{tab:app-solver-endpoints} compares stage-3 endpoints $x_T$ on the same
+$N{=}32$ ImageNet validation images (one per random class, seed~$0$), after zeroing
+the massive channel used in the main-text metrics.
+Relative distance is $\|x_a-x_b\|/\|x_b\|$; cosine is $\cos(x_a,x_b)$.
+
+\begin{table}[t]
+    \centering
+    \caption{Pairwise stage-3 endpoint agreement (mean over $N{=}32$; ignore top-1
+    channel). Horizon $T{=}9$ in every row.}
+    \label{tab:app-solver-endpoints}
+    \small
+    \setlength{\tabcolsep}{3pt}
+    \begin{tabular}{lrrr}
+        \toprule
+        Pair ($a$ vs.\ $b$) & rel.\ $\ell_2$ & $\cos$ & angle \\
+        \midrule
+        \multicolumn{4}{l}{\emph{ConvNeXt-T}} \\
+        Euler $R{=}100$ vs.\ RK4 $R{=}100$ & $0.004$ & $1.000$ & $0.25^\circ$ \\
+        Euler $R{=}100$ vs.\ Euler $R{=}200$ & $0.002$ & $1.000$ & $0.12^\circ$ \\
+        Euler $R{=}100$ vs.\ Euler $R{=}1$ & $0.36$ & $0.93$ & $21^\circ$ \\
+        Mid $R{=}1$ vs.\ Euler $R{=}100$ & $0.12$ & $0.993$ & $6.6^\circ$ \\
+        RK4 $R{=}1$ vs.\ Euler $R{=}100$ & $0.010$ & $0.9999$ & $0.5^\circ$ \\
+        \midrule
+        \multicolumn{4}{l}{\emph{Weight-tied ConvNeXt-T ($9R$ shared steps)}} \\
+        Euler $R{=}100$ vs.\ RK4 $R{=}100$ & $0.002$ & $1.000$ & $0.1^\circ$ \\
+        Euler $R{=}100$ vs.\ Euler $R{=}200$ & $0.001$ & $1.000$ & $0.05^\circ$ \\
+        Euler $R{=}100$ vs.\ Euler $R{=}1$ & $0.20$ & $0.98$ & $11^\circ$ \\
+        RK4 $R{=}1$ vs.\ RK4 $R{=}100$ & $0.003$ & $1.000$ & $0.16^\circ$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Euler and RK4 (and Euler $R{=}100$ vs.\ $R{=}200$) collapse onto the same $x_T$, while
+both remain far from the trained one-step path.
+RK4 reaches that limit already with the nine unit steps of the native schedule;
+the native Euler path does not.
+Midpoint at $R{=}1$ matches the limit in top-1 ($80.23\%$, \cref{tab:app-cnx}) while its
+state is still $12\%$ away, a reminder that accuracy is a coarse probe of $x_T$.
+% TODO: optional re-run with N=500 for table error bars; script
+% scripts/compare_solver_convergence.py.

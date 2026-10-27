@@ -1,4 +1,3 @@
-% WRITE LAST
 \section{Introduction}
 \label{sec:intro}
 
@@ -6,48 +5,85 @@
     \centering
     \includegraphics[width=\textwidth]{figures/hero_trajectories.png}
     \caption{Stage-3 feature trajectories of a weight-tied ConvNeXt (left) and a
-    standard ConvNeXt-T (right), refined at inference with $\Delta t{=}0.01$
-    ($T{=}9$; massive channel removed).
-    \textbf{Top:} PCA of all states, paths coloured by depth $t$; white dots mark
-    integer $t$.
-    \textbf{Bottom:} residual speed $\|f(x(t))\|$ (class means; shade: spread).
+    standard ConvNeXt-T (right), integrated with Euler up to $T{=}9$
+    ($\Delta t{=}0.09$ and $\Delta t{=}0.01$; massive channel removed;
+    $200$ ImageNet validation images).
+    \textbf{Top:} states are flattened and mapped to $2048$ dimensions with a
+    fixed Gaussian random projection
+    \citep{johnson1984extensions,dasgupta2003elementary}, and PCA is fitted on all
+    projected states of each model \citep{halko2011finding}; paths coloured by
+    depth $t$, white dots mark integer $t$.
+    \textbf{Bottom:} residual speed $\|f(x(t))\|$ (mean over images; shade:
+    P10--P90).
     One shared block is a single autonomous field $\dot x = f(x)$; nine independent
     blocks switch the field at every integer, $\dot x = f_{\lfloor t\rfloor}(x)$.
     We analyse this contrast throughout the paper.}
     \label{fig:teaser}
 \end{figure*}
 
-A residual block $x + f(x)$ has the algebraic form of one Euler step of size~$1$.
-That observation has been used to read residual networks as discretisations of an
-ODE, but a trained stack need not be a \emph{smooth} field in depth:
-\cref{fig:teaser} shows two ConvNeXt stage-3 transports of the same horizon $T{=}9$.
-Sharing one block yields a single autonomous flow whose speed rises and falls as a
-bell; independent blocks produce a new field every unit of time, with kinks and
-speed jumps at every integer.
-The rest of the paper makes that contrast quantitative---and asks how much of the
-accuracy of the switched stack is already carried by the shared field.
+Plain deep stacks such as VGG~\citep{simonyan2015deepconvolutionalnetworkslargescale}
+are hard to train as depth grows, partly because gradients vanish or explode through
+many layers~\citep{vanishingGradient,glorot2010understanding}.
+Residual connections~\citep{he2016resnet} made very deep networks trainable by
+letting each block add a correction to its input, $x\mapsto x+f(x)$, which also
+yields markedly smoother loss landscapes~\citep{li2018visualizinglosslandscapeneural}.
+Because every block writes into the same representation, the stack can be read as a
+single state that moves through feature space, and the update has the algebraic form
+of one explicit Euler step of an
+ODE~\citep{e2017proposal,haber2017stable,lu2018beyond}.
+That reading inspired Neural ODEs~\citep{chen2019neuralordinarydifferentialequations},
+but whether a \emph{trained} residual network behaves as an integrator is
+contested: the analogy can be purely syntactic~\citep{queiruga2020continuousindepthneuralnetworks},
+and a stack is guaranteed to approach an ODE only if its blocks vary smoothly in
+depth~\citep{sander2022residualneuralnetworksdiscretize}.
 
-Skip Connections-NN (SCNN) wanted to solve grad vanishing problem that VGG introduced. By defining $x = f(x) + x$ it induced some properties: Works in the same feature representation. P.e. A given channel
-will have the same purpose in the next layer.
+Two questions follow, and current tools answer neither well.
+The first is geometric: a stage of nine blocks yields nine states, too few to tell
+a smooth flow from a sequence of unrelated jumps.
+The second is about parameters: if each block were one step of a common flow,
+independent weights per block would be largely redundant.
+Indeed, a ConvNeXt-T whose nine stage-3 blocks share a single set of weights reaches
+$80.36\%$ ImageNet top-1, $0.61$ points below the untied model with $33\%$ fewer
+parameters (\cref{sec:weight_tied}).
 
-\citep{sander2022residualneuralnetworksdiscretize, queiruga2020continuousindepthneuralnetworks} says that resnets just have the algebraic form of Euler ODE solver, that if params are steps they won'r be ODEs.
-We apport evidence that residual blocks are 1-step ODE solvers and we therefore have a sum of Ode solvers that are constantly changing of domain and we can accomplish the same dynamics by sharing the weights and
-we augmentate the resolution of the feature dynamics to study with better quality how X moves along the latent-space manifold in time / depth.
+We address both with one inference-time probe.
+We read each block as a local field integrated over one unit of depth and refine it:
+apply it $R$ times with step $\Delta t{=}1/R$, so that the stage horizon $T$ is
+conserved, without any fine-tuning.
+On ConvNeXt, Swin and ResNet the refined stages converge to a continuous limit that
+costs less than one top-1 point, whereas changing $T$ collapses every network
+(\cref{sec:indefinite_looping}).
+We do not propose refinement as a way to build deeper models; we use it because it
+turns each stage into a trajectory with hundreds of states per block, on which
+velocity, angular velocity, acceleration and curvature can be measured.
 
-Questions we want to solve:
+These trajectories separate two regimes behind the same algebra (\cref{fig:teaser}).
+The weight-tied stage is an autonomous flow $\dot x=f(x)$: it first searches for a
+heading, then expands along it and finally refines at low speed
+(\cref{sec:geometrical_analysis}).
+The untied stage is a switched flow $\dot x=f_{\lfloor t\rfloor}(x)$: nine shallow
+arcs joined by turns of about $80^\circ$ at every block boundary.
+Measured along the path, almost half of the untied motion is cancelled by later blocks,
+and nearly half of all sign reversals fall exactly on block boundaries, against
+almost none for the shared field; a frozen decoder can also read the shared state
+much earlier in the stage (\cref{sec:overparametrized_undoing}).
+Much of the untied capacity in depth is thus spent undoing earlier blocks, which is
+why a single shared block recovers almost all of its accuracy.
 
+Our contributions are:
 \begin{itemize}
-    \item Can SCNN's blocks be looped indefinitely?
-        $\rightarrow$ Yes
-    \item Are all this weights necessary? + Shared networks can reach similar performance?
-        $\rightarrow$ No + Yes
-    \item What are the dynamics of the features in this two types of models?
-    Statement: The over-parametrized networks undo what the previous layer does, that's why SCNNs and weight-tied are equal.
-        Tangential acceleration is crucial for this affirmation.
-        Here we analyze the geometry of trajectories.
-        Take into account the massive activations here.
-    \item How can we improve discrete models given this evidence? -> Delta networks?
+    \item \textbf{Refinement at fixed horizon} as a training-free probe of residual
+    stages, with a solver-independent continuous limit that stays usable by the
+    downstream network on ConvNeXt, Swin and ResNet
+    (\cref{sec:indefinite_looping}).
+    \item \textbf{Autonomous versus switched transport}: a weight-tied stage as a
+    controlled autonomous counterpart of the standard stack, close in accuracy and
+    clearly different in dynamics (\cref{sec:weight_tied,sec:geometrical_analysis}).
+    \item \textbf{A kinematic analysis} of feature trajectories (speed, angular
+    velocity, tangential and normal acceleration, curvature), after excluding massive
+    activations that otherwise dominate the statistics
+    (\cref{sec:geometrical_analysis}).
+    \item \textbf{A measurement of depth redundancy}: cancelled motion, sign reversals
+    at block boundaries, and prefix decoding with the frozen downstream network
+    (\cref{sec:overparametrized_undoing}).
 \end{itemize}
-
-% We should talk about how non weight tied networks have a problem with the undoing.
-% And talk about the dynamics and some results we found no?

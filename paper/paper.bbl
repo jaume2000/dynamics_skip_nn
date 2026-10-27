@@ -1,4 +1,4 @@
-\begin{thebibliography}{16}
+\begin{thebibliography}{63}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -12,6 +12,77 @@ Ainsworth, S.~K., Hayase, J., and Srinivasa, S.
 \newblock In \emph{International Conference on Learning Representations
   (ICLR)}, 2023.
 
+\bibitem[Alain \& Bengio(2017)Alain and Bengio]{alain2016probes}
+Alain, G. and Bengio, Y.
+\newblock Understanding intermediate layers using linear classifier probes.
+\newblock In \emph{International Conference on Learning Representations (ICLR),
+  Workshop Track}, 2017.
+\newblock arXiv:1610.01644.
+
+\bibitem[Ansuini et~al.(2019)Ansuini, Laio, Macke, and
+  Zoccolan]{ansuini2019intrinsic}
+Ansuini, A., Laio, A., Macke, J.~H., and Zoccolan, D.
+\newblock Intrinsic dimension of data representations in deep neural networks.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2019.
+
+\bibitem[Bae et~al.(2025)Bae, Fisch, Harutyunyan, Ji, Kim, and
+  Schuster]{bae2024relaxed}
+Bae, S., Fisch, A., Harutyunyan, H., Ji, Z., Kim, S., and Schuster, T.
+\newblock Relaxed recursive transformers: Effective parameter sharing with
+  layer-wise {LoRA}.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2025.
+
+\bibitem[Bai et~al.(2019)Bai, Kolter, and Koltun]{bai2019deep}
+Bai, S., Kolter, J.~Z., and Koltun, V.
+\newblock Deep equilibrium models.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~32, 2019.
+
+\bibitem[Bansal et~al.(2022)Bansal, Schwarzschild, Borgnia, Emam, Huang,
+  Goldblum, and Goldstein]{bansal2022endtoend}
+Bansal, A., Schwarzschild, A., Borgnia, E., Emam, Z., Huang, F., Goldblum, M.,
+  and Goldstein, T.
+\newblock End-to-end algorithm synthesis with recurrent networks: Extrapolation
+  without overthinking.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~35, 2022.
+
+\bibitem[Belrose et~al.(2023)Belrose, Furman, Smith, Halawi, Ostrovsky,
+  McKinney, Biderman, and Steinhardt]{belrose2023tuned}
+Belrose, N., Furman, Z., Smith, L., Halawi, D., Ostrovsky, I., McKinney, L.,
+  Biderman, S., and Steinhardt, J.
+\newblock Eliciting latent predictions from transformers with the tuned lens,
+  2023.
+\newblock arXiv preprint.
+
+\bibitem[Bengio et~al.(1994)Bengio, Simard, and Frasconi]{vanishingGradient}
+Bengio, Y., Simard, P., and Frasconi, P.
+\newblock Learning long-term dependencies with gradient descent is difficult.
+\newblock \emph{IEEE Transactions on Neural Networks}, 5\penalty0 (2):\penalty0
+  157--166, 1994.
+\newblock \doi{10.1109/72.279181}.
+
+\bibitem[Bengio et~al.(2013)Bengio, Courville, and
+  Vincent]{bengio2013representation}
+Bengio, Y., Courville, A., and Vincent, P.
+\newblock Representation learning: A review and new perspectives.
+\newblock \emph{IEEE Transactions on Pattern Analysis and Machine
+  Intelligence}, 35\penalty0 (8):\penalty0 1798--1828, 2013.
+
+\bibitem[Boulch(2017)]{sharesnet}
+Boulch, A.
+\newblock {ShaResNet}: reducing residual network parameter number by sharing
+  weights, 2017.
+\newblock URL \url{https://arxiv.org/abs/1702.08782}.
+
+\bibitem[Brahma et~al.(2016)Brahma, Wu, and She]{brahma2016why}
+Brahma, P.~P., Wu, D., and She, Y.
+\newblock Why deep learning works: A manifold disentanglement perspective.
+\newblock \emph{IEEE Transactions on Neural Networks and Learning Systems},
+  27\penalty0 (10), 2016.
+
 \bibitem[Chang et~al.(2018)Chang, Meng, Haber, Tung, and
   Begert]{chang2018multilevel}
 Chang, B., Meng, L., Haber, E., Tung, F., and Begert, D.
@@ -19,12 +90,64 @@ Chang, B., Meng, L., Haber, E., Tung, F., and Begert, D.
 \newblock In \emph{International Conference on Learning Representations
   (ICLR)}, 2018.
 
+\bibitem[Chen et~al.(2018)Chen, Rubanova, Bettencourt, and
+  Duvenaud]{chen2019neuralordinarydifferentialequations}
+Chen, R. T.~Q., Rubanova, Y., Bettencourt, J., and Duvenaud, D.
+\newblock Neural ordinary differential equations.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~31, 2018.
+
+\bibitem[Cohen et~al.(2021)Cohen, Cont, Rossier, and Xu]{cohen2021scaling}
+Cohen, A.-S., Cont, R., Rossier, A., and Xu, R.
+\newblock Scaling properties of deep residual networks.
+\newblock In \emph{International Conference on Machine Learning (ICML)}, volume
+  139 of \emph{Proceedings of Machine Learning Research}, pp.\  2039--2048,
+  2021.
+
+\bibitem[Cohen et~al.(2020)Cohen, Chung, Lee, and
+  Sompolinsky]{cohen2020separability}
+Cohen, U., Chung, S., Lee, D.~D., and Sompolinsky, H.
+\newblock Separability and geometry of object manifolds in deep neural
+  networks.
+\newblock \emph{Nature Communications}, 11:\penalty0 746, 2020.
+
+\bibitem[Darcet et~al.(2024)Darcet, Oquab, Mairal, and
+  Bojanowski]{darcet2024vision}
+Darcet, T., Oquab, M., Mairal, J., and Bojanowski, P.
+\newblock Vision transformers need registers.
+\newblock In \emph{International Conference on Learning Representations}, 2024.
+
+\bibitem[Dasgupta \& Gupta(2003)Dasgupta and Gupta]{dasgupta2003elementary}
+Dasgupta, S. and Gupta, A.
+\newblock An elementary proof of a theorem of {J}ohnson and {L}indenstrauss.
+\newblock \emph{Random Structures \& Algorithms}, 22\penalty0 (1):\penalty0
+  60--65, 2003.
+
+\bibitem[Dehghani et~al.(2019)Dehghani, Gouws, Vinyals, Uszkoreit, and
+  Kaiser]{dehghani2019universal}
+Dehghani, M., Gouws, S., Vinyals, O., Uszkoreit, J., and Kaiser, {\L}.
+\newblock Universal transformers.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2019.
+
 \bibitem[Deng et~al.(2009)Deng, Dong, Socher, Li, Li, and
   Fei-Fei]{deng2009imagenet}
 Deng, J., Dong, W., Socher, R., Li, L.-J., Li, K., and Fei-Fei, L.
 \newblock {ImageNet}: A large-scale hierarchical image database.
 \newblock In \emph{Proceedings of the IEEE Conference on Computer Vision and
   Pattern Recognition (CVPR)}, pp.\  248--255, 2009.
+
+\bibitem[DiCarlo \& Cox(2007)DiCarlo and Cox]{dicarlo2007untangling}
+DiCarlo, J.~J. and Cox, D.~D.
+\newblock Untangling invariant object recognition.
+\newblock \emph{Trends in Cognitive Sciences}, 11\penalty0 (8):\penalty0
+  333--341, 2007.
+
+\bibitem[Dupont et~al.(2019)Dupont, Doucet, and Teh]{dupont2019augmented}
+Dupont, E., Doucet, A., and Teh, Y.~W.
+\newblock Augmented neural {ODE}s.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~32, 2019.
 
 \bibitem[E(2017)]{e2017proposal}
 E, W.
@@ -40,12 +163,56 @@ Entezari, R., Sedghi, H., Saukh, O., and Neyshabur, B.
 \newblock In \emph{International Conference on Learning Representations
   (ICLR)}, 2022.
 
+\bibitem[Fernando \& Guitchounts(2025)Fernando and
+  Guitchounts]{fernando2025transformerdynamics}
+Fernando, J. and Guitchounts, G.
+\newblock Transformer dynamics: A neuroscientific approach to interpretability
+  of large language models, 2025.
+
+\bibitem[Gan et~al.(2025)Gan, Tu, Chen, Chen, Li, Harandi, and
+  Lin]{gan2025ditf}
+Gan, C., Tu, Y., Chen, X., Chen, T., Li, Y., Harandi, M., and Lin, W.
+\newblock Unleashing diffusion transformers for visual correspondence by
+  modulating massive activations.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~38, 2025.
+
+\bibitem[Geiping et~al.(2025)Geiping, McLeish, Jain, Kirchenbauer, Singh,
+  Bartoldson, Kailkhura, Bhatele, and Goldstein]{geiping2025recurrent}
+Geiping, J., McLeish, S., Jain, N., Kirchenbauer, J., Singh, S., Bartoldson,
+  B.~R., Kailkhura, B., Bhatele, A., and Goldstein, T.
+\newblock Scaling up test-time compute with latent reasoning: A recurrent depth
+  approach.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2025.
+
+\bibitem[Giannou et~al.(2023)Giannou, Rajput, yong Sohn, Lee, Lee, and
+  Papailiopoulos]{giannou2023looped}
+Giannou, A., Rajput, S., yong Sohn, J., Lee, K., Lee, J.~D., and
+  Papailiopoulos, D.
+\newblock Looped transformers as programmable computers.
+\newblock In \emph{International Conference on Machine Learning (ICML)}, 2023.
+
 \bibitem[Glorot \& Bengio(2010)Glorot and Bengio]{glorot2010understanding}
 Glorot, X. and Bengio, Y.
 \newblock Understanding the difficulty of training deep feedforward neural
   networks.
 \newblock In \emph{Proceedings of the Thirteenth International Conference on
   Artificial Intelligence and Statistics (AISTATS)}, pp.\  249--256, 2010.
+
+\bibitem[Greff et~al.(2017)Greff, Srivastava, and
+  Schmidhuber]{greff2017highway}
+Greff, K., Srivastava, R.~K., and Schmidhuber, J.
+\newblock Highway and residual networks learn unrolled iterative estimation.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2017.
+
+\bibitem[Gromov et~al.(2025)Gromov, Tirumala, Shapourian, Glorioso, and
+  Roberts]{gromov2024unreasonable}
+Gromov, A., Tirumala, K., Shapourian, H., Glorioso, P., and Roberts, D.~A.
+\newblock The unreasonable ineffectiveness of the deeper layers.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2025.
 
 \bibitem[Haber \& Ruthotto(2017)Haber and Ruthotto]{haber2017stable}
 Haber, E. and Ruthotto, L.
@@ -58,11 +225,103 @@ Hairer, E., N{\o}rsett, S.~P., and Wanner, G.
   Problems}, volume~8 of \emph{Springer Series in Computational Mathematics}.
 \newblock Springer, 2 edition, 1993.
 
+\bibitem[Halko et~al.(2011)Halko, Martinsson, and Tropp]{halko2011finding}
+Halko, N., Martinsson, P.-G., and Tropp, J.~A.
+\newblock Finding structure with randomness: Probabilistic algorithms for
+  constructing approximate matrix decompositions.
+\newblock \emph{SIAM Review}, 53\penalty0 (2):\penalty0 217--288, 2011.
+
+\bibitem[Hauser \& Ray(2017)Hauser and Ray]{hauser2017principles}
+Hauser, M. and Ray, A.
+\newblock Principles of {R}iemannian geometry in neural networks.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~30, 2017.
+
 \bibitem[He et~al.(2016)He, Zhang, Ren, and Sun]{he2016resnet}
 He, K., Zhang, X., Ren, S., and Sun, J.
 \newblock Deep residual learning for image recognition.
 \newblock In \emph{Proceedings of the IEEE Conference on Computer Vision and
   Pattern Recognition (CVPR)}, pp.\  770--778, 2016.
+
+\bibitem[H{\'e}naff et~al.(2019)H{\'e}naff, Goris, and
+  Simoncelli]{henaff2019perceptual}
+H{\'e}naff, O.~J., Goris, R. L.~T., and Simoncelli, E.~P.
+\newblock Perceptual straightening of natural videos.
+\newblock \emph{Nature Neuroscience}, 22\penalty0 (6):\penalty0 984--991, 2019.
+
+\bibitem[Hosseini \& Fedorenko(2023)Hosseini and
+  Fedorenko]{hosseini2023straighten}
+Hosseini, E.~A. and Fedorenko, E.
+\newblock Large language models implicitly learn to straighten neural sentence
+  trajectories to construct a predictive representation of natural language.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2023.
+
+\bibitem[Huang et~al.(2016)Huang, Sun, Liu, Sedra, and
+  Weinberger]{huang2016stochastic}
+Huang, G., Sun, Y., Liu, Z., Sedra, D., and Weinberger, K.~Q.
+\newblock Deep networks with stochastic depth.
+\newblock In \emph{European Conference on Computer Vision (ECCV)}, 2016.
+
+\bibitem[Ioffe \& Szegedy(2015)Ioffe and Szegedy]{ioffe2015batchnorm}
+Ioffe, S. and Szegedy, C.
+\newblock Batch normalization: Accelerating deep network training by reducing
+  internal covariate shift.
+\newblock In \emph{International Conference on Machine Learning (ICML)}, 2015.
+
+\bibitem[Jastrz{\k{e}}bski et~al.(2018)Jastrz{\k{e}}bski, Arpit, Ballas, Verma,
+  Che, and Bengio]{jastrzebski2018iterative}
+Jastrz{\k{e}}bski, S., Arpit, D., Ballas, N., Verma, V., Che, T., and Bengio,
+  Y.
+\newblock Residual connections encourage iterative inference.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2018.
+
+\bibitem[Johnson \& Lindenstrauss(1984)Johnson and
+  Lindenstrauss]{johnson1984extensions}
+Johnson, W.~B. and Lindenstrauss, J.
+\newblock Extensions of {L}ipschitz mappings into a {H}ilbert space.
+\newblock \emph{Contemporary Mathematics}, 26:\penalty0 189--206, 1984.
+
+\bibitem[Lad et~al.(2025)Lad, Lee, Gurnee, and Tegmark]{lad2025robustness}
+Lad, V., Lee, J.~H., Gurnee, W., and Tegmark, M.
+\newblock The remarkable robustness of {LLM}s: Stages of inference?
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2025.
+\newblock arXiv:2406.19384.
+
+\bibitem[Lan et~al.(2020)Lan, Chen, Goodman, Gimpel, Sharma, and
+  Soricut]{lan2020albert}
+Lan, Z., Chen, M., Goodman, S., Gimpel, K., Sharma, P., and Soricut, R.
+\newblock {ALBERT}: A lite {BERT} for self-supervised learning of language
+  representations.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2020.
+
+\bibitem[Li et~al.(2018)Li, Xu, Taylor, Studer, and
+  Goldstein]{li2018visualizinglosslandscapeneural}
+Li, H., Xu, Z., Taylor, G., Studer, C., and Goldstein, T.
+\newblock Visualizing the loss landscape of neural nets.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~31, 2018.
+
+\bibitem[Liao \& Poggio(2016)Liao and Poggio]{liao2016bridging}
+Liao, Q. and Poggio, T.
+\newblock Bridging the gaps between residual learning, recurrent neural
+  networks and visual cortex, 2016.
+
+\bibitem[Liberzon(2003)]{liberzon2003switching}
+Liberzon, D.
+\newblock \emph{Switching in Systems and Control}.
+\newblock Birkh{\"a}user, Boston, 2003.
+
+\bibitem[Liu et~al.(2021)Liu, Lin, Cao, Hu, Wei, Zhang, Lin, and
+  Guo]{liu2021swin}
+Liu, Z., Lin, Y., Cao, Y., Hu, H., Wei, Y., Zhang, Z., Lin, S., and Guo, B.
+\newblock {Swin Transformer}: Hierarchical vision transformer using shifted
+  windows.
+\newblock In \emph{Proceedings of the IEEE/CVF International Conference on
+  Computer Vision (ICCV)}, 2021.
 
 \bibitem[Liu et~al.(2022)Liu, Mao, Wu, Feichtenhofer, Darrell, and
   Xie]{liu2022convnext}
@@ -76,6 +335,19 @@ Lu, Y., Zhong, A., Li, Q., and Dong, B.
 \newblock Beyond finite layer neural networks: Bridging deep architectures and
   numerical differential equations.
 \newblock In \emph{International Conference on Machine Learning (ICML)}, 2018.
+
+\bibitem[Marion et~al.(2024)Marion, Wu, Sander, and Biau]{marion2024implicit}
+Marion, P., Wu, Y.-H., Sander, M.~E., and Biau, G.
+\newblock Implicit regularization of deep residual networks towards neural
+  {ODE}s.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2024.
+
+\bibitem[Naitzat et~al.(2020)Naitzat, Zhitnikov, and Lim]{naitzat2020topology}
+Naitzat, G., Zhitnikov, A., and Lim, L.-H.
+\newblock Topology of deep neural networks.
+\newblock \emph{Journal of Machine Learning Research}, 21\penalty0
+  (184):\penalty0 1--40, 2020.
 
 \bibitem[Pandey et~al.(2026)Pandey, Singh, and
   Mahdid]{pandey2026trajectorygeometrytransformerrepresentations}
@@ -98,16 +370,68 @@ Sander, M.~E., Ablin, P., and Peyr{\'e}, G.
 \newblock In \emph{Advances in Neural Information Processing Systems
   (NeurIPS)}, volume~35, 2022.
 
+\bibitem[Savarese \& Maire(2019)Savarese and Maire]{savarese2019learning}
+Savarese, P. and Maire, M.
+\newblock Learning implicitly recurrent {CNN}s through parameter sharing.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2019.
+
+\bibitem[Simonyan \& Zisserman(2015)Simonyan and
+  Zisserman]{simonyan2015deepconvolutionalnetworkslargescale}
+Simonyan, K. and Zisserman, A.
+\newblock Very deep convolutional networks for large-scale image recognition.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2015.
+
+\bibitem[Strogatz(2015)]{strogatz2015nonlinear}
+Strogatz, S.~H.
+\newblock \emph{Nonlinear Dynamics and Chaos: With Applications to Physics,
+  Biology, Chemistry, and Engineering}.
+\newblock Westview Press, 2 edition, 2015.
+
 \bibitem[Sun et~al.(2024)Sun, Chen, Kolter, and
   Liu]{sun2024massiveactivationslargelanguage}
 Sun, M., Chen, X., Kolter, J.~Z., and Liu, Z.
-\newblock Massive activations in large language models, 2024.
-\newblock URL \url{https://arxiv.org/abs/2402.17762}.
+\newblock Massive activations in large language models.
+\newblock In \emph{Conference on Language Modeling (COLM)}, 2024.
 
 \bibitem[Sun et~al.(2025)Sun, Pickett, Nain, and Jones]{sun2025painters}
 Sun, Q., Pickett, M., Nain, A.~K., and Jones, L.
 \newblock Transformer layers as painters.
 \newblock In \emph{Proceedings of the AAAI Conference on Artificial
   Intelligence}, volume~39, pp.\  25219--25227, 2025.
+
+\bibitem[Sun et~al.(2026)Sun, Canziani, {LeCun}, and Zhu]{pmlr-v306-sun26d}
+Sun, S., Canziani, A., {LeCun}, Y., and Zhu, J.
+\newblock Anatomy of massive activations and attention sinks.
+\newblock In Zhang, T., Dudik, M., Jaggi, M., Agarwal, A., Li, S., Schuurmans,
+  D., Zhu, J., Berkenkamp, F., Dong, H., and Bietti, A. (eds.),
+  \emph{Proceedings of the 43rd International Conference on Machine Learning},
+  volume 306 of \emph{Proceedings of Machine Learning Research}, pp.\
+  116443--116463. PMLR, 06--11 Jul 2026.
+\newblock URL \url{https://proceedings.mlr.press/v306/sun26d.html}.
+
+\bibitem[Takase \& Kiyono(2023)Takase and Kiyono]{takase2021lessons}
+Takase, S. and Kiyono, S.
+\newblock Lessons on parameter sharing across layers in transformers.
+\newblock In \emph{Proceedings of the Fourth Workshop on Simple and Efficient
+  Natural Language Processing (SustaiNLP)}, pp.\  78--90, 2023.
+\newblock \doi{10.18653/v1/2023.sustainlp-1.5}.
+
+\bibitem[Valeriani et~al.(2023)Valeriani, Doimo, Cuturello, Laio, Ansuini, and
+  Cazzaniga]{valeriani2023geometry}
+Valeriani, L., Doimo, D., Cuturello, F., Laio, A., Ansuini, A., and Cazzaniga,
+  A.
+\newblock The geometry of hidden representations of large transformer models.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2023.
+
+\bibitem[Veit et~al.(2016)Veit, Wilber, and
+  Belongie]{veit2016residualnetworksbehavelike}
+Veit, A., Wilber, M., and Belongie, S.
+\newblock Residual networks behave like ensembles of relatively shallow
+  networks.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~29, 2016.
 
 \end{thebibliography}

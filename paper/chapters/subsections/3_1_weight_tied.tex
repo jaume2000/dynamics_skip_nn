@@ -3,12 +3,23 @@
 
 We first ask whether the stage-3 transport needs nine independent blocks, or whether
 one shared block applied nine times is enough.
-\citet{sun2025painters} study a related question in transformers: they replace and loop
-layers with a middle block to test whether all layers implement the same operation.
-We observe the same phenomenon in ConvNeXt stage~3---ablations that permute, duplicate
-or substitute blocks are reported in \cref{app:block-ops}---and go one step further:
-if the stage can be run with a single repeated function, a network trained to use that
-shared function should reach a similar accuracy level.
+Sharing weights across depth is not new: residual networks with shared blocks have been
+linked to recurrent networks~\citep{liao2016bridging}, residual networks with partially
+shared blocks have been trained as compact CNNs~\citep{sharesnet,savarese2019learning},
+and looped or universal transformers reuse a single layer or a fixed block of layers
+many times~\citep{dehghani2019universal,giannou2023looped}.
+\citet{sun2025painters} study a related question in pretrained transformers: they skip,
+reorder, parallelise and repeat middle layers, and find that the middle layers share a
+representation space but do not implement the same operation---replacing them by
+repeated copies of the central layer is the most damaging intervention they test.
+Large language models likewise tolerate deleting or swapping middle
+layers~\citep{lad2025robustness} and pruning a large fraction of the deepest
+ones after light fine-tuning~\citep{gromov2024unreasonable}.
+Analogous ablations on ConvNeXt stage~3 (permuting, duplicating or substituting
+blocks) are reported in \cref{app:block-ops}.
+Reusing blocks that were trained to be different tests the wrong object, however; we
+instead ask whether a stage \emph{trained} to use a single shared function reaches a
+similar accuracy level.
 
 We train a vanilla ConvNeXt-T and a weight-tied stage-3 variant under the same recipe
 (ImageNet-1k, batch size $1024$; configuration in \cref{app:training}).

@@ -1,2 +1,79 @@
 \section{Related Work}
 \label{sec:rel_work}
+
+\paragraph{Residual networks as discretised ODEs.}
+A residual update $x+f(x)$~\citep{he2016resnet} is one explicit Euler step of an
+ODE~\citep{e2017proposal,haber2017stable,lu2018beyond}, a reading that led to
+Neural ODEs~\citep{chen2019neuralordinarydifferentialequations}, multi-level training
+schemes~\citep{chang2018multilevel} and continuous-in-depth
+architectures~\citep{queiruga2020continuousindepthneuralnetworks}.
+Whether a trained ResNet actually behaves as such a discretisation is debated.
+\citet{queiruga2020continuousindepthneuralnetworks} find that standard ResNets fail
+to act as meaningful integrators beyond the syntactic analogy;
+\citet{sander2022residualneuralnetworksdiscretize} show that the gap between a ResNet
+and its Neural ODE need not vanish with depth unless the residual maps vary smoothly
+in depth;
+\citet{cohen2021scaling} find that, depending on the architecture and on how trained
+weights scale with depth, the deep limit can be an ODE, a stochastic differential
+equation, or neither; and \citet{marion2024implicit} prove that, under gradient flow and
+in the large-depth limit, a ResNet initialised as a Neural ODE discretisation remains
+one through training.
+These works either train continuous models or study the limit of growing depth.
+We instead refine \emph{already trained}, standard networks at inference, keeping the
+integration horizon fixed, and use the refined path as a probe rather than as a model.
+
+\paragraph{Weight sharing and looping in depth.}
+Sharing one residual block across depth links ResNets to recurrent
+networks~\citep{liao2016bridging}; sharing convolutions across the blocks of a stage
+yields compact CNNs~\citep{sharesnet}, as does soft parameter sharing across
+layers~\citep{savarese2019learning}.
+In transformers, universal and looped transformers reuse a single layer or a fixed
+block of layers in a loop~\citep{dehghani2019universal,giannou2023looped}, ALBERT shares all
+layers~\citep{lan2020albert}, and partial sharing schemes trade parameters against
+accuracy~\citep{takase2021lessons,bae2024relaxed}.
+Iterating a shared block beyond its training depth is fragile: recurrent networks
+``overthink'' and degrade unless they recall the input and are trained with a randomly
+sampled number of iterations~\citep{bansal2022endtoend}; recurrent-depth language models
+that inject the input at every step and sample the iteration count during training
+remain stable far beyond their typical depth~\citep{geiping2025recurrent}; and deep
+equilibrium models replace the iteration by a fixed point~\citep{bai2019deep}.
+For us weight tying is not a compression method but a control: it turns a switched
+stack of fields into a single autonomous one, and its trajectory explains both why a
+shared stage is nearly as accurate and why integrating past the trained horizon fails.
+
+\paragraph{Redundancy and iterative refinement across depth.}
+Residual networks are robust to dropping or reordering blocks: they behave like
+ensembles of shallow paths~\citep{veit2016residualnetworksbehavelike}, can be trained
+with stochastic depth~\citep{huang2016stochastic}, and have been read as iterative
+estimators that refine one representation~\citep{greff2017highway,jastrzebski2018iterative}.
+Language models show a similar tolerance: middle layers can be skipped, swapped or
+run in parallel with graceful degradation, although repeating a single middle layer is
+harmful~\citep{sun2025painters,lad2025robustness}, and many deep layers can be pruned
+with a small amount of healing fine-tuning~\citep{gromov2024unreasonable}.
+Intermediate states are commonly decoded with linear probes~\citep{alain2016probes} or
+lenses~\citep{belrose2023tuned}.
+These studies establish that depth is redundant; we measure \emph{where} the redundancy
+sits, as motion that consecutive blocks undo, concentrated at block boundaries, and
+decode prefixes with the frozen downstream network rather than a trained probe.
+
+\paragraph{Geometry of representations along depth.}
+Under the manifold hypothesis, deep networks gradually untangle and flatten the data
+manifold~\citep{bengio2013representation,dicarlo2007untangling,brahma2016why,
+hauser2017principles,naitzat2020topology,cohen2020separability}, and its intrinsic
+dimension changes systematically with depth~\citep{ansuini2019intrinsic,valeriani2023geometry}.
+Closer to our measurements, the curvature of representation trajectories decreases in
+human perception of natural videos~\citep{henaff2019perceptual} and from early to
+middle layers of language models~\citep{hosseini2023straighten}.
+Recent work treats the residual stream of transformers as a dynamical system whose
+velocity and acceleration change across layers and whose trajectories are
+curved~\citep{fernando2025transformerdynamics}, and measures trajectory length and
+turning-angle curvature across
+layers~\citep{pandey2026trajectorygeometrytransformerrepresentations}.
+Those analyses sample one point per layer.
+Refinement provides hundreds of points per block, so velocity, angular velocity, the
+tangential/normal split of acceleration and curvature can be estimated within blocks
+and separated from the jumps between them.
+Finally, outlier features---massive activations in language
+models~\citep{sun2024massiveactivationslargelanguage,pmlr-v306-sun26d} and high-norm
+tokens in vision transformers~\citep{darcet2024vision}---dominate such statistics; we
+find their analogues in ConvNeXt and Swin and exclude them from the kinematics.

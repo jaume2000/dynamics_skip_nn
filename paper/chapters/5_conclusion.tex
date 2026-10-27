@@ -1,2 +1,19 @@
 \section{Conclusion}
 \label{sec:conclusion}
+
+Residual blocks can be refined indefinitely at inference: as long as the
+integration horizon $T$ is kept, ConvNeXt, Swin and ResNet stages converge to a
+continuous limit that loses less than one top-1 point, whereas breaking $T$
+collapses every network.
+Refinement turns a residual stage into a trajectory, and that trajectory
+separates two regimes behind the same algebra $x+f(x)$.
+A single shared block, reused over the whole stage, is an autonomous transport:
+it searches for a heading, expands along it and refines, and its features become
+usable by the decoder early.
+Nine independent blocks form a switched transport: shallow arcs joined by sharp
+turns at every block boundary, where almost half of the motion is undone.
+This redundancy is why one shared block recovers almost all of the accuracy of
+the untied stage ($-0.6$ points with $33\%$ fewer parameters).
+The same probe applies to any residual stream, and suggests a design goal:
+fields that stay mostly autonomous, so that every parameter pushes toward the
+same target.
