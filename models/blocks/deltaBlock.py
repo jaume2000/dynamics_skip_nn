@@ -6,7 +6,14 @@ from models.blocks.stochasticDepth import StochasticDepth
 
 
 class DeltaConvnextBlock(nn.Module):
-    def __init__(self, sharedBlock, stochasticDepth=0.1, useDeltas=True, eulerStep=1.0):
+    def __init__(
+        self,
+        sharedBlock,
+        stochasticDepth=0.1,
+        useDeltas=True,
+        eulerStep=1.0,
+        delta_source: "DeltaConvnextBlock | None" = None,
+    ):
         super().__init__()
         if len(sharedBlock) != 6:
             raise ValueError("Shared block must have 6 layers")
@@ -17,14 +24,24 @@ class DeltaConvnextBlock(nn.Module):
         # Scales every delta in forward: W + coeff * δ. 1 is the trained model;
         # 0 is shared-only. Not a Parameter — the train script sets it per epoch.
         self.delta_coeff = 1.0
+        # True when δ Parameters live on another block (grouped shared-δ rewire).
+        self._borrows_deltas = False
         if useDeltas:
-            dw, ln, pw1, _, pw2, ls = sharedBlock
-            z = lambda t: nn.Parameter(torch.zeros_like(t))
-            self.dwWDelta,  self.dwBDelta  = z(dw.weight),  z(dw.bias)
-            self.lnWDelta,  self.lnBDelta  = z(ln.weight),  z(ln.bias)
-            self.pw1WDelta, self.pw1BDelta = z(pw1.weight), z(pw1.bias)
-            self.pw2WDelta, self.pw2BDelta = z(pw2.weight), z(pw2.bias)
-            self.lsDelta                   = z(ls.gamma)
+            if delta_source is not None:
+                if not delta_source.has_deltas():
+                    raise ValueError("delta_source has no deltas to share")
+                # Borrow without registering: one owner in state_dict / named_parameters.
+                for attr in self.DELTA_ATTRS.values():
+                    object.__setattr__(self, attr, getattr(delta_source, attr))
+                self._borrows_deltas = True
+            else:
+                dw, ln, pw1, _, pw2, ls = sharedBlock
+                z = lambda t: nn.Parameter(torch.zeros_like(t))
+                self.dwWDelta,  self.dwBDelta  = z(dw.weight),  z(dw.bias)
+                self.lnWDelta,  self.lnBDelta  = z(ln.weight),  z(ln.bias)
+                self.pw1WDelta, self.pw1BDelta = z(pw1.weight), z(pw1.bias)
+                self.pw2WDelta, self.pw2BDelta = z(pw2.weight), z(pw2.bias)
+                self.lsDelta                   = z(ls.gamma)
 
         self.stochasticDepth = StochasticDepth(stochasticDepth)
 
@@ -50,6 +67,8 @@ class DeltaConvnextBlock(nn.Module):
         """Allocate zero delta Parameters if missing."""
         if self.has_deltas():
             return
+        if self._borrows_deltas:
+            raise RuntimeError("Cannot allocate deltas on a block that borrows them")
         dw, ln, pw1, _, pw2, ls = self._shared
         z = lambda t: nn.Parameter(torch.zeros_like(t))
         self.dwWDelta,  self.dwBDelta  = z(dw.weight),  z(dw.bias)
@@ -68,6 +87,14 @@ class DeltaConvnextBlock(nn.Module):
     def delete_deltas(self):
         """Drop delta Parameters to free GPU memory in shared-only mode."""
         if not self.has_deltas():
+            self.useDeltas = False
+            return
+        if self._borrows_deltas:
+            # Only drop the local alias; the owner keeps the Parameters.
+            for attr in self.DELTA_ATTRS.values():
+                if hasattr(self, attr):
+                    object.__delattr__(self, attr)
+            self._borrows_deltas = False
             self.useDeltas = False
             return
         for attr in self.DELTA_ATTRS.values():

@@ -1,4 +1,4 @@
-"""Delta ConvNeXt experiments (D=9 stage-3, unique per-block δ).
+"""Delta ConvNeXt experiments (D=9 stage-3).
 
 Variants (set VARIANT, or pass the name as the first CLI arg):
 
@@ -16,7 +16,12 @@ Variants (set VARIANT, or pass the name as the first CLI arg):
                  Standard shared recipe: 1e-3, warmup 10, global batch 1024.
 
   scratch_full   From scratch, coefficient always 1, 300 epochs. Control for
-                 scratch_ramp.
+                 scratch_ramp. Unique δ per step on one shared W (classic).
+
+  scratch_grouped3x3
+                 From scratch, same recipe as scratch_full, but stage-3 is
+                 3 distinct (W, δ) blocks each applied 3 times (shared δ
+                 within each block only).
 
 Leonardo:
   VARIANT=d9_lowlr source .env && sbatch --account="$SLURM_ACCOUNT" \\
@@ -103,6 +108,19 @@ VARIANTS: dict[str, dict] = {
         "global_batch_size": 1024,
         "hold_until": 0,
         "ramp_end": 0,
+        "rewire": "classic",
+    },
+    "scratch_grouped3x3": {
+        "experiment_name": "delta_scratch_grouped3x3_e300",
+        "pretrained": None,
+        "epochs": 300,
+        "warmup_epochs": 10,
+        "lr": 1e-3,
+        "min_lr": 1e-7,
+        "global_batch_size": 1024,
+        "hold_until": 0,
+        "ramp_end": 0,
+        "rewire": "grouped3x3",
     },
 }
 
@@ -127,8 +145,8 @@ GLOBAL_BATCH_SIZE = int(os.environ.get("GLOBAL_BATCH_SIZE", cfg["global_batch_si
 BATCH_SIZE = int(os.environ.get("BATCH_SIZE", "256"))
 HOLD_UNTIL = int(os.environ.get("DELTA_HOLD_UNTIL", cfg["hold_until"]))
 RAMP_END = int(os.environ.get("DELTA_RAMP_END", cfg["ramp_end"]))
-WEIGHT_DECAY = 0.05
-DELTA_WEIGHT_DECAY = 0.05
+WEIGHT_DECAY = float(os.environ.get("WEIGHT_DECAY", "0.05"))
+DELTA_WEIGHT_DECAY = float(os.environ.get("DELTA_WEIGHT_DECAY", "0.05"))
 USE_DDP = True
 RETAKE = os.environ.get("RETAKE", "0") == "1"
 
@@ -196,7 +214,13 @@ else:
     use_ddp = False
 
 model = DeltaConvNext(useDeltas=True)
-model.rewire(sharedBlock=5)
+rewire_mode = cfg.get("rewire", "classic")
+if rewire_mode == "grouped3x3":
+    model.rewire_grouped(n_groups=3, repeats=3)
+elif rewire_mode == "classic":
+    model.rewire(sharedBlock=5)
+else:
+    raise ValueError(f"Unknown rewire mode {rewire_mode!r}")
 if not RETAKE and PRETRAINED_PATH is not None:
     if not PRETRAINED_PATH.is_file():
         raise FileNotFoundError(

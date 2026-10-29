@@ -15,15 +15,28 @@
 #SBATCH --output=logs/delta_train_%j.out
 #SBATCH --error=logs/delta_train_%j.err
 
-# Four variants (VARIANT is required):
-#   d9_lowlr       D=9 shared → deltas, LR=1e-5, 100 epochs
-#   d9_ramp        D=9 shared → deltas, coeff 0→1 by epoch 60, end 80, LR=1e-4
-#   scratch_ramp   from scratch, coeff 0 until 150, 1 at 250, end 300
-#   scratch_full   from scratch, coeff always 1, 300 epochs
+# Variants (VARIANT is required):
+#   d9_lowlr            D=9 shared → deltas, LR=1e-5, 100 epochs
+#   d9_ramp             D=9 shared → deltas, coeff 0→1 by epoch 60, end 80, LR=1e-4
+#   scratch_ramp        from scratch, coeff 0 until 150, 1 at 250, end 300
+#   scratch_full        from scratch, coeff always 1, 300 epochs (1 W + 9 δ)
+#   scratch_grouped3x3  from scratch, 3 (W,δ) groups ×3 repeats, same recipe
+#
+# Optional env overrides (passed through to the train script):
+#   DELTA_WEIGHT_DECAY     default 0.05 (AdamW WD on δ params only)
+#   WEIGHT_DECAY           default 0.05 (base params)
+#   DELTA_EXPERIMENT_NAME  override output dir (required if changing WD
+#                          so you do not overwrite the baseline run)
 #
 # Submit from the repo root (new Leonardo account: AIFAC_P02_1564):
 #   VARIANT=d9_lowlr source .env && sbatch --account="$SLURM_ACCOUNT" \
 #       --export=ALL jobs/train_delta_experiment.sh
+#
+# scratch_full with stronger δ WD:
+#   VARIANT=scratch_full DELTA_WEIGHT_DECAY=0.20 \
+#     DELTA_EXPERIMENT_NAME=delta_scratch_full_e300_dwd0p20 \
+#     source .env && sbatch --account="$SLURM_ACCOUNT" --export=ALL \
+#     jobs/train_delta_experiment.sh
 #
 # Chain after a time-limit kill:
 #   VARIANT=d9_lowlr RETAKE=1 source .env && sbatch --account="$SLURM_ACCOUNT" \
@@ -39,6 +52,9 @@ fi
 
 RETAKE_CLI="${RETAKE:-}"
 VARIANT_CLI="${VARIANT:-}"
+DELTA_EXPERIMENT_NAME_CLI="${DELTA_EXPERIMENT_NAME:-}"
+DELTA_WEIGHT_DECAY_CLI="${DELTA_WEIGHT_DECAY:-}"
+WEIGHT_DECAY_CLI="${WEIGHT_DECAY:-}"
 if [[ -f "${PROJECT_ROOT}/.env" ]]; then
   set -a
   # shellcheck disable=SC1091
@@ -47,9 +63,12 @@ if [[ -f "${PROJECT_ROOT}/.env" ]]; then
 fi
 export RETAKE="${RETAKE_CLI:-${RETAKE:-0}}"
 export VARIANT="${VARIANT_CLI:-${VARIANT:-}}"
+export DELTA_EXPERIMENT_NAME="${DELTA_EXPERIMENT_NAME_CLI:-${DELTA_EXPERIMENT_NAME:-}}"
+export DELTA_WEIGHT_DECAY="${DELTA_WEIGHT_DECAY_CLI:-${DELTA_WEIGHT_DECAY:-0.05}}"
+export WEIGHT_DECAY="${WEIGHT_DECAY_CLI:-${WEIGHT_DECAY:-0.05}}"
 
 if [[ -z "${VARIANT}" ]]; then
-  echo "VARIANT is required: d9_lowlr | d9_ramp | scratch_ramp | scratch_full" >&2
+  echo "VARIANT is required: d9_lowlr | d9_ramp | scratch_ramp | scratch_full | scratch_grouped3x3" >&2
   exit 1
 fi
 
@@ -105,16 +124,24 @@ if [[ ! -d "${HF_DATASETS_CACHE}/${DATASET_DIR}" ]]; then
 fi
 
 # Forced from VARIANT so .env's EXPERIMENT_NAME (the shared baseline) cannot win.
+# DELTA_EXPERIMENT_NAME overrides when set (ablations that must not clobber baseline).
 case "${VARIANT}" in
   d9_lowlr) EXPERIMENT_NAME="delta_from_D9_lr1e-5_e100" ;;
   d9_ramp) EXPERIMENT_NAME="delta_from_D9_ramp0to1_e80" ;;
   scratch_ramp) EXPERIMENT_NAME="delta_scratch_ramp150to250_e300" ;;
   scratch_full) EXPERIMENT_NAME="delta_scratch_full_e300" ;;
+  scratch_grouped3x3) EXPERIMENT_NAME="delta_scratch_grouped3x3_e300" ;;
   *)
     echo "Unknown VARIANT=${VARIANT}" >&2
     exit 1
     ;;
 esac
+if [[ -n "${DELTA_EXPERIMENT_NAME:-}" ]]; then
+  EXPERIMENT_NAME="${DELTA_EXPERIMENT_NAME}"
+fi
+export DELTA_EXPERIMENT_NAME="${EXPERIMENT_NAME}"
+export WEIGHT_DECAY="${WEIGHT_DECAY:-0.05}"
+export DELTA_WEIGHT_DECAY="${DELTA_WEIGHT_DECAY:-0.05}"
 EXPERIMENT="${PROJECT_ROOT}/outputs/${EXPERIMENT_NAME}"
 PRETRAINED="${PROJECT_ROOT}/outputs/shared_convnextv1_imagenet/weights/last.pth"
 NPROC_PER_NODE="${NPROC_PER_NODE:-2}"
@@ -165,6 +192,8 @@ echo "VARIANT: ${VARIANT}"
 echo "RETAKE: ${RETAKE}"
 echo "Train script: ${TRAIN_SCRIPT}"
 echo "EXPERIMENT_NAME: ${EXPERIMENT_NAME}"
+echo "WEIGHT_DECAY: ${WEIGHT_DECAY}"
+echo "DELTA_WEIGHT_DECAY: ${DELTA_WEIGHT_DECAY}"
 echo "Experiment path: ${EXPERIMENT}"
 echo "Pretrained: ${PRETRAINED} ($([ -f "${PRETRAINED}" ] && echo ok || echo missing))"
 echo "nproc_per_node: ${NPROC_PER_NODE}"
@@ -174,6 +203,9 @@ python -c "import torch, torchvision, timm; print(f'torch={torch.__version__} ({
 export RETAKE
 export VARIANT
 export EXPERIMENT_NAME
+export DELTA_EXPERIMENT_NAME
+export WEIGHT_DECAY
+export DELTA_WEIGHT_DECAY
 torchrun --standalone --nproc_per_node="${NPROC_PER_NODE}" "${TRAIN_SCRIPT}" ${TRAIN_ARGS:-}
 
 echo "End: $(date)"

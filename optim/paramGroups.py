@@ -22,11 +22,12 @@ def build_param_groups_with_delta_weight_decay(
         # 6 por bloque: dw, pw1 y pw2, weight y bias. Los deltas de ln y ls van a delta_norm.
         per_block = 6
         # After setStage3Length(D) this is D, not the ConvNeXt-T default of 9.
+        # Grouped rewire (e.g. 3×3) shares δ within each group → n_unique_deltas owners.
         root = model.module if hasattr(model, "module") else model
-        n_blocks = int(root.stage3_length)
+        n_blocks = int(getattr(root, "n_unique_deltas", root.stage3_length))
         assert len(delta) == per_block * n_blocks, (
             f"Esperaba {per_block * n_blocks} deltas de conv "
-            f"(stage3_length={n_blocks}), hay {len(delta)}"
+            f"(n_unique_deltas={n_blocks}), hay {len(delta)}"
         )
 
     groups = [{"params": base, "weight_decay": weight_decay}]

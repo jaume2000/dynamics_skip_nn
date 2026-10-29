@@ -35,6 +35,7 @@ class DeltaConvNext(ConvNextV1):
 
     def rewire(self, sharedBlock: int = 5):
         self.sharedBlock: nn.Sequential = self.stage3[sharedBlock].block  # único registro del bloque
+        self.n_unique_deltas = self.stage3_length if self.useDeltas else 0
 
         deltablocks = [
             DeltaConvnextBlock(
@@ -53,6 +54,71 @@ class DeltaConvNext(ConvNextV1):
         self.set_delta_coeff(self.delta_coeff)
         mode = "shared-only (no delta params)" if not self.useDeltas else f"{self.stage3_length} delta blocks"
         print(f"Rewired: stage3 -> 1 shared block + {mode} + {len(self.tail)} tail layers")
+
+    def rewire_grouped(
+        self,
+        n_groups: int = 3,
+        repeats: int = 3,
+        shared_indices: list[int] | None = None,
+    ):
+        """Stage-3 as ``n_groups`` distinct (W, δ) pairs, each applied ``repeats`` times.
+
+        Unlike ``rewire`` (one shared W + a unique δ per step), each group owns its own
+        shared weights and one δ reused on every repeat of that group. Default 3×3 keeps
+        ConvNeXt-T's 9 stage-3 evaluations with block-local tying of both W and δ.
+        """
+        total = n_groups * repeats
+        n_base = self.depths[2]
+        if shared_indices is None:
+            # Middle block of each contiguous third of the original stage.
+            group = n_base // n_groups
+            shared_indices = [g * group + group // 2 for g in range(n_groups)]
+        if len(shared_indices) != n_groups:
+            raise ValueError(f"Expected {n_groups} shared indices, got {shared_indices}")
+        for idx in shared_indices:
+            if not 0 <= idx < n_base:
+                raise ValueError(f"shared index {idx} out of range for stage3 depth {n_base}")
+
+        self.stage3_length = total
+        self.n_unique_deltas = n_groups if self.useDeltas else 0
+        self.group_repeats = repeats
+        shared = {
+            str(g): self.stage3[idx].block for g, idx in enumerate(shared_indices)
+        }
+        self.sharedBlocks = nn.ModuleDict(shared)
+        # Alias first group for helpers that still expect a single sharedBlock.
+        object.__setattr__(self, "sharedBlock", shared["0"])
+
+        drop_paths = self._stage3_drop_paths()
+        deltablocks: list[DeltaConvnextBlock] = []
+        for g in range(n_groups):
+            shared_block = shared[str(g)]
+            owner: DeltaConvnextBlock | None = None
+            for r in range(repeats):
+                step = g * repeats + r
+                block = DeltaConvnextBlock(
+                    shared_block,
+                    stochasticDepth=drop_paths[step],
+                    useDeltas=self.useDeltas,
+                    eulerStep=self.eulerStep,
+                    delta_source=owner if (self.useDeltas and owner is not None) else None,
+                )
+                if self.useDeltas and owner is None:
+                    owner = block
+                deltablocks.append(block)
+
+        self.tail = self.stage3[n_base:]
+        self.deltifiedStage3 = nn.Sequential(*deltablocks, *self.tail)
+        del self.stage3
+        self.set_delta_coeff(self.delta_coeff)
+        if not self.useDeltas:
+            mode = "shared-only (no delta params)"
+        else:
+            mode = f"{n_groups} shared-δ groups ×{repeats}"
+        print(
+            f"Rewired grouped: stage3 -> {n_groups} shared blocks ({shared_indices}) "
+            f"+ {mode} + {len(self.tail)} tail layers"
+        )
 
     def rewire_all_stages(self, shared_indices: list[int] | None = None):
         """One shared block per stage, looped depths[i] times (channels differ per stage).
@@ -90,6 +156,7 @@ class DeltaConvNext(ConvNextV1):
                 self.stage3_length = n
 
         self.sharedBlocks = nn.ModuleDict(shared)
+        self.n_unique_deltas = sum(self.depths) if self.useDeltas else 0
         # Alias for stage3-only helpers (getSharedWeights, delta_ratios, …).
         # Not registered again: sharedBlocks already owns the module.
         object.__setattr__(self, "sharedBlock", shared["3"])
@@ -152,29 +219,34 @@ class DeltaConvNext(ConvNextV1):
     def setSharedWeights(self, sharedWeights: dict[str, torch.Tensor]):
         DeltaConvnextBlock.setSharedBlockWeights(self.sharedBlock, sharedWeights)
 
+    def _delta_owners(self) -> list[DeltaConvnextBlock]:
+        """Unique δ-owning blocks (skips borrowers that alias another block's Parameters)."""
+        return [
+            b for b in self.deltifiedStage3
+            if isinstance(b, DeltaConvnextBlock)
+            and b.has_deltas()
+            and not getattr(b, "_borrows_deltas", False)
+        ]
+
     @torch.no_grad()
     def delta_ratios(self) -> dict[str, float]:
-        """||delta|| / ||shared weight|| for every part of every delta block.
+        """||delta|| / ||shared weight|| for every part of every unique δ owner.
 
-        The denominators are five norms, not 45: every block divides by the same shared
-        tensors, and those hold ~1.2M of the parameters the call reduces over.
+        Borrowers that share another block's δ are skipped so grouped rewires report
+        one ratio set per group, not one per repeat.
 
-        The ratios are stacked and read back once, since 45 separate .item() calls would
-        mean 45 device syncs inside the training step.
+        The ratios are stacked and read back once, since many separate .item() calls
+        would mean that many device syncs inside the training step.
         """
-        # The tail (LayerNorm2d + downsampling conv) shares the Sequential but has no deltas.
-        blocks = [
-            b for b in self.deltifiedStage3
-            if isinstance(b, DeltaConvnextBlock) and b.has_deltas()
-        ]
+        blocks = self._delta_owners()
         if not blocks:
             return {}
-        weight_norms = {
-            name: weight.norm().clamp_min(1e-12)
-            for name, weight in DeltaConvnextBlock.sharedWeights(self.sharedBlock)
-        }
         names, ratios = [], []
         for i, block in enumerate(blocks):
+            weight_norms = {
+                name: weight.norm().clamp_min(1e-12)
+                for name, weight in DeltaConvnextBlock.sharedWeights(block._shared)
+            }
             for name, delta in block.deltas():
                 names.append(f"b{i}/{name}")
                 ratios.append(delta.norm() / weight_norms[name])
@@ -185,6 +257,7 @@ class DeltaConvNext(ConvNextV1):
     @torch.no_grad()
     def _reparametrize_shared(self, mean_deltas: dict[str, torch.Tensor]):
         # Fold the *effective* mean (coeff · δ) so W + coeff·δ is unchanged.
+        # Single-shared-W path (classic rewire). Grouped rewire folds per owner below.
         coeff = self.get_delta_coeff()
         for name, weight in self.getSharedWeights():
             n_meanDelta = mean_deltas[name]
@@ -192,22 +265,36 @@ class DeltaConvNext(ConvNextV1):
 
     @torch.no_grad()
     def _reparametrize_deltas(self, mean_deltas: dict[str, torch.Tensor]):
-        for i in range(self.stage3_length):
-            self.deltifiedStage3[i].reparametrize_delta(mean_deltas)
+        for block in self._delta_owners():
+            block.reparametrize_delta(mean_deltas)
 
     @torch.no_grad()
     def _getMeanDeltas(self) -> dict[str, torch.Tensor]:
+        owners = self._delta_owners()
         mean_deltas = {}
-        for block in self.deltifiedStage3:
-            if isinstance(block, DeltaConvnextBlock):
-                for name, delta in block.deltas():
-                    mean_deltas[name] = mean_deltas.get(name, torch.zeros_like(delta)) + delta / self.stage3_length
+        n = max(len(owners), 1)
+        for block in owners:
+            for name, delta in block.deltas():
+                mean_deltas[name] = mean_deltas.get(name, torch.zeros_like(delta)) + delta / n
         return mean_deltas
 
     @torch.no_grad()
     def reparametrize(self):
-        blocks = [b for b in self.deltifiedStage3 if isinstance(b, DeltaConvnextBlock) and b.has_deltas()]
-        if not blocks:
+        owners = self._delta_owners()
+        if not owners:
+            return
+        # Grouped (W, δ): fold each owner's mean into its own shared W. Classic path
+        # still averages across all owners then folds into the single sharedBlock.
+        if hasattr(self, "sharedBlocks") and getattr(self, "group_repeats", None):
+            coeff = self.get_delta_coeff()
+            for block in owners:
+                for name, weight in DeltaConvnextBlock.sharedWeights(block._shared):
+                    DeltaConvnextBlock.setSharedBlockWeights(
+                        block._shared, {name: weight + coeff * dict(block.deltas())[name]}
+                    )
+                zeros = {name: torch.zeros_like(d) for name, d in block.deltas()}
+                # Centering: after folding δ into W, zero the shared δ (all repeats alias it).
+                block.setDeltas(zeros)
             return
         mean_deltas = self._getMeanDeltas()
         self._reparametrize_shared(mean_deltas)
@@ -232,6 +319,9 @@ class DeltaConvNext(ConvNextV1):
         ]
         self.deltifiedStage3 = nn.Sequential(*deltablocks, *self.tail)
         self.stage3_length = stage3Length
+        self.n_unique_deltas = stage3Length if self.useDeltas else 0
+        if hasattr(self, "group_repeats"):
+            del self.group_repeats
         self.set_delta_coeff(self.delta_coeff)
         mode = "shared-only" if not self.useDeltas else f"{stage3Length} delta blocks"
         print(f"Stage3 length -> {stage3Length} ({mode}, eulerStep={self.eulerStep:g})")

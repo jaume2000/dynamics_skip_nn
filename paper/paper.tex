@@ -122,6 +122,27 @@ than of depth.
 \url{https://github.com/jaume2000/dynamics_skip_nn}.}
 \end{abstract}
 
+Residual blocks have been considered ODE sovers for long since they compute a composition of
+$x + f(x)$, which is the form of one explicit Euler step.
+We refine trained residual stages at inference by applying each block $R$ times with
+step $1/R$, which keeps the integration horizon and needs no retraining.
+The refined path shows that a trained stage is not one ODE but a composition of one
+ODE per block. Therefore, we can interpret these networks as a composition of ODEs solved by
+one Euler step.
+Nonetheless, we used this technique to gather better quality of the feature trajectories inside the
+network to study its dynamics compared agains a weight-tied Convnext-T.
+Without one third of the original model's params, it performed very similarly with 80.34\5 top-1 ImageNet-1k
+compared with our Convnext-T with 81\%.
+The dynamics of both are the opposite. The trajectory of the orginal model has to compute a trajectory two times
+greater compared to the straigt line directly to the final feature with 0.5 of straightness, the weight-tied one
+performed 0.78\% straigtness. Normal residual blocks use teir params only once, therefore they learn to
+compute simple curves where they push the features onto very different directions, all of them towards the goal,
+but never all of them to the best direction, cancelling partially the direciton previous layer choosed. Weight-tied
+models don't show this problem, but perform a little bit lower. So we created an hibrid aproach where we define
+a function composed by two sets of params that are added: first one consist on shared params, the second one
+custom params for each block and both of them have weight decay, therefore, the shared param can be interpreted as
+an autonomous field and the second set is the non-autonomos field, performing better than both networks with a 81.1\% top-1 accuracy.
+
 \input{chapters/1_introduction}
 \input{chapters/2_related_work}
 \input{chapters/3_method}
